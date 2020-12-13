@@ -1,0 +1,6 @@
+1 cd                                     entrar no diretorio onde esta a pasta
+2 git init                               inicializar o git se for a primeira vez
+3 git add .                              carregar todos os ficheiros da pasta
+4 git commit -m "mensagem de cabeçario"  criar uma mensagem de cabeçario
+5 git push                               fazer upload
+6 git pull                               sincronizar o repositorio do git com o local

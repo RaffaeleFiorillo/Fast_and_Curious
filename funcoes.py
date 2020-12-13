@@ -1,8 +1,10 @@
 import time
 import pygame
 import os
+# import classes_menu as cm
 # import random
 import math
+
 
 diretorio_raiz = "saves/"
 cores_obst = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 130, 18], [255, 17, 11], [255, 18, 11],
@@ -15,6 +17,9 @@ codigos_significados = {3: "desconhecido", 1: "estrada", 2: "parts", 0: "lava"}
 weights = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
 
+
+def wait(seconds):
+    time.sleep(seconds)
 
 def ver(screen, coo):
     x, y = coo
@@ -63,6 +68,18 @@ def prep_cores():
     f.close()
 
 
+def show_error_message(screen, code):
+    screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png"), (230, 200))
+    pygame.display.update()
+    wait(3)
+
+
+def show_succes_message(screen, code) -> None:
+    screen.blit(pygame.image.load(f"images/menu/messages/success{code}.png"), (230, 200))
+    pygame.display.update()
+    wait(3)
+
+
 def refresh_game(screen, background, entidades):
     screen.blit(background, (0, 0))
     for entidade in entidades:
@@ -73,32 +90,25 @@ def refresh_game(screen, background, entidades):
 def criar_pasta(nome_utilizador):
     os.mkdir(diretorio_raiz+nome_utilizador)
 
+def eliminar_pasta(nome_utilizador):
+    pass
 
 def lista_utilizadores():
     utilizadores = [x[0].split("\\") for x in os.walk("saves")][1:]
     return [u[1] for u in utilizadores]
 
 
-def write_best_time(screen, best_time):
-    pygame.font.init()
-    text_font = pygame.font.SysFont('Times New Roman', 12)
-    text = ["0" for y in range(10 - len(str(best_time)))]
-    new_text = str(best_time)
-    for y in text:
-        new_text = y+new_text
-    image_text = text_font.render(new_text, True, (255, 255, 255))
-    while True:
-        screen.blit(image_text, (20, 20))
-        pygame.display.update()
-
-
-def write_name_passw(screen, name, password, ativo):
+def write_name_passw(screen, name, password, ativo, hide):
     pygame.font.init()
     coordenadas1 = [(333, 203), (335, 349)]
     pygame.draw.rect(screen, (0, 0, 255),(coordenadas1[ativo], (420, 57)), 8)
-    screen.blit(pygame.image.load("imagens/menu/interfaces/navigation/pointer.png"), (coordenadas1[ativo][0]+450, coordenadas1[ativo][1]))
+    screen.blit(pygame.image.load("images/menu/interfaces/navigation/pointer.png"), (coordenadas1[ativo][0]+450, coordenadas1[ativo][1]))
     coordenadas2 = [(385, 217), (385, 363)]
-    name, password = "".join(name), "".join(password)
+    if hide:
+        password = "".join(["*" for letter in password if str(letter).isalnum()])
+    else:
+        password = "".join(password)
+    name = "".join(name)
     text_font = pygame.font.SysFont('Times New Roman', 32)
     name_text = text_font.render(name, True, (255, 255, 255))
     password_text = text_font.render(password, True, (255, 255, 255))
@@ -106,41 +116,97 @@ def write_name_passw(screen, name, password, ativo):
     screen.blit(password_text, coordenadas2[1])
 
 
-def write_best_speed(screen, best_speed):
+def write_password(screen, password, hide):
+    pygame.font.init()
+    if hide:
+        password = "".join(["*" for letter in password if str(letter).isalnum()])
+    else:
+        password = "".join(password)
+    text_font = pygame.font.SysFont('Times New Roman', 32)
+    text_font.set_bold(True)
+    password_text = text_font.render(password, True, (0, 0, 0))
+    screen.blit(password_text, (290, 330))
+
+
+def write_name(screen, name):
+    pygame.font.init()
+    password = "".join(name)
+    text_font, name_text = None, None
+    for i in range(30, 50)[::-1]:
+        text_font = pygame.font.SysFont('Times New Roman', i)
+        text_font.set_bold(True)
+        name_text = text_font.render(password, True, (0, 255, 0))
+        if name_text.get_size()[0] <= 540:
+            break
+    screen.blit(name_text, ((screen.get_width()-name_text.get_size()[0])//2+7, 330))
+
+
+def writeble_best_time(best_time):
+    pygame.font.init()
+    coordenadas = (135, 357)
+    text_font = pygame.font.SysFont('Times New Roman', 19)
+    text = ["  " for y in range(10 - len(str(best_time)))]
+    new_text = "".join(text)+str(best_time)
+    image_text = text_font.render(new_text, True, (255, 255, 255))
+    return [image_text, coordenadas]
+
+
+def writeble_best_speed(best_speed):
+    pygame.font.init()
+    coordenadas = (185, 427)
+    text_font = pygame.font.SysFont('Times New Roman', 20)
+    text = ["  " for y in range(4 - len(str(best_speed)))]
+    new_text = "".join(text)+str(best_speed)
+    image_text = text_font.render(new_text, True, (255, 255, 255))
+    return [image_text, coordenadas]
+
+
+def writeble_user_name(name):
+    pygame.font.init()
+    for s in range(65)[::-1]:
+        text_font = pygame.font.SysFont('Times New Roman', s)
+        text_font.set_bold(True)
+        image_text = text_font.render(name, True, (0, 0, 0))
+        size = image_text.get_size()
+        if size[0] <= 253:
+            break
+    coordenadas = (107, 85-size[1]/2)
+    return [image_text, coordenadas]
+
+
+def writeble_parts_number(number):
     pygame.font.init()
     text_font = pygame.font.SysFont('Times New Roman', 12)
-    text = ["0" for y in range(10 - len(str(best_speed)))]
-    new_text = str(best_speed)
-    for y in text:
-        new_text = y+new_text
+    new_text = str(number)
+    for s in range(65)[::-1]:
+        text_font = pygame.font.SysFont('Times New Roman', s)
+        image_text = text_font.render(str(number), True, (0, 0, 0))
+        size = image_text.get_size()
+        if size[0] <= 170:
+            break
+    coordenadas = (132, 226-size[1]/2)
     image_text = text_font.render(new_text, True, (255, 255, 255))
-    while True:
-        screen.blit(image_text, (20, 20))
-        pygame.display.update()
+    return [image_text, coordenadas]
 
 
-def write_user_name(screen, best_time):
+def erase_active_user_data():
+    ficheiro = open("saves/active_user.txt", "w")
+    ficheiro.close()
+
+
+def get_users_images(codigo):
+    users = lista_utilizadores()
+    users_images = []
     pygame.font.init()
-    text_font = pygame.font.SysFont('Times New Roman', 12)
-    text = ["0" for y in range(10 - len(str(best_time)))]
-    new_text = str(best_time)
-    for y in text:
-        new_text = y+new_text
-    image_text = text_font.render(new_text, True, (255, 255, 255))
-    while True:
-        screen.blit(image_text, (20, 20))
-        pygame.display.update()
-
-
-def write_parts_number(screen, best_time):
-    pygame.font.init()
-    text_font = pygame.font.SysFont('Times New Roman', 12)
-    text = ["0" for y in range(10 - len(str(best_time)))]
-    new_text = str(best_time)
-    for y in text:
-        new_text = y+new_text
-    image_text = text_font.render(new_text, True, (255, 255, 255))
-    while True:
-        screen.blit(image_text, (20, 20))
-        pygame.display.update()
-
+    for user in users:
+        for s in range(40)[::-1]:
+            text_font = pygame.font.SysFont('Times New Roman', s)
+            if users.index(user) == codigo:
+                image_text = text_font.render(user, True, (0, 0, 0))
+            else:
+                image_text = text_font.render(user, True, (255, 255, 255))
+            size = image_text.get_size()
+            if size[0] <= 410:
+                break
+        users_images.append(image_text)
+    return users_images

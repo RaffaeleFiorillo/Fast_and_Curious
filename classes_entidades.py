@@ -10,9 +10,9 @@ espacamento_obst = [o for o in range(300, 1290, distancia_obstaculos)]
 
 
 class carro:
-    def __init__(self, cor):
+    def __init__(self):
         self.valores_y = [20, 130, 240]
-        self.imagem = pygame.image.load("imagens/carros/carro-ultimate1.png")
+        self.imagem = pygame.image.load("images/cars/1.png")
         self.speed = 7
         self.x = 400
         self.y = 130
@@ -88,11 +88,11 @@ class carro:
 class estrada:
     def __init__(self):
         self.frame_atual = 0
-        self.imagens_estrada = [pygame.image.load("imagens/estrada/frame"+str(num+1)+".png") for num in range(19)]
-        self.frames = len(self.imagens_estrada)
+        self.images_estrada = [pygame.image.load("images/estrada/frame"+str(num+1)+".png") for num in range(19)]
+        self.frames = len(self.images_estrada)
 
     def draw(self, screen):
-        screen.blit(self.imagens_estrada[self.frame_atual], self.imagens_estrada[self.frame_atual].get_rect())
+        screen.blit(self.images_estrada[self.frame_atual], self.images_estrada[self.frame_atual].get_rect())
         self.frame_atual += 1
         if self.frame_atual == self.frames:
             self.frame_atual = 0
@@ -113,9 +113,9 @@ class _obstaculo:
     def escolher_imagem(self):
         self.pasta = str(random.randint(1, 4))
         if self.pasta == "4":
-            self.imagem = pygame.image.load(f"imagens/obstaculos/4/{random.randint(1,12)}.png")
+            self.imagem = pygame.image.load(f"images/obstacles/4/{random.randint(1,12)}.png")
         else:
-            self.imagem = pygame.image.load("imagens/obstaculos/" + self.pasta + "/1.png")
+            self.imagem = pygame.image.load("images/obstacles/" + self.pasta + "/1.png")
 
     def calcular_posicao_y(self, ultimo_y):
         if ultimo_y == 0:
@@ -128,9 +128,9 @@ class _obstaculo:
 
     def mover(self):
         init_m, nxt = 650, 30
-        mudanca = {init_m: f"imagens/obstaculos/{self.pasta}/2.png", init_m-nxt: f"imagens/obstaculos/{self.pasta}/3.png",
-                   init_m-nxt*2: f"imagens/obstaculos/{self.pasta}/4.png", init_m-nxt*3: f"imagens/obstaculos/{self.pasta}/5.png",
-                   init_m - nxt * 4: f"imagens/obstaculos/{self.pasta}/6.png",  init_m-nxt*5: f"imagens/obstaculos/{self.pasta}/7.png"
+        mudanca = {init_m: f"images/obstacles/{self.pasta}/2.png", init_m-nxt: f"images/obstacles/{self.pasta}/3.png",
+                   init_m-nxt*2: f"images/obstacles/{self.pasta}/4.png", init_m-nxt*3: f"images/obstacles/{self.pasta}/5.png",
+                   init_m - nxt * 4: f"images/obstacles/{self.pasta}/6.png",  init_m-nxt*5: f"images/obstacles/{self.pasta}/7.png"
                    }
         self.x -= 10
         if self.x in mudanca and self.pasta != "4":
@@ -182,7 +182,7 @@ class _part:
         self.y = self.y_medio+numero
         self.x = x
         self.value = self.type_p**2
-        self.imagem = pygame.image.load("imagens/parts/part"+str(self.type_p)+".png")
+        self.imagem = pygame.image.load("images/parts/part"+str(self.type_p)+".png")
         self.hitbox = pygame.mask.from_surface(self.imagem.convert_alpha())
         self.rect = self.imagem.get_rect()
         self.comprimento = 32

@@ -8,7 +8,7 @@ import funcoes
 def treino_jogo_autom (screen, background, individuo):
 # Entidades
     print(individuo.weights, individuo.bias)
-    car = classes_entidades.carro((0, 0, 255))
+    car = classes_entidades.carro()
     estrada = classes_entidades.estrada()
     lista_obstaculos = classes_entidades.obstaculos()
     lista_parts = classes_entidades.parts()
@@ -45,7 +45,7 @@ def treino_jogo_autom (screen, background, individuo):
         lista_obstaculos.remover_obstaculos()
         lista_obstaculos.criar_obstaculos()
 # Refresh screen
-        funcoes.refresh(screen, background, [estrada, lista_parts, lista_obstaculos, car])
+        funcoes.refresh_game(screen, background, [estrada, lista_parts, lista_obstaculos, car])
         #print(time_passed)
         if time_passed >= 500:
             break
@@ -97,9 +97,8 @@ class _individuo:
 
     def activation_function(self, variables):
         soma = 0
-        #print(variables)
         if self.necessidade:
-            for i in range(len(variables)):
+            for i in range(len(variables)-1):
                 soma += self.weights[i] * variables[i] + self.bias[i]
             refined_value = math.tanh(soma)
             if refined_value >= 0.70:
@@ -208,21 +207,21 @@ background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((0, 255, 0))
 keepGoing = True
-pop = Populacao(2, 3, 0.2)
-w = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
+pop = Populacao(4, 3, 0.2)
+w = [0.9849777777777572, 0.03444444444426724, 0.28495822222222262, 0.14811111117294833, 1.0254444434875984]
 b = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
 pop.lista[0].get_wb(w, b)
 pop.lista[1].get_wb(w, b)
 #pop.ler_atributos_individuos()
-#pop.select_best()
-#pop.criar_familia()
+pop.select_best()
+pop.criar_familia()
 while keepGoing:
     print(f"Geracao: {pop.generacao}")
     for p in pop.lista:
         keepGoing = treino_jogo_autom(screen, background, p)
         if keepGoing is None:
             keepGoing = True
-    #pop.ler_atributos_individuos()
-    #pop.select_best()
-    #pop.gravar_atributos_individuo()
-    #pop.criar_familia()
+    pop.ler_atributos_individuos()
+    pop.select_best()
+    pop.gravar_atributos_individuo()
+    pop.criar_familia()

@@ -5,7 +5,7 @@ import funcoes
 
 def Mission_Parts (screen, background):
 # Entidades
-    car = classes_entidades.carro((0, 0, 255))
+    car = classes_entidades.carro()
     estrada = classes_entidades.estrada()
     lista_obstaculos = classes_entidades.obstaculos()
     lista_parts = classes_entidades.parts()
@@ -46,7 +46,7 @@ def Mission_Parts (screen, background):
 
 def Mission_AI (screen, background):
 # Entidades
-    car = classes_entidades.carro((0, 0, 255))
+    car = classes_entidades.carro()
     estrada = classes_entidades.estrada()
     lista_obstaculos = classes_entidades.obstaculos()
     lista_parts = classes_entidades.parts()

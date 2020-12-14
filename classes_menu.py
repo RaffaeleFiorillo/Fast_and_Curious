@@ -23,7 +23,7 @@ class Button2(Button):
         self.value = 0
         self.efeito = "manage"
         self.id = id_c
-        self.value_image = pygame.image.load("images/menu/buttons/8/6.png")
+        self.value_image = pygame.image.load("images/menu/buttons/8/7.png")
         self.get_value()
 
     def get_value(self):
@@ -101,6 +101,14 @@ class User:
         file.write(data)
         file.close()
 
+class Menu_image_sequence:
+    def __init__(self, screen, diretorio, num_paginas, func_link, name):
+        self.screen = screen
+        self.name = name
+        self.background_image = pygame.image.load("images/menu/interfaces/Main/sequence.png")
+        self.images_list = [pygame.image.load(diretorio+f"{i}.png") for i in range(num_paginas)]
+        self.num_paginas = num_paginas
+        self.origin_link = func_link
 
 class Menu:
     def __init__(self, buttons, diretorio, superficie, user=None):
@@ -510,7 +518,7 @@ class Management:
         self.list = buttons
         self.diretorio = diretorio
         self.image_nome = pygame.image.load(diretorio)
-        self.efeito1 = [pygame.image.load(f"images/menu/effects/1/{i+1}.png") for i in range(4)]
+        self.efeito1 = [pygame.image.load(f"images/menu/effects/5/{i+1}.png") for i in range(4)]
         self.efeito2 = [pygame.image.load(f"images/menu/effects/4/{i+1}.png") for i in range(4)]
         self.codigo_ativo = 0
         self.screen = superficie
@@ -579,7 +587,7 @@ class Management:
         self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
         self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0]+15, coo[1]+53))
         self.user.draw_text(self.screen)
-        coordenadas = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178)}
+        coordenadas = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178), 5: (685, 178)}
         coo = coordenadas[self.codigo_ativo]
         self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.codigo_ativo+1}.png"), (coo[0], coo[1]))
         self.draw_buttons()

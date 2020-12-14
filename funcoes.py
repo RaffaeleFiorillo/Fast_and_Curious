@@ -98,8 +98,20 @@ def lista_utilizadores():
     return [u[1] for u in utilizadores]
 
 
-def write_name_passw(screen, name, password, ativo, hide):
+def create_sized_text(max_size_image, max_size_letter, text, color, min_size_letter=30):
     pygame.font.init()
+    text_font = None
+    rendered_text = None
+    for i in range(min_size_letter, max_size_letter)[::-1]:
+        text_font = pygame.font.SysFont('Times New Roman', i)
+        text_font.set_bold(True)
+        rendered_text = text_font.render(text, True, color)
+        if rendered_text.get_size()[0] <= max_size_image:
+            break
+    return rendered_text
+
+
+def write_name_passw(screen, name, password, ativo, hide):
     coordenadas1 = [(333, 203), (335, 349)]
     pygame.draw.rect(screen, (0, 0, 255),(coordenadas1[ativo], (420, 57)), 8)
     screen.blit(pygame.image.load("images/menu/interfaces/navigation/pointer.png"), (coordenadas1[ativo][0]+450, coordenadas1[ativo][1]))
@@ -109,9 +121,8 @@ def write_name_passw(screen, name, password, ativo, hide):
     else:
         password = "".join(password)
     name = "".join(name)
-    text_font = pygame.font.SysFont('Times New Roman', 32)
-    name_text = text_font.render(name, True, (255, 255, 255))
-    password_text = text_font.render(password, True, (255, 255, 255))
+    name_text = create_sized_text(330, 32, name, (255, 255, 255), 20)
+    password_text = create_sized_text(330, 32, password, (255, 255, 255), 16)
     screen.blit(name_text, coordenadas2[0])
     screen.blit(password_text, coordenadas2[1])
 
@@ -178,12 +189,14 @@ def writeble_parts_number(number):
     pygame.font.init()
     text_font = pygame.font.SysFont('Times New Roman', 12)
     new_text = str(number)
+    #image_text = create_sized_text(170, 65, new_text, (0, 0, 0))
     for s in range(65)[::-1]:
-        text_font = pygame.font.SysFont('Times New Roman', s)
-        image_text = text_font.render(str(number), True, (0, 0, 0))
-        size = image_text.get_size()
-        if size[0] <= 170:
-            break
+            text_font = pygame.font.SysFont('Times New Roman', s)
+            image_text = text_font.render(str(number), True, (0, 0, 0))
+            size = image_text.get_size()
+            if size[0] <= 170:
+                break
+    size = image_text.get_size()
     coordenadas = (132, 226-size[1]/2)
     image_text = text_font.render(new_text, True, (255, 255, 255))
     return [image_text, coordenadas]

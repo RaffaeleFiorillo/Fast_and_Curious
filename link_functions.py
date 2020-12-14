@@ -104,16 +104,16 @@ def game_parts(screen):
 
 def manage_account(screen):
     posicx = (1080 - 260)//2
-    posicy = [y for y in range(110, 600, 100)]
-    effects = ["", "", "add_text", "elmnt_account", "exit3"]
-    butns = [cm.Button(posicx, y, f"images/menu/buttons/8/{posicy.index(y)+1}.png",
+    posicy = [y for y in range(155, 600, 70)]
+    effects = ["", "", "add_text", "change_password", "elmnt_account", "exit3"]
+    butns = [cm.Button(posicx, y+20, f"images/menu/buttons/8/{posicy.index(y)+1}.png",
                                 effects[posicy.index(y)], posicy.index(y))
                       for y in posicy[:len(effects)]]
     posicx -= 55
-    button1 = cm.Button2(posicx, 130, f"images/menu/buttons/8/{posicy.index(110)+1}.png",
-                                effects[posicy.index(110)], posicy.index(110), 0)
-    button2 = cm.Button2(posicx, 230, f"images/menu/buttons/8/{posicy.index(210)+1}.png",
-                                effects[posicy.index(210)], posicy.index(210), 1)
+    button1 = cm.Button2(posicx, 130, f"images/menu/buttons/8/{0+1}.png",
+                                effects[0], 0, 0)
+    button2 = cm.Button2(posicx, 230, f"images/menu/buttons/8/{1+1}.png",
+                                effects[1], 1, 1)
     butns = [button1, button2]+butns[2:]
     user = cm.User()
     user.get_active_user()

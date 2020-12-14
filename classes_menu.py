@@ -101,14 +101,51 @@ class User:
         file.write(data)
         file.close()
 
+
 class Menu_image_sequence:
-    def __init__(self, screen, diretorio, num_paginas, func_link, name):
+    def __init__(self, screen, pasta, num_paginas, func_link, name):
         self.screen = screen
         self.name = name
         self.background_image = pygame.image.load("images/menu/interfaces/Main/sequence.png")
-        self.images_list = [pygame.image.load(diretorio+f"{i}.png") for i in range(num_paginas)]
-        self.num_paginas = num_paginas
+        self.images_list = [pygame.image.load(f"images/menu/interfaces/sequences/{pasta}/{i}.png") for i in range(num_paginas)]
+        self.num_pages = num_paginas
+        self.current_page = 0
         self.origin_link = func_link
+
+    def manage_buttons(self, keys):
+        if keys[pygame.K_RIGHT]:
+            self.current_page += 1
+        elif keys[pygame.K_LEFT]:
+            self.current_page -= 1
+        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+            if self.current_page == self.num_pages:
+                return self.origin_link
+        elif keys[pygame.K_ESCAPE]:
+            return self.origin_link
+        if self.current_page > self.num_pages:
+            self.current_page = self.num_pages
+        if self.current_page < 0:
+            self.current_page = 0
+
+    def refresh(self):
+        self.screen.blit(self.background_image, (0, 0))
+        self.screen.blit(self.images_list[self.current_page], (100, 100))
+        pygame.display.update()
+
+    def display_menu(self):
+        clock = pygame.time.Clock()
+        keepGoing = True
+        while keepGoing:
+            clock.tick(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    efeito = self.manage_buttons(pygame.key.get_pressed())
+                    if efeito is not None:
+                        return efeito
+            self.refresh()
+
 
 class Menu:
     def __init__(self, buttons, diretorio, superficie, user=None):

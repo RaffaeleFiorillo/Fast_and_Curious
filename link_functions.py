@@ -122,6 +122,18 @@ def manage_account(screen):
     return m.display_menu()
 
 
+def delete_account(screen):
+    if cm.Exit("images/menu/exit/delete_account.png", screen).display_menu():
+        file = open("saves/active_user.txt", "r")
+        line = file.readline().split(" ")
+        verification_password = cm.Enter_Password(screen, True).display_menu()
+        file.close()
+        if verification_password == "main_menu":
+            f.delete_user_account(line[0])
+        return verification_password
+    return "manage"
+
+
 def tutorial_s(screen):
     pass
 

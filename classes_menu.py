@@ -465,7 +465,6 @@ class Choose_Account:
         self.buttons[self.previous_button].image = pygame.image.load("images/menu/buttons/6/2.png")
         self.buttons[self.codigo_ativo_y].image = pygame.image.load("images/menu/buttons/6/1.png")
 
-
     def refresh(self):
         coordenadas = {0: (325, 520), 1: (558, 520)}
         coo = coordenadas[self.codigo_ativo_x]
@@ -479,13 +478,14 @@ class Choose_Account:
 
 
 class Enter_Password:
-    def __init__(self, screen):
+    def __init__(self, screen, change=False):
         self.screen = screen
         self.image = pygame.image.load("images/menu/interfaces/Main/insert_password.png")
         self.user = None
         self.password_list = []
         self.create_user()
         self.hide = False
+        self.change = change
 
     def create_user(self):
         self.user = User()
@@ -500,10 +500,15 @@ class Enter_Password:
         self.screen.blit(pygame.image.load("images/menu/interfaces/provisory/provisory.png"), (0, 0))
 
     def show_succes_message(self) -> None:
-        self.screen.blit(pygame.image.load("images/menu/messages/success2.png"), (230, 200))
-        f.write_name(self.screen, self.user.name)
+        if self.change:
+            self.screen.blit(pygame.image.load("images/menu/messages/success3.png"), (230, 200))
+            time = 3
+        else:
+            self.screen.blit(pygame.image.load("images/menu/messages/success2.png"), (230, 200))
+            f.write_name(self.screen, self.user.name)
+            time = 1
         pygame.display.update()
-        f.wait(1)
+        f.wait(time)
 
     def verify_password(self):
         return "".join(self.password_list) == self.user.password
@@ -529,13 +534,17 @@ class Enter_Password:
         if event.key == pygame.K_BACKSPACE:
             self.password_list = self.password_list[:-1]
         elif keys[pygame.K_ESCAPE]:
+            if self.change:
+                return "manage"
             return "choose"
         elif keys[pygame.K_TAB]:
             self.hide = not self.hide
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            self.password = "".join(self.password_list)
+            # self.password = "".join(self.password_list)
             if self.verify_password():
                 self.show_succes_message()
+                if self.change:
+                    return "main_menu"
                 return "continue"
             else:
                 self.show_error_message()
@@ -615,6 +624,7 @@ class Management:
         self.coord_efeito = (self.list[self.codigo_ativo].x-12, self.list[self.codigo_ativo].y-12)
 
     def refresh(self):
+        f.clean_background(self.screen)
         self.screen.blit(self.image_nome, ((1080-470)//2, 0))
         self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation.png"), (355, 620))
         coo = (20, 490)

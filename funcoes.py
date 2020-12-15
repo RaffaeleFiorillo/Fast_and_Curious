@@ -1,6 +1,7 @@
 import time
 import pygame
 import os
+import shutil
 # import classes_menu as cm
 # import random
 import math
@@ -90,8 +91,10 @@ def refresh_game(screen, background, entidades):
 def criar_pasta(nome_utilizador):
     os.mkdir(diretorio_raiz+nome_utilizador)
 
+
 def eliminar_pasta(nome_utilizador):
     pass
+
 
 def lista_utilizadores():
     utilizadores = [x[0].split("\\") for x in os.walk("saves")][1:]
@@ -202,9 +205,20 @@ def writeble_parts_number(number):
     return [image_text, coordenadas]
 
 
+def clean_background(screen):
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((0, 0, 0))
+    screen.blit(background, (0, 0))
+
+
 def erase_active_user_data():
     ficheiro = open("saves/active_user.txt", "w")
     ficheiro.close()
+
+
+def delete_user_account(user_name):
+    shutil.rmtree(f'saves/{user_name}')
 
 
 def get_users_images(codigo):

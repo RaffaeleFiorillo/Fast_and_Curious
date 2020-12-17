@@ -283,7 +283,7 @@ class Exit:
 
 
 class Create_Account:
-    def __init__(self, diretorio, superficie):
+    def __init__(self, diretorio, superficie, change=False):
         self.image_nome = pygame.image.load(diretorio)
         self.effects = (False, True)
         self.efeito = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
@@ -294,12 +294,20 @@ class Create_Account:
         self.inputs = [[], []]
         self.frame_atual = 0
         self.user = User()
+        self.change = change
+        if change:
+            self.user.get_active_user()
 
     def draw_buttons(self) -> None:
         coordenadas = {0: (325, 485), 1: (558, 485)}
         coo = coordenadas[self.codigo_ativo_x]
         self.screen.blit(self.efeito[int(self.frame_atual)], (coo[0]-5, coo[1]-10))
-        self.screen.blit(pygame.image.load(f"images/menu/buttons/5/{self.codigo_ativo_x+1}.png"), (coo[0]+13, coo[1]+10))
+        if self.change:
+            self.screen.blit(pygame.image.load(f"images/menu/buttons/9/{self.codigo_ativo_x + 1}.png"),
+                             (coo[0] + 13, coo[1] + 10))
+        else:
+            self.screen.blit(pygame.image.load(f"images/menu/buttons/5/{self.codigo_ativo_x+1}.png"),
+                             (coo[0]+13, coo[1]+10))
         self.frame_atual += 0.2
         if self.frame_atual > 3:
             self.frame_atual = 0
@@ -326,19 +334,30 @@ class Create_Account:
         f.criar_pasta(name)
 
     def validate_user_information(self) -> bool:
-        name, password = "".join(self.inputs[0]), "".join(self.inputs[1])
-        if name in f.lista_utilizadores():
-            f.show_error_message(self.screen, 1)
-            return False
-        elif len(self.inputs[0]) == 0:
-            f.show_error_message(self.screen, 2)
-            return False
-        elif len(self.inputs[1]) == 0:
-            f.show_error_message(self.screen, 3)
-            return False
-        elif " " in self.inputs[0] or " " in self.inputs[1]:
-            f.show_error_message(self.screen, 4)
-            return False
+        first, second = "".join(self.inputs[0]), "".join(self.inputs[1])
+        if self.change:
+            if first != self.user.password:
+                f.show_error_message(self.screen, 7)
+                return False
+            elif len(self.inputs[1]) == 0:
+                f.show_error_message(self.screen, 3)
+                return False
+            elif " " in self.inputs[1]:
+                f.show_error_message(self.screen, 4)
+                return False
+        else:
+            if first in f.lista_utilizadores():
+                f.show_error_message(self.screen, 1)
+                return False
+            elif len(self.inputs[0]) == 0:
+                f.show_error_message(self.screen, 2)
+                return False
+            elif len(self.inputs[1]) == 0:
+                f.show_error_message(self.screen, 3)
+                return False
+            elif " " in self.inputs[0] or " " in self.inputs[1]:
+                f.show_error_message(self.screen, 4)
+                return False
         return True
 
     def manage_buttons(self, keys, event):
@@ -353,14 +372,22 @@ class Create_Account:
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.effects[self.codigo_ativo_x]:
                 if self.validate_user_information():
-                    self.user.name = "".join(self.inputs[0])
-                    self.user.password = "".join(self.inputs[1])
-                    self.create_account()
-                    self.user.save_info()
-                    self.user.turn_active()
-                    f.show_succes_message(self.screen, 1)
+                    if self.change:
+                        self.user.password = "".join(self.inputs[1])
+                        self.user.save_info()
+                        self.user.turn_active()
+                        f.show_succes_message(self.screen, 4)
+                    else:
+                        self.user.name = "".join(self.inputs[0])
+                        self.user.password = "".join(self.inputs[1])
+                        self.create_account()
+                        self.user.save_info()
+                        self.user.turn_active()
+                        f.show_succes_message(self.screen, 1)
                     return True
                 else:
+                    if self.change:
+                        return "change_password"
                     return "new"
             return False
         elif keys[pygame.K_TAB]:
@@ -373,7 +400,7 @@ class Create_Account:
             self.inputs[self.codigo_ativo_y].append(event.unicode)
 
     def refresh(self) -> None:
-        self.screen.blit(self.image_nome, (2, 0))
+        self.screen.blit(self.image_nome, (0, 0))
         self.draw_buttons()
         self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation3.png"), (355, 620))
         f.write_name_passw(self.screen, self.inputs[0], self.inputs[1], self.codigo_ativo_y, self.hide)

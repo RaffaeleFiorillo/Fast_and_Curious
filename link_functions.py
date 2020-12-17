@@ -1,7 +1,10 @@
+from typing import List
+
 import classes_menu as cm
 import loops as lp
 import pygame
 import funcoes as f
+from classes_menu import Button
 
 
 def exit_game(screen):
@@ -24,10 +27,12 @@ def exit_tutorial(screen):
 
 # Main Menu
 def main_menu(screen):
-    posicx_main = (1080 - 260)//2
-    posicy_main = [y for y in range(150,600,150)]
+    posicx_main = (1080 - 260) // 2
+    posicy_main = [y for y in range(150, 600, 150)]
     effects_main = ["choose", "new", "exit1"]
-    butns_main = [cm.Button(posicx_main, y, f"images/menu/buttons/1/{posicy_main.index(y)+1}.png", effects_main[posicy_main.index(y)], posicy_main.index(y)) for y in posicy_main[:len(effects_main)]]
+    butns_main = [cm.Button(posicx_main, y, f"images/menu/buttons/1/{posicy_main.index(y) + 1}.png",
+                            effects_main[posicy_main.index(y)], posicy_main.index(y)) for y in
+                  posicy_main[:len(effects_main)]]
     m_m = cm.Menu(butns_main, f"images/menu/interfaces/Main/main menu.png", screen)
     return m_m.display_menu()
 
@@ -46,23 +51,27 @@ def choose_user(screen):
 
 # Game Menu
 def game_menu(screen):
-    posicx_game = (1080 - 260)//2
+    posicx_game = (1080 - 260) // 2
     posicy_game = [y for y in range(107, 600, 80)]
     effects_game = ["story", "mai", "mpart", "tutorial", "manage", "exit2"]
-    butns_game = [cm.Button(posicx_game, y, f"images/menu/buttons/2/{posicy_game.index(y)+1}.png", effects_game[posicy_game.index(y)], posicy_game.index(y)) for y in posicy_game[:len(effects_game)]]
+    butns_game = [cm.Button(posicx_game, y, f"images/menu/buttons/2/{posicy_game.index(y) + 1}.png",
+                            effects_game[posicy_game.index(y)], posicy_game.index(y)) for y in
+                  posicy_game[:len(effects_game)]]
     user = cm.User()
     user.get_active_user()
     user.get_texts()
     g_m = cm.Menu(butns_game, f"images/menu/interfaces/Main/game menu.png", screen, user)
-    #f.erase_active_user_data()
+    # f.erase_active_user_data()
     return g_m.display_menu()
 
 
 def tutorial(screen):
-    posicx_tutorial = (1080 - 260)//2
+    posicx_tutorial = (1080 - 260) // 2
     posicy_tutorial = [y for y in range(110, 600, 100)]
     effects_tutorial = ["comands", "t_save", "enemies", "level_up", "exit3"]
-    butns_tutorial = [cm.Button(posicx_tutorial, y, f"images/menu/buttons/4/{posicy_tutorial.index(y)+1}.png", effects_tutorial[posicy_tutorial.index(y)], posicy_tutorial.index(y)) for y in posicy_tutorial[:len(effects_tutorial)]]
+    butns_tutorial = [cm.Button(posicx_tutorial, y, f"images/menu/buttons/4/{posicy_tutorial.index(y) + 1}.png",
+                                effects_tutorial[posicy_tutorial.index(y)], posicy_tutorial.index(y)) for y in
+                      posicy_tutorial[:len(effects_tutorial)]]
     user = cm.User()
     user.get_active_user()
     user.get_texts()
@@ -81,6 +90,7 @@ def create_new_account(screen):
     elif effect:
         return "continue"
     return "main_menu"
+
 
 def display_story(screen):
     pass
@@ -103,18 +113,18 @@ def game_parts(screen):
 
 
 def manage_account(screen):
-    posicx = (1080 - 260)//2
+    posicx = (1080 - 260) // 2
     posicy = [y for y in range(155, 600, 70)]
     effects = ["", "", "add_text", "change_password", "elmnt_account", "exit3"]
-    butns = [cm.Button(posicx, y+20, f"images/menu/buttons/8/{posicy.index(y)+1}.png",
-                                effects[posicy.index(y)], posicy.index(y))
-                      for y in posicy[:len(effects)]]
+    butns = [cm.Button(posicx, y + 20, f"images/menu/buttons/8/{posicy.index(y) + 1}.png",
+                       effects[posicy.index(y)], posicy.index(y))
+             for y in posicy[:len(effects)]]
     posicx -= 55
-    button1 = cm.Button2(posicx, 130, f"images/menu/buttons/8/{0+1}.png",
-                                effects[0], 0, 0)
-    button2 = cm.Button2(posicx, 230, f"images/menu/buttons/8/{1+1}.png",
-                                effects[1], 1, 1)
-    butns = [button1, button2]+butns[2:]
+    button1 = cm.Button2(posicx, 130, f"images/menu/buttons/8/{0 + 1}.png",
+                         effects[0], 0, 0)
+    button2 = cm.Button2(posicx, 230, f"images/menu/buttons/8/{1 + 1}.png",
+                         effects[1], 1, 1)
+    butns = [button1, button2] + butns[2:]
     user = cm.User()
     user.get_active_user()
     user.get_texts()
@@ -131,6 +141,19 @@ def delete_account(screen):
         if verification_password == "main_menu":
             f.delete_user_account(line[0])
         return verification_password
+    return "manage"
+
+
+def change_password(screen):
+    if len(f.lista_utilizadores()) == 7:
+        f.show_error_message(screen, 6)
+        return "main_menu"
+    cp = cm.Create_Account("images/menu/interfaces/Main/change password.png", screen, True)
+    effect = cp.display_menu()
+    if effect == "change_password":
+        return effect
+    elif effect:
+        return "manage"
     return "manage"
 
 

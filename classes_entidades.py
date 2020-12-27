@@ -54,7 +54,7 @@ class carro:
 
     def draw(self, screen):
         screen.blit(self.imagem, (self.x, self.y))
-        pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
+        # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
         """for i in self.vision_coo:
             pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)"""
 
@@ -292,12 +292,6 @@ class HUD:
         self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
         pygame.display.update()
 
-    def display_cleaning_backgrounds(self):
-        pygame.draw.rect(self.screen, (255, 255, 255), (114, 600, 62, 14))
-        pygame.draw.rect(self.screen, (255, 255, 255), (905, 600, 62, 14))
-        pygame.draw.rect(self.screen, (255, 255, 0), (514, 672, 53, 14))
-        pygame.display.update()
-
     def get_text(self):
         self.texts = f.get_text_names()
         self.text_to_write = random.choice(self.texts)
@@ -316,9 +310,8 @@ class HUD:
             self.written_text.append([])
         self.written_text[self.line].append(event.unicode)
 
-    def draw(self, number_parts):
-        coordinates = [(20, 420), (811, 420)]
-        self.screen.blit(self.speed_meter_image, coordinates[0])
-        self.screen.blit(self.precision_meter_image, coordinates[1])
-        self.display_cleaning_backgrounds()
+    def draw(self, number_parts, time, speed, precision):
         f.write_HUD_parts_value(self.screen, number_parts)
+        f.write_HUD_time_value(self.screen, time)
+        f.display_HUD_speed_meter(self.screen, speed)
+        f.display_HUD_precision_meter(self.screen, precision)

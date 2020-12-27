@@ -3,7 +3,7 @@ import pygame
 import os
 import shutil
 # import classes_menu as cm
-# import random
+from random import randint
 import math
 
 
@@ -242,3 +242,29 @@ def write_HUD_parts_value(screen, number_parts):
     text_image = create_sized_text(165, 25, text, (0, 0, 0), 7)
     screen.blit(text_image, (540-adjust, 600))
 
+
+def write_HUD_time_value(screen, time_value):
+    text = str(time_value)
+    adjust = len(text)*4
+    text_image = create_sized_text(100, 16, text, (0, 0, 0), 7)
+    screen.blit(text_image, (540-adjust, 670))
+
+
+def display_HUD_speed_meter(screen, speed):
+    text = str(speed)
+    image_number = int(speed/6.7)
+    if image_number > 14:
+        image_number = 14
+    adjust = len(text)*7
+    text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
+    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png"), (20, 420))
+    screen.blit(text_image, (148-adjust, 596))
+
+
+def display_HUD_precision_meter(screen, precision):
+    text = str(precision)
+    image_number = int(precision/6.7)
+    adjust = len(text)*7
+    text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
+    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png"), (811, 420))
+    screen.blit(text_image, (940-adjust, 596))

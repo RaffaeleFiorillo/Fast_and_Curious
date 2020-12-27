@@ -26,7 +26,9 @@ class Mission_AI:
         self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
         for entidade in entidades:
             entidade.draw(self.screen)
-        self.hud.draw(self.parts_collected)
+        speed = 50
+        precision = 70
+        self.hud.draw(self.parts_collected, 60-int(self.time_passed), speed, precision)
         pygame.display.update()
 
     def car_moviment_y(self):
@@ -51,7 +53,11 @@ class Mission_AI:
             # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return False
+                    self.run = False
+                    return "continue"
+            if int(self.time_passed) >= 60:
+                self.run = False
+                return "continue"
     # parts effects
             self.parts_list.remover_parts(self.obstacles_list.lista)
             self.parts_list.criar_parts()
@@ -67,3 +73,4 @@ class Mission_AI:
             self.obstacles_list.criar_obstaculos()
     # Refresh screen
             self.refresh_game()
+        return "continue"

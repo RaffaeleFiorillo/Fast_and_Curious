@@ -101,6 +101,13 @@ def lista_utilizadores():
     return [u[1] for u in utilizadores]
 
 
+def numero_textos():
+    texts = os.walk("texts")
+    texts = [text for text in texts][0][1:][1]
+    print(texts)
+    #return [u[1] for u in utilizadores]
+
+
 def create_sized_text(max_size_image, max_size_letter, text, color, min_size_letter=30):
     pygame.font.init()
     text_font = None

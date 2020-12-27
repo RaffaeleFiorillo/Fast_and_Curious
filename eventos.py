@@ -6,5 +6,4 @@ import pygame
 pygame.init()
 
 screen = pygame.display.set_mode((1080, 700))
-
-lf.manage_account(screen).display()
+f.numero_textos()

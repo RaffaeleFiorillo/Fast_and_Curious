@@ -258,3 +258,19 @@ class parts:
         for part in self.lista:
             part.draw(screen)
             part.mover()
+
+
+class HUD:
+    def __init__(self):
+        self.speed_meter_image = pygame.image.load("images/HUD/meter/7.png")
+        self.precision_meter_image = pygame.image.load("images/HUD/meter/7.png")
+        self.speed = 0
+        self.precision = 0
+        self.energy = 0
+        self.resistence = 0
+        self.parts = 0
+        self.written_text = []
+        self.text_to_write = self.get_text()
+
+    def get_text(self):
+        pass

@@ -15,4 +15,7 @@ efeitos = {"exit1": lf.exit_game, "main_menu": lf.main_menu, "continue": lf.game
 
 ef = "main_menu"
 while True:
-    ef = efeitos[ef](screen)
+    try:
+        ef = efeitos[ef](screen)
+    except KeyError:
+        exit("Game Status: TERMINATED")

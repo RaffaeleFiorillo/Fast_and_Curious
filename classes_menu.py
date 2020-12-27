@@ -107,7 +107,8 @@ class Menu_image_sequence:
         self.screen = screen
         self.name = name
         self.background_image = pygame.image.load("images/menu/interfaces/Main/sequence.png")
-        self.images_list = [pygame.image.load(f"images/menu/interfaces/sequences/{pasta}/{i}.png") for i in range(num_paginas)]
+        self.images_list = [pygame.image.load(f"images/slides/{pasta}/{i+1}.png") for i in range(num_paginas)]
+        self.slide_name = pygame.image.load(f"images/slides/{pasta}/name.png")
         self.num_pages = num_paginas
         self.current_page = 0
         self.origin_link = func_link
@@ -122,14 +123,24 @@ class Menu_image_sequence:
                 return self.origin_link
         elif keys[pygame.K_ESCAPE]:
             return self.origin_link
-        if self.current_page > self.num_pages:
-            self.current_page = self.num_pages
+        if self.current_page > self.num_pages-1:
+            self.current_page = self.num_pages-1
         if self.current_page < 0:
             self.current_page = 0
 
+    def get_rectangle(self):
+        if self.current_page == self.num_pages-1:
+            return 700, 633, 300, 40
+        elif self.current_page == 0:
+            return 85, 633, 300, 40
+        else:
+            return 200, 640, 1, 1
+
     def refresh(self):
         self.screen.blit(self.background_image, (0, 0))
-        self.screen.blit(self.images_list[self.current_page], (100, 100))
+        self.screen.blit(self.images_list[self.current_page], (108, 120))
+        self.screen.blit(self.slide_name, (400, 0))
+        pygame.draw.rect(self.screen, (0, 0, 0), self.get_rectangle())
         pygame.display.update()
 
     def display_menu(self):
@@ -217,10 +228,10 @@ class Menu:
         if self.user is not None:
             coo = (20, 490)
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.user.level}.png"), (0, 0))
-            self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/car_window.png"), coo)
+            #self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/car_window.png"), coo)
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/records.png"), (coo[0], coo[1]-210))
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
-            self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0]+15, coo[1]+53))
+            self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0] - 18, coo[1]))
             self.user.draw_text(self.screen)
         self.draw_buttons()
         pygame.display.update()
@@ -598,7 +609,7 @@ class Management:
         self.frame_atual = 0
         self.name = "management"
         self.user = user
-        self.coord_efeito = (self.list[0].x-12, self.list[0].y-12)
+        self.coord_efeito = (self.list[0].x-8, self.list[0].y-8)
 
     def draw_buttons(self):
         if self.codigo_ativo < 2:
@@ -656,10 +667,9 @@ class Management:
         self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation.png"), (355, 620))
         coo = (20, 490)
         self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.user.level}.png"), (0, 0))
-        self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/car_window.png"), coo)
         self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/records.png"), (coo[0], coo[1]-210))
         self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
-        self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0]+15, coo[1]+53))
+        self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0]-18, coo[1]))
         self.user.draw_text(self.screen)
         coordenadas = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178), 5: (685, 178)}
         coo = coordenadas[self.codigo_ativo]

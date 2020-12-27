@@ -93,7 +93,9 @@ def create_new_account(screen):
 
 
 def display_story(screen):
-    pass
+    story_slides= cm.Menu_image_sequence(screen, "story", 10, "continue", "Story")
+    effect = story_slides.display_menu()
+    return effect
 
 
 def game_ai(screen):

@@ -228,7 +228,6 @@ class Menu:
         if self.user is not None:
             coo = (20, 490)
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.user.level}.png"), (0, 0))
-            #self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/car_window.png"), coo)
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/records.png"), (coo[0], coo[1]-210))
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
             self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0] - 18, coo[1]))

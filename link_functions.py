@@ -99,18 +99,14 @@ def display_story(screen):
 
 
 def game_ai(screen):
-    background = pygame.Surface((1080, 700))
-    background.fill((0, 255, 0))
-    r = lp.Mission_AI(screen, background)
-    results_mission_ai(r)
+    game = lp.Mission_AI(screen)
+    game.game_loop()
     return "continue"
 
 
 def game_parts(screen):
-    background = pygame.Surface((1080, 700))
-    background.fill((0, 255, 0))
-    r = lp.Mission_Parts(screen, background)
-    results_mission_p(r)
+    game = lp.Mission_AI(screen)
+    game.game_loop()
     return "continue"
 
 

@@ -9,7 +9,7 @@ import math
 
 diretorio_raiz = "saves/"
 cores_obst = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 130, 18], [255, 17, 11], [255, 18, 11],
-              [255, 18, 12], [195, 195, 195], [163, 73, 164], [248, 12, 35]]
+              [255, 18, 12], [195, 195, 195], [163, 73, 164], [248, 12, 35], [255, 255, 255]]
 cores_part = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [237, 28, 36], [163, 73, 164], [255, 0, 255],
               [120, 0, 120], [0, 255, 255], [0, 0, 255]]
 cores_estrada = [[0, 0, 0], [108, 108, 108]]
@@ -21,6 +21,7 @@ bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116
 
 def wait(seconds):
     time.sleep(seconds)
+
 
 def ver(screen, coo):
     x, y = coo
@@ -81,19 +82,8 @@ def show_succes_message(screen, code) -> None:
     wait(3)
 
 
-def refresh_game(screen, background, entidades):
-    screen.blit(background, (0, 0))
-    for entidade in entidades:
-        entidade.draw(screen)
-    pygame.display.update()
-
-
 def criar_pasta(nome_utilizador):
     os.mkdir(diretorio_raiz+nome_utilizador)
-
-
-def eliminar_pasta(nome_utilizador):
-    pass
 
 
 def lista_utilizadores():
@@ -101,11 +91,10 @@ def lista_utilizadores():
     return [u[1] for u in utilizadores]
 
 
-def numero_textos():
+def get_text_names():
     texts = os.walk("texts")
     texts = [text for text in texts][0][1:][1]
-    print(texts)
-    #return [u[1] for u in utilizadores]
+    return texts
 
 
 def create_sized_text(max_size_image, max_size_letter, text, color, min_size_letter=30):
@@ -244,3 +233,12 @@ def get_users_images(codigo):
                 break
         users_images.append(image_text)
     return users_images
+
+
+# HUD functions
+def write_HUD_parts_value(screen, number_parts):
+    text = str(number_parts)
+    adjust = len(text)*7
+    text_image = create_sized_text(165, 25, text, (0, 0, 0), 7)
+    screen.blit(text_image, (540-adjust, 600))
+

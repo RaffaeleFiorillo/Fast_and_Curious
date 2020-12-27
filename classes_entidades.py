@@ -1,6 +1,6 @@
 import pygame
 import random
-import funcoes
+import funcoes as f
 # import time
 
 distancia_obstaculos = 290
@@ -16,13 +16,13 @@ class carro:
         self.speed = 7
         self.x = 400
         self.y = 130
-        self.points = 0
-        self.pecas = 0
+        self.hitbox = pygame.mask.from_surface(self.imagem.convert_alpha())
         self.keepmoving = False
         self.destino = 1
         self.direction = None
-        self.hitbox = pygame.mask.from_surface(self.imagem.convert_alpha())
-        self.vision_coo = [[self.x+150, self.y-90], [self.x+150, self.y+27], [self.x+150, self.y+130], [self.x+70, self.y - 90], [self.x+70, self.y+130]]
+        self.rect = (self.x, self.y, self.imagem.get_size()[0], self.imagem.get_size()[1])
+        self.vision_coo = [[self.x+150, self.y-90], [self.x+150, self.y+27], [self.x+150, self.y+130],
+                           [self.x+70, self.y - 90], [self.x+70, self.y+130]]
         self.valores_vistos = []
         self.po = 0
 
@@ -35,23 +35,28 @@ class carro:
     def visao(self, screen):
         self.valores_vistos = []
         for i in self.vision_coo:
-            self.valores_vistos.append(funcoes.ver(screen, i))
+            self.valores_vistos.append(f.ver(screen, i))
         # time.sleep(0.5)
 
     def colisao_parts(self, l_parts):
+        value = 0
         new_parts = []
         for part in l_parts:
-            if self.hitbox.overlap(part.hitbox, (self.x-part.x, self.y-part.y)):
-                self.points += part.value
-                self.pecas += 1
+            if part.x+44 >= self.rect[0] and part.x <= self.rect[0]+self.rect[2]:
+                if part.y + 24 >= self.rect[1] and part.y <= self.rect[1] + self.rect[3]:
+                    value += part.value
+                    continue
+                else:
+                    new_parts.append(part)
             else:
                 new_parts.append(part)
-        return new_parts
+        return new_parts, value
 
     def draw(self, screen):
         screen.blit(self.imagem, (self.x, self.y))
-        for i in self.vision_coo:
-            pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)
+        pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
+        """for i in self.vision_coo:
+            pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)"""
 
     def movimento(self, evento):
         movimentos = {"UP": -self.speed, "DWN": self.speed}
@@ -77,6 +82,7 @@ class carro:
         elif self.valores_y[0] > self.y:
             self.y = self.valores_y[0]
         self.vision_coo = [[self.x + 150, self.y - 90], [self.x + 150, self.y + 27], [self.x + 150, self.y + 130], [self.x+70, self.y - 90], [self.x+70, self.y+130]]
+        self.rect = (self.x, self.y, self.imagem.get_size()[0], self.imagem.get_size()[1])
 
     def contin_mov(self):
         if self.keepmoving:
@@ -261,7 +267,8 @@ class parts:
 
 
 class HUD:
-    def __init__(self):
+    def __init__(self, screen, mode=False):
+        self.screen = screen
         self.speed_meter_image = pygame.image.load("images/HUD/meter/7.png")
         self.precision_meter_image = pygame.image.load("images/HUD/meter/7.png")
         self.speed = 0
@@ -269,8 +276,49 @@ class HUD:
         self.energy = 0
         self.resistence = 0
         self.parts = 0
+        self.modo = mode
+        if mode:
+            self.time = "infinit"
+        else:
+            self.time = 60
         self.written_text = []
-        self.text_to_write = self.get_text()
+        self.texts = []
+        self.line = 0
+        self.text_to_write = []
+        self.get_text()
+        self.set_up_HUD()
+
+    def set_up_HUD(self):
+        self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
+        pygame.display.update()
+
+    def display_cleaning_backgrounds(self):
+        pygame.draw.rect(self.screen, (255, 255, 255), (114, 600, 62, 14))
+        pygame.draw.rect(self.screen, (255, 255, 255), (905, 600, 62, 14))
+        pygame.draw.rect(self.screen, (255, 255, 0), (514, 672, 53, 14))
+        pygame.display.update()
 
     def get_text(self):
-        pass
+        self.texts = f.get_text_names()
+        self.text_to_write = random.choice(self.texts)
+
+    def manage_buttons(self, keys, event):
+        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+            self.line += 1
+            self.written_text.append([])
+        elif event.key == pygame.K_BACKSPACE:
+            if len(self.written_text[self.line]) == 0:
+                self.written_text = self.written_text[:-1]
+            else:
+                self.written_text[self.line] = self.written_text[self.line][:-1]
+        elif len(self.written_text[self.line]) >= 25:
+            self.line += 1
+            self.written_text.append([])
+        self.written_text[self.line].append(event.unicode)
+
+    def draw(self, number_parts):
+        coordinates = [(20, 420), (811, 420)]
+        self.screen.blit(self.speed_meter_image, coordinates[0])
+        self.screen.blit(self.precision_meter_image, coordinates[1])
+        self.display_cleaning_backgrounds()
+        f.write_HUD_parts_value(self.screen, number_parts)

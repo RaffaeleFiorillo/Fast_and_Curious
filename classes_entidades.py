@@ -1,18 +1,16 @@
 import pygame
 import random
 import funcoes as f
-# import time
 
 distancia_obstaculos = 290
 distancia_parts = 5
 espacamento_obst = [o for o in range(300, 1290, distancia_obstaculos)]
-# print(espacamento_obst)
 
 
 class carro:
     def __init__(self):
         self.valores_y = [20, 130, 240]
-        self.imagem = pygame.image.load("images/cars/1.png")
+        self.imagem = self.get_car_image()
         self.speed = 7
         self.x = 400
         self.y = 130
@@ -26,11 +24,17 @@ class carro:
         self.valores_vistos = []
         self.po = 0
 
+    def get_car_image(self):
+        file = open("saves/active_user.txt", "r")
+        level = file.readline().split(" ")[3]
+        file.close()
+        return pygame.image.load(f"images/cars/{level}.png")
+
     def colisao_obstaculo(self, l_obstaculos):
         for obst in l_obstaculos:
             if self.hitbox.overlap(obst.hitbox, (self.x-obst.x+obst.ajuste, self.y-obst.y+obst.ajuste)):
-                return False
-        return True
+                return True
+        return False
 
     def visao(self, screen):
         self.valores_vistos = []
@@ -119,7 +123,7 @@ class _obstaculo:
     def escolher_imagem(self):
         self.pasta = str(random.randint(1, 4))
         if self.pasta == "4":
-            self.imagem = pygame.image.load(f"images/obstacles/4/{random.randint(1,12)}.png")
+            self.imagem = pygame.image.load(f"images/obstacles/4/{random.randint(1,11)}.png")
         else:
             self.imagem = pygame.image.load("images/obstacles/" + self.pasta + "/1.png")
 
@@ -133,7 +137,7 @@ class _obstaculo:
         screen.blit(self.imagem, (self.x, self.y))
 
     def mover(self):
-        init_m, nxt = 650, 30
+        init_m, nxt = 650, 20
         mudanca = {init_m: f"images/obstacles/{self.pasta}/2.png", init_m-nxt: f"images/obstacles/{self.pasta}/3.png",
                    init_m-nxt*2: f"images/obstacles/{self.pasta}/4.png", init_m-nxt*3: f"images/obstacles/{self.pasta}/5.png",
                    init_m - nxt * 4: f"images/obstacles/{self.pasta}/6.png",  init_m-nxt*5: f"images/obstacles/{self.pasta}/7.png"
@@ -281,37 +285,16 @@ class HUD:
             self.time = "infinit"
         else:
             self.time = 60
-        self.written_text = []
-        self.texts = []
-        self.line = 0
-        self.text_to_write = []
-        self.get_text()
         self.set_up_HUD()
 
     def set_up_HUD(self):
         self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
         pygame.display.update()
 
-    def get_text(self):
-        self.texts = f.get_text_names()
-        self.text_to_write = random.choice(self.texts)
-
-    def manage_buttons(self, keys, event):
-        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            self.line += 1
-            self.written_text.append([])
-        elif event.key == pygame.K_BACKSPACE:
-            if len(self.written_text[self.line]) == 0:
-                self.written_text = self.written_text[:-1]
-            else:
-                self.written_text[self.line] = self.written_text[self.line][:-1]
-        elif len(self.written_text[self.line]) >= 25:
-            self.line += 1
-            self.written_text.append([])
-        self.written_text[self.line].append(event.unicode)
-
-    def draw(self, number_parts, time, speed, precision):
+    def draw(self, number_parts, time, speed, precision, energy, resistence):
         f.write_HUD_parts_value(self.screen, number_parts)
         f.write_HUD_time_value(self.screen, time)
         f.display_HUD_speed_meter(self.screen, speed)
         f.display_HUD_precision_meter(self.screen, precision)
+        f.display_HUD_energy_bar(self.screen, energy)
+        f.display_HUD_resistence_bar(self.screen, resistence)

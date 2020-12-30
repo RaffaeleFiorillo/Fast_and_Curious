@@ -1,5 +1,5 @@
 import classes_menu as cm
-import loops as lp
+import game_classes as gc
 import funcoes as f
 
 
@@ -95,13 +95,14 @@ def display_story(screen):
 
 
 def game_ai(screen):
-    game = lp.Mission_AI(screen)
-    game.game_loop()
+    game = gc.Mission_AI(screen)
+    total_words, correct_words, precision, speed, parts_collected, energy, resistence = game.game_loop()
+    results_mission_ai(total_words, correct_words, precision, speed, parts_collected, energy, resistence)
     return "continue"
 
 
 def game_parts(screen):
-    game = lp.Mission_AI(screen)
+    game = gc.Mission_AI(screen)
     game.game_loop()
     return "continue"
 
@@ -167,7 +168,7 @@ def tutorial_lu(screen):
     pass
 
 
-def results_mission_ai(r):
+def results_mission_ai(total_words, correct_words, precision, speed, parts_collected, energy, resistence):
     pass
 
 

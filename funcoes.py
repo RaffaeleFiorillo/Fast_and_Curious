@@ -165,7 +165,7 @@ def writeble_best_speed(best_speed):
     pygame.font.init()
     coordenadas = (185, 427)
     text_font = pygame.font.SysFont('Times New Roman', 20)
-    text = ["  " for y in range(4 - len(str(best_speed)))]
+    text = ["  " for _ in range(4 - len(str(best_speed)))]
     new_text = "".join(text)+str(best_speed)
     image_text = text_font.render(new_text, True, (255, 255, 255))
     return [image_text, coordenadas]
@@ -251,10 +251,12 @@ def write_HUD_time_value(screen, time_value):
 
 
 def display_HUD_speed_meter(screen, speed):
-    text = str(speed)
+    text = str(int(speed))
     image_number = int(speed/6.7)
     if image_number > 14:
         image_number = 14
+    if image_number < 0:
+        image_number = 0
     adjust = len(text)*7
     text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
     screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png"), (20, 420))
@@ -262,9 +264,64 @@ def display_HUD_speed_meter(screen, speed):
 
 
 def display_HUD_precision_meter(screen, precision):
-    text = str(precision)
+    text = str(int(precision))
     image_number = int(precision/6.7)
+    if precision > 100:
+        image_number = 14
+    elif precision < 0:
+        image_number = 0
     adjust = len(text)*7
     text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
     screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png"), (811, 420))
     screen.blit(text_image, (940-adjust, 596))
+
+
+def display_HUD_energy_bar(screen, energy_level):
+    image_number = int(energy_level/3.333)
+    if image_number > 30:
+        image_number = 30
+    elif image_number < 0:
+        image_number = 0
+    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png"), (296, 640))
+
+
+def display_HUD_resistence_bar(screen, resistence_level):
+    image_number = int(resistence_level/3.333)
+    if image_number > 30:
+        image_number = 30
+    elif image_number < 0:
+        image_number = 0
+    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png"), (605, 640))
+
+
+def get_text_images(lines):
+    text_font = pygame.font.SysFont('Times New Roman', 20)
+    text_font.set_bold(True)
+    return [text_font.render("".join(line), True, (0, 0, 0)) for line in lines]
+
+
+def save_text_image(name):
+    screen2 = pygame.display.set_mode((519, 135))
+    background = pygame.image.load("images/texts/text_background.png")
+    file = open(f"texts/{name}.txt", "r")
+    lines = file.readlines()
+    file.close()
+    text_font = pygame.font.SysFont('Times New Roman', 20)
+    text_font.set_bold(True)
+    text1 = text_font.render(lines[0][:-1], True, (0, 0, 0))
+    text2 = text_font.render(lines[1][:-1], True, (0, 0, 0))
+    text3 = text_font.render(lines[2][:-1], True, (0, 0, 0))
+    text4 = text_font.render(lines[3][:-1], True, (0, 0, 0))
+    text5 = text_font.render(lines[4][:-1], True, (0, 0, 0))
+    text6 = text_font.render(lines[5][:-1], True, (0, 0, 0))
+    text7 = text_font.render(lines[6][:-1], True, (0, 0, 0))
+    screen2.blit(background, (0, 0))
+    screen2.blit(text1, (10, 7))
+    screen2.blit(text2, (10, 24))
+    screen2.blit(text3, (10, 39))
+    screen2.blit(text4, (10, 54))
+    screen2.blit(text5, (10, 69))
+    screen2.blit(text6, (10, 84))
+    screen2.blit(text7, (10, 99))
+    pygame.image.save(screen2, f"images/texts/{name}.png")
+    pygame.display.update()

@@ -102,15 +102,14 @@ class Mission_AI:
                 self.current_word_index = len(self.written_text[-1]) - 1
             elif self.written_text[-1] == [""] and len(self.written_text) == 1:  # prevents from going beyond deleting last word
                 pass
-            else:
-                if self.written_text[-1][-1] != "":  # checks if a word is not empty
-                    if self.last_letter_correct():
-                        self.correct_letters -= 1
-                    self.written_text[-1][-1] = self.written_text[-1][-1][:-1]
-                if self.written_text[-1][-1] == "" and self.written_text[-1] != [""]:  # pass to previous word if current is empty
-                    self.written_text[-1].pop()
-                    self.current_word_index = len(self.written_text[-1]) - 1
-                    self.total_words -= 1
+            elif self.written_text[-1][-1] != "":  # checks if a word is not empty to make sure letter can be deleted
+                if self.last_letter_correct():
+                    self.correct_letters -= 1
+                self.written_text[-1][-1] = self.written_text[-1][-1][:-1]
+            elif self.written_text[-1][-1] == "":  # pass to previous word if current is empty
+                self.written_text[-1].pop()
+                self.current_word_index = len(self.written_text[-1]) - 1
+                self.total_words -= 1
         elif event.unicode != "":  # verify that a character is a symbol, letter or number before writing it
             if self.written_text_images[self.line].get_size()[0] > 490:  # checks if line is too long to fit
                 self.written_text.append([""])

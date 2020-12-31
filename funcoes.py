@@ -2,6 +2,7 @@ import time
 import pygame
 import os
 import shutil
+import gc
 # import classes_menu as cm
 from random import randint
 import math
@@ -217,22 +218,27 @@ def delete_user_account(user_name):
     shutil.rmtree(f'saves/{user_name}')
 
 
-def get_users_images(codigo):
+def get_users_images():
+    gc.collect()
     users = lista_utilizadores()
-    users_images = []
+    user_images_active = []
+    user_images_passive = []
     pygame.font.init()
     for user in users:
         for s in range(40)[::-1]:
             text_font = pygame.font.SysFont('Times New Roman', s)
-            if users.index(user) == codigo:
-                image_text = text_font.render(user, True, (0, 0, 0))
-            else:
-                image_text = text_font.render(user, True, (255, 255, 255))
-            size = image_text.get_size()
+            image_text1 = text_font.render(user, True, (0, 0, 0))
+            image_text2 = text_font.render(user, True, (255, 255, 255))
+            size = image_text1.get_size()
             if size[0] <= 410:
                 break
-        users_images.append(image_text)
-    return users_images
+        user_images_active.append(image_text1)
+        user_images_passive.append(image_text2)
+    return user_images_active, user_images_passive
+
+
+def correct_letters_number(digited_word, original_word):
+    return 0
 
 
 # HUD functions
@@ -294,10 +300,10 @@ def display_HUD_resistence_bar(screen, resistence_level):
     screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png"), (605, 640))
 
 
-def get_text_images(lines):
+def get_text_images(line):
     text_font = pygame.font.SysFont('Times New Roman', 20)
     text_font.set_bold(True)
-    return [text_font.render("".join(line), True, (0, 0, 0)) for line in lines]
+    return text_font.render(" ".join(line).strip(), True, (0, 0, 0))
 
 
 def save_text_image(name):

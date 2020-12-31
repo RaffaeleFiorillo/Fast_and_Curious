@@ -10,6 +10,3 @@ pygame.init()
 screen = pygame.display.set_mode((1080, 700))
 game = gc.Mission_AI(screen)
 game.game_loop()
-
-
-

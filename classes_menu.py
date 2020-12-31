@@ -422,6 +422,8 @@ class Choose_Account:
         self.screen = screen
         self.image = pygame.image.load("images/menu/interfaces/Main/choose account.png")
         self.efeito = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
+        self.passive_button_image = pygame.image.load("images/menu/buttons/6/2.png")
+        self.active_button_image = pygame.image.load("images/menu/buttons/6/1.png")
         self.button_coordinates = [(322, 120), (322, 175), (322, 230), (322, 285), (322, 340), (322, 395), (322, 450)]
         self.account_name = None
         self.frame_atual = 0
@@ -430,9 +432,16 @@ class Choose_Account:
         self.buttons = []
         self.previous_button = 0
         self.users = f.lista_utilizadores()
-        self.user_names_images = f.get_users_images(0)
+        self.user_names_images_active, self.user_names_images_passive = f.get_users_images()
+        self.user_names_images = None
+        self.adjust_user_name_images()
         self.user = User()
         self.create_buttons()
+
+    def adjust_user_name_images(self):
+        self.user_names_images = self.user_names_images_passive[:]
+        self.user_names_images[self.codigo_ativo_y] = self.user_names_images_active[self.codigo_ativo_y]
+        self.user_names_images[self.previous_button] = self.user_names_images_passive[self.previous_button]
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -498,9 +507,9 @@ class Choose_Account:
         self.set_active_button()
 
     def set_active_button(self):
-        self.user_names_images = f.get_users_images(self.codigo_ativo_y)
-        self.buttons[self.previous_button].image = pygame.image.load("images/menu/buttons/6/2.png")
-        self.buttons[self.codigo_ativo_y].image = pygame.image.load("images/menu/buttons/6/1.png")
+        self.adjust_user_name_images()
+        self.buttons[self.previous_button].image = self.passive_button_image
+        self.buttons[self.codigo_ativo_y].image = self.active_button_image
 
     def refresh(self):
         coordenadas = {0: (325, 520), 1: (558, 520)}

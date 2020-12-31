@@ -21,12 +21,15 @@ class Mission_AI:
         self.precision = 100
         # text stuff
         self.cursor = pygame.image.load("images/texts/cursor.png")
-        self.written_text = [[]]
+        self.written_text = [[""]]
         self.text_name = None
         self.text_to_write_image = None
+        image = f.get_text_images("")
+        self.written_text_images = [image, image, image, image, image, image, image, image]
         self.line = 0
-        self.total_words = 0
+        self.total_words = 0.0
         self.correct_letters = 0
+        self.current_word_index = 0
         self.text_to_write = None
         self.set_up_texts()
         # loop stuff
@@ -38,7 +41,7 @@ class Mission_AI:
     def set_up_texts(self):
         self.text_name = choice(f.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
-        self.text_to_write = [[line] for line in open(f"texts/{self.text_name}.txt", "r").readlines()]
+        self.text_to_write = [line.split(" ") for line in open(f"texts/{self.text_name}.txt", "r").readlines()]
         self.screen.blit(self.text_to_write_image, (280, 320))
         pygame.display.update()
 
@@ -68,37 +71,67 @@ class Mission_AI:
     def car_moviment_x(self):
         pass
 
+    def last_letter_correct(self):
+        last_letter_index = len(self.written_text[-1][-1])-1
+        if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
+            return False
+        elif self.written_text[-1][-1][-1] == self.text_to_write[self.line][self.current_word_index][last_letter_index]:
+            return True
+        return False
+
     def manage_buttons(self, keys, event):
         if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            self.written_text.append([])
-            self.line += 1
+            if self.line < 7:  # prevents from adding too much lines
+                self.written_text.append([""])
+                self.line += 1
+                self.current_word_index = 0
+            else:  # prepare another text to write
+                pass
+        elif keys[pygame.K_SPACE]:
+            if len(self.written_text[self.line]) == len(self.text_to_write[self.line]):  # go to next line in case written words are numericaly equal to words to wrtite
+                self.written_text.append([""])
+                self.line += 1
+                self.current_word_index = 0
+            if self.written_text[-1][-1] != "":  # prevents adding new words in case current word is empty
+                self.written_text[self.line].append("")
+                self.current_word_index += 1
         elif keys[pygame.K_BACKSPACE]:
-            if len(self.written_text[self.line]) == 0:
-                if len(self.written_text) > 1:
-                    self.written_text.pop()
-                    self.line -= 1
+            if self.written_text[-1] == [""] and len(self.written_text) != 1:  # if line is empty go to previous
+                self.written_text.pop()
+                self.line -= 1
+                self.current_word_index = len(self.written_text[-1]) - 1
+            elif self.written_text[-1] == [""] and len(self.written_text) == 1:  # prevents from going beyond deleting last word
+                pass
             else:
-                self.correct_letters -= 1
-                self.written_text[self.line].pop()
-                self.total_words -= 0.2
-        elif len(self.written_text[self.line]) >= 48:
-            self.written_text.append([])
-            self.line += 1
-        else:
-            if event.unicode != "":
-                self.written_text[self.line].append(event.unicode)
-                self.total_words += 0.2
-                if self.written_text[self.line][-1] == self.text_to_write[self.line][0][len(self.written_text[self.line])-1]:
-                    self.correct_letters += 1
+                if self.written_text[-1][-1] != "":  # checks if a word is not empty
+                    if self.last_letter_correct():
+                        self.correct_letters -= 1
+                    self.written_text[-1][-1] = self.written_text[-1][-1][:-1]
+                if self.written_text[-1][-1] == "" and self.written_text[-1] != [""]:  # pass to previous word if current is empty
+                    self.written_text[-1].pop()
+                    self.current_word_index = len(self.written_text[-1]) - 1
+                    self.total_words -= 1
+        elif event.unicode != "":  # verify that a character is a symbol, letter or number before writing it
+            if self.written_text_images[self.line].get_size()[0] > 490:  # checks if line is too long to fit
+                self.written_text.append([""])
+                self.line += 1
+                self.current_word_index = 0
+            self.written_text[self.line][self.current_word_index] += event.unicode
+            if self.last_letter_correct():
+                self.correct_letters += 1
 
     def display_text(self):
         coordinates = [(290, 454), (290, 469), (290, 484), (290, 499), (290, 514), (290, 529), (290, 544), (290, 559)]
-        text_images = f.get_text_images(self.written_text)
-        for image, coo in zip(text_images, coordinates):
+        self.written_text_images[self.line] = f.get_text_images(self.written_text[-1])
+        for image, coo in zip(self.written_text_images, coordinates):
             self.screen.blit(image, coo)
         if int(self.time_passed+self.time_passed*1.5) % 2:
-            self.screen.blit(self.cursor, (coordinates[self.line][0]+text_images[self.line].get_size()[0],
-                                           coordinates[self.line][1]+3))
+            if self.written_text[-1][-1] == "" and self.written_text[-1] != [""]:
+                self.screen.blit(self.cursor, (coordinates[self.line][0]+self.written_text_images[self.line].get_size()[0]+5,
+                                               coordinates[self.line][1]+3))
+            else:
+                self.screen.blit(self.cursor, (coordinates[self.line][0]+self.written_text_images[self.line].get_size()[0],
+                                               coordinates[self.line][1]+3))
 
     def continue_game(self):
         if not self.resistence:
@@ -110,12 +143,13 @@ class Mission_AI:
         return True
 
     def update_speed(self):
+        self.total_words = sum([len(line) for line in self.written_text]) - 1
         self.speed = self.total_words*60/self.time_passed
 
     def update_precision(self):
-        if self.total_words:
-            print(self.correct_letters, self.total_words*5)
-            self.precision = self.correct_letters/(self.total_words*5) * 100
+        total_letters = sum([sum([len(word) for word in line]) for line in self.written_text])
+        if total_letters:
+            self.precision = self.correct_letters/total_letters * 100
         else:
             self.precision = 100
 
@@ -150,7 +184,6 @@ class Mission_AI:
             self.obstacles_list.remover_obstaculos()
             self.obstacles_list.criar_obstaculos()
     # Refresh screen
-            # print(f"words: {self.digited_word_number}; time: {self.time_passed}")
             self.update_speed()
             self.update_precision()
             if self.run:

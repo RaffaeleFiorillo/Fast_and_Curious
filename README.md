@@ -1,2 +1,2 @@
 # Fast_and_Curious
-Learning Typing Game 
+A game to learn how to type on the keyboard

@@ -8,6 +8,7 @@ class Mission_AI:
     def __init__(self, screen):
         self.screen = screen
         # Game objects
+        self.sp_ti_entity = ce.space_time_entity()
         self.car = ce.carro()
         self.estrada = ce.estrada()
         self.obstacles_list = ce.obstaculos()
@@ -45,8 +46,15 @@ class Mission_AI:
         self.screen.blit(self.text_to_write_image, (280, 320))
         pygame.display.update()
 
+    def control_resistence_energy(self):
+        if self.car.x <= 290 and int(self.time_passed) % 2:
+            self.resistence -= 0.08*((300-self.car.x) // 8)
+            self.energy -= 0.2 * ((300 - self.car.x) // 8)
+        if self.energy > 0:
+            self.energy -= 0.5
+
     def refresh_game(self):
-        entidades = [self.estrada, self.parts_list, self.obstacles_list, self.car]
+        entidades = [self.estrada, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]
         self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
         for entidade in entidades:
             entidade.draw(self.screen)
@@ -69,14 +77,29 @@ class Mission_AI:
         self.car.contin_mov()
 
     def car_moviment_x(self):
-        pass
+        self.car.damage_period += 0.05
+        print(self.car.damage_period)
+        if self.car.damage_period >= 1.0:
+            self.car.x -= 1
+            self.car.damage_period = 0
 
     def last_letter_correct(self):
         last_letter_index = len(self.written_text[-1][-1])-1
         if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
+            if self.car.speed > 3:
+                self.car.speed -= 1
             return False
         elif self.written_text[-1][-1][-1] == self.text_to_write[self.line][self.current_word_index][last_letter_index]:
+            if self.car.speed < 7:
+                self.car.speed += 1
+            self.energy += 8
+            if self.energy > 100:
+                if self.car.x < 350:
+                    self.car.x += 10
+                self.energy = 100
             return True
+        if self.car.speed > 3:
+            self.car.speed -= 1
         return False
 
     def manage_buttons(self, keys, event):
@@ -124,7 +147,7 @@ class Mission_AI:
         self.written_text_images[self.line] = f.get_text_images(self.written_text[-1])
         for image, coo in zip(self.written_text_images, coordinates):
             self.screen.blit(image, coo)
-        if int(self.time_passed+self.time_passed*1.5) % 2:
+        if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodicaly
             if self.written_text[-1][-1] == "" and self.written_text[-1] != [""]:
                 self.screen.blit(self.cursor, (coordinates[self.line][0]+self.written_text_images[self.line].get_size()[0]+5,
                                                coordinates[self.line][1]+3))
@@ -133,9 +156,7 @@ class Mission_AI:
                                                coordinates[self.line][1]+3))
 
     def continue_game(self):
-        if not self.resistence:
-            return False
-        elif not self.energy:
+        if not int(self.resistence):
             return False
         elif int(self.time_passed) >= 60:
             return False
@@ -168,7 +189,7 @@ class Mission_AI:
     # car moviment
             self.car_moviment_y()
             self.car_moviment_x()
-    # colision
+    # colision & damage
             if self.time_passed >= 4:
                 if damage_count >= 0.5:
                     if self.car.colisao_obstaculo(self.obstacles_list.lista):
@@ -177,6 +198,7 @@ class Mission_AI:
                         damage_count = 0
                 else:
                     damage_count += 0.01
+            self.control_resistence_energy()
             self.parts_list.lista, value = self.car.colisao_parts(self.parts_list.lista)
             self.parts_collected += value
     # obstacles effects

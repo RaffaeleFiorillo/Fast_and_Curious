@@ -10,17 +10,18 @@ espacamento_obst = [o for o in range(300, 1290, distancia_obstaculos)]
 class carro:
     def __init__(self):
         self.valores_y = [20, 130, 240]
-        self.imagem = self.get_car_image()
+        self.image = self.get_car_image()
         self.speed = 7
-        self.x = 400
+        self.x = 320
         self.y = 130
-        self.hitbox = pygame.mask.from_surface(self.imagem.convert_alpha())
+        self.damage_period = 0.0
+        self.hitbox = pygame.mask.from_surface(self.image.convert_alpha())
         self.keepmoving = False
         self.destino = 1
         self.direction = None
-        self.rect = (self.x, self.y, self.imagem.get_size()[0], self.imagem.get_size()[1])
-        self.vision_coo = [[self.x+150, self.y-90], [self.x+150, self.y+27], [self.x+150, self.y+130],
-                           [self.x+70, self.y - 90], [self.x+70, self.y+130]]
+        self.rect = (self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
+        self.vision_coo = [[self.x + 150, self.y - 90], [self.x + 150, self.y + 27], [self.x + 150, self.y + 130],
+                           [self.x + 70, self.y - 90], [self.x + 70, self.y + 130]]
         self.valores_vistos = []
         self.po = 0
 
@@ -32,7 +33,7 @@ class carro:
 
     def colisao_obstaculo(self, l_obstaculos):
         for obst in l_obstaculos:
-            if self.hitbox.overlap(obst.hitbox, (self.x-obst.x+obst.ajuste, self.y-obst.y+obst.ajuste)):
+            if self.hitbox.overlap(obst.hitbox, (self.x - obst.x + obst.ajuste, self.y - obst.y + obst.ajuste)):
                 return True
         return False
 
@@ -46,7 +47,7 @@ class carro:
         value = 0
         new_parts = []
         for part in l_parts:
-            if part.x+44 >= self.rect[0] and part.x <= self.rect[0]+self.rect[2]:
+            if part.x + 44 >= self.rect[0] and part.x <= self.rect[0] + self.rect[2]:
                 if part.y + 24 >= self.rect[1] and part.y <= self.rect[1] + self.rect[3]:
                     value += part.value
                     continue
@@ -57,7 +58,7 @@ class carro:
         return new_parts, value
 
     def draw(self, screen):
-        screen.blit(self.imagem, (self.x, self.y))
+        screen.blit(self.image, (self.x, self.y))
         # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
         """for i in self.vision_coo:
             pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)"""
@@ -85,8 +86,9 @@ class carro:
             self.y = self.valores_y[2]
         elif self.valores_y[0] > self.y:
             self.y = self.valores_y[0]
-        self.vision_coo = [[self.x + 150, self.y - 90], [self.x + 150, self.y + 27], [self.x + 150, self.y + 130], [self.x+70, self.y - 90], [self.x+70, self.y+130]]
-        self.rect = (self.x, self.y, self.imagem.get_size()[0], self.imagem.get_size()[1])
+        self.vision_coo = [[self.x + 150, self.y - 90], [self.x + 150, self.y + 27], [self.x + 150, self.y + 130],
+                           [self.x + 70, self.y - 90], [self.x + 70, self.y + 130]]
+        self.rect = (self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
 
     def contin_mov(self):
         if self.keepmoving:
@@ -95,10 +97,22 @@ class carro:
             self.keepmoving = False
 
 
+class space_time_entity:
+    def __init__(self):
+        self.images = [pygame.image.load(f"images/Caracters/Space-Time Entity/{i + 1}.png") for i in range(6)]
+        self.index = 0
+
+    def draw(self, screen):
+        self.index += 0.5
+        if self.index >= 6:
+            self.index = 0
+        screen.blit(self.images[int(self.index)], (0, 0))
+
+
 class estrada:
     def __init__(self):
         self.frame_atual = 0
-        self.images_estrada = [pygame.image.load("images/estrada/frame"+str(num+1)+".png") for num in range(19)]
+        self.images_estrada = [pygame.image.load("images/estrada/frame" + str(num + 1) + ".png") for num in range(19)]
         self.frames = len(self.images_estrada)
 
     def draw(self, screen):
@@ -114,37 +128,39 @@ class _obstaculo:
         self.ajuste = -23
         self.y = self.calcular_posicao_y(ultimo_y)
         self.pasta = None
-        self.imagem = None
-        self.escolher_imagem()
-        self.hitbox = pygame.mask.from_surface(self.imagem.convert_alpha())
-        self.rect = self.imagem.get_rect()
+        self.image = None
+        self.escolher_image()
+        self.hitbox = pygame.mask.from_surface(self.image.convert_alpha())
+        self.rect = self.image.get_rect()
         self.comprimento = 100
 
-    def escolher_imagem(self):
+    def escolher_image(self):
         self.pasta = str(random.randint(1, 4))
         if self.pasta == "4":
-            self.imagem = pygame.image.load(f"images/obstacles/4/{random.randint(1,11)}.png")
+            self.image = pygame.image.load(f"images/obstacles/4/{random.randint(1, 11)}.png")
         else:
-            self.imagem = pygame.image.load("images/obstacles/" + self.pasta + "/1.png")
+            self.image = pygame.image.load("images/obstacles/" + self.pasta + "/1.png")
 
     def calcular_posicao_y(self, ultimo_y):
         if ultimo_y == 0:
-            return random.choice([20, 130, 240])+self.ajuste
+            return random.choice([20, 130, 240]) + self.ajuste
         possibilidades = {20: [130, 240], 130: [20, 240], 240: [130, 20]}
-        return random.choice(possibilidades[ultimo_y-self.ajuste])+self.ajuste
+        return random.choice(possibilidades[ultimo_y - self.ajuste]) + self.ajuste
 
     def draw(self, screen):
-        screen.blit(self.imagem, (self.x, self.y))
+        screen.blit(self.image, (self.x, self.y))
 
     def mover(self):
         init_m, nxt = 650, 20
-        mudanca = {init_m: f"images/obstacles/{self.pasta}/2.png", init_m-nxt: f"images/obstacles/{self.pasta}/3.png",
-                   init_m-nxt*2: f"images/obstacles/{self.pasta}/4.png", init_m-nxt*3: f"images/obstacles/{self.pasta}/5.png",
-                   init_m - nxt * 4: f"images/obstacles/{self.pasta}/6.png",  init_m-nxt*5: f"images/obstacles/{self.pasta}/7.png"
+        mudanca = {init_m: f"images/obstacles/{self.pasta}/2.png", init_m - nxt: f"images/obstacles/{self.pasta}/3.png",
+                   init_m - nxt * 2: f"images/obstacles/{self.pasta}/4.png",
+                   init_m - nxt * 3: f"images/obstacles/{self.pasta}/5.png",
+                   init_m - nxt * 4: f"images/obstacles/{self.pasta}/6.png",
+                   init_m - nxt * 5: f"images/obstacles/{self.pasta}/7.png"
                    }
         self.x -= 10
         if self.x in mudanca and self.pasta != "4":
-            self.imagem = pygame.image.load(mudanca[self.x])
+            self.image = pygame.image.load(mudanca[self.x])
 
 
 class obstaculos:
@@ -189,27 +205,27 @@ class _part:
         self.type_p = type_p
         self.ajuste = 15
         self.y_medio = y + self.ajuste
-        self.y = self.y_medio+numero
+        self.y = self.y_medio + numero
         self.x = x
-        self.value = self.type_p**2
-        self.imagem = pygame.image.load("images/parts/part"+str(self.type_p)+".png")
-        self.hitbox = pygame.mask.from_surface(self.imagem.convert_alpha())
-        self.rect = self.imagem.get_rect()
+        self.value = self.type_p ** 2
+        self.image = pygame.image.load("images/parts/part" + str(self.type_p) + ".png")
+        self.hitbox = pygame.mask.from_surface(self.image.convert_alpha())
+        self.rect = self.image.get_rect()
         self.comprimento = 32
         self.modulo_movimento = 10
         self.subir = True
 
     def draw(self, screen):
-        screen.blit(self.imagem, (self.x, self.y))
+        screen.blit(self.image, (self.x, self.y))
 
     def mover(self):
         altern = {True: -1, False: 1}
         avanco_y = altern[self.subir]
         self.x -= 10
         self.y += avanco_y
-        if self.y_medio + self.modulo_movimento*avanco_y == self.y and self.subir:
+        if self.y_medio + self.modulo_movimento * avanco_y == self.y and self.subir:
             self.subir = not self.subir
-        elif self.y_medio + self.modulo_movimento*avanco_y == self.y and not self.subir:
+        elif self.y_medio + self.modulo_movimento * avanco_y == self.y and not self.subir:
             self.subir = not self.subir
 
 
@@ -236,12 +252,14 @@ class parts:
         type_p = self.calcular_type_part()
         if self.first_parts:
             for i in range(random.randint(self.min_parts, self.max_parts)):
-                self.lista.append(_part(espacamento_obst[-1] + dist_entre_blocos + i * self.dist_entre_parts, type_p, self.y, i % 10))
+                self.lista.append(
+                    _part(espacamento_obst[-1] + dist_entre_blocos + i * self.dist_entre_parts, type_p, self.y, i % 10))
             self.first_parts = False
             return 0
         if self.controlar_o_ultimo():
             for i in range(random.randint(self.min_parts, self.max_parts)):
-                self.lista.append(_part(espacamento_obst[-1]+dist_entre_blocos+i*self.dist_entre_parts, type_p, self.y, i % 10))
+                self.lista.append(
+                    _part(espacamento_obst[-1] + dist_entre_blocos + i * self.dist_entre_parts, type_p, self.y, i % 10))
             self.y = random.choice(self.choices)
             return 0
 

@@ -441,7 +441,8 @@ class Choose_Account:
     def adjust_user_name_images(self):
         self.user_names_images = self.user_names_images_passive[:]
         self.user_names_images[self.codigo_ativo_y] = self.user_names_images_active[self.codigo_ativo_y]
-        self.user_names_images[self.previous_button] = self.user_names_images_passive[self.previous_button]
+        if self.previous_button != self.codigo_ativo_y:  # prevents getting wrong image in the initiation
+            self.user_names_images[self.previous_button] = self.user_names_images_passive[self.previous_button]
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())

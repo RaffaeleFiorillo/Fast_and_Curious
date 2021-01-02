@@ -11,6 +11,7 @@ def exit_game(screen):
 
 def exit_game_menu(screen):
     if cm.Exit("images/menu/exit/exit_menu.png", screen).display_menu():
+        f.erase_active_user_data()
         return "main_menu"
     return "continue"
 

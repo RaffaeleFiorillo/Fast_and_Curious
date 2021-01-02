@@ -1,6 +1,6 @@
 import pygame
 import random
-import funcoes as f
+import functions as f
 
 distancia_obstaculos = 290
 distancia_parts = 5
@@ -11,8 +11,11 @@ class carro:
     def __init__(self):
         self.valores_y = [20, 130, 240]
         self.image = self.get_car_image()
+        self.fire_image = None
+        self.fire_image_time = 0
+        self.last_fire = False
         self.speed = 7
-        self.x = 320
+        self.x = 290
         self.y = 130
         self.damage_period = 0.0
         self.hitbox = pygame.mask.from_surface(self.image.convert_alpha())
@@ -24,6 +27,17 @@ class carro:
                            [self.x + 70, self.y - 90], [self.x + 70, self.y + 130]]
         self.valores_vistos = []
         self.po = 0
+
+    def activate_fire(self, fire_type):
+        if self.last_fire != fire_type:
+            self.last_fire = fire_type
+            self.fire_image_time = 0
+        if self.fire_image_time <1:
+            self.fire_image_time += 1
+        if fire_type:
+            self.fire_image = pygame.image.load("images/cars/car effects/nitro/blue.png")
+        else:
+            self.fire_image = pygame.image.load("images/cars/car effects/nitro/red.png")
 
     def get_car_image(self):
         file = open("saves/active_user.txt", "r")
@@ -59,6 +73,9 @@ class carro:
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
+        if self.fire_image_time and self.x < 350:
+            screen.blit(self.fire_image, (self.x-40, self.y+15))
+            self.fire_image_time = 0
         # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
         """for i in self.vision_coo:
             pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)"""

@@ -1,5 +1,6 @@
 import pygame
 import link_functions as lf
+import functions as f
 
 pygame.init()
 
@@ -18,4 +19,5 @@ while True:
     try:
         ef = efeitos[ef](screen)
     except KeyError:
+        f.erase_active_user_data()
         exit("Game Status: TERMINATED")

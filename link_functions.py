@@ -1,6 +1,6 @@
 import classes_menu as cm
 import game_classes as gc
-import funcoes as f
+import functions as f
 
 
 def exit_game(screen):
@@ -96,15 +96,19 @@ def display_story(screen):
 
 def game_ai(screen):
     game = gc.Mission_AI(screen)
-    precision, speed, parts_collected, resistance = game.game_loop()
-    results = cm.Results(screen, precision, speed, parts_collected, resistance)
-    results.display()
+    precision, speed, parts_collected, resistance, time = game.game_loop()
+    results = cm.Results_AI(screen, precision, speed, parts_collected, resistance, time)
+    go_to_next_level, parts = results.display()
+    f.save_performance_ai(go_to_next_level, parts, speed)
     return "continue"
 
 
 def game_parts(screen):
-    game = gc.Mission_AI(screen)
-    game.game_loop()
+    game = gc.Mission_PARTS(screen)
+    precision, speed, parts_collected, time = game.game_loop()
+    results = cm.Results_Parts(screen, precision, speed, parts_collected, time)
+    parts = results.display()
+    f.save_performance_parts(parts, speed, time)
     return "continue"
 
 

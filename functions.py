@@ -247,6 +247,57 @@ def get_requirements():
     return int(values[0]), int(values[1])
 
 
+def save_performance_ai(go_to_next_level, parts, speed):
+    # active user format: "Name speed best_time level parts password volume1 volume2"
+    file = open("saves/active_user.txt", "r")
+    values_p = file.readline().split(" ")
+    file.close()
+    str_val = [values_p[0], values_p[5]]
+    int_val = [int(value) for value in values_p if value.isdigit()]
+    if go_to_next_level:
+        int_val[2] +=1
+    int_val[3] += parts
+    if int_val[0] < speed:
+        int_val[0] = int(speed)
+    line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
+    file = open("saves/active_user.txt", "w")
+    file.write(line)
+    file.close()
+    file = open(f"saves/{str_val[0]}/data.txt", "w")
+    line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
+    file.write(line)
+    file.close()
+
+
+def save_performance_parts(parts, speed, time):
+    # active user format: "Name speed best_time level parts password volume1 volume2"
+    file = open("saves/active_user.txt", "r")
+    values_p = file.readline().split(" ")
+    file.close()
+    str_val = [values_p[0], values_p[5]]
+    int_val = [int(value) for value in values_p if value.isdigit()]
+    int_val[3] += parts
+    if int_val[3] < 0:
+        int_val[3] = 0
+    if int_val[0] < speed:
+        int_val[0] = int(speed)
+    if int_val[1] < time:
+        int_val[1] = int(time)
+    line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
+    file = open("saves/active_user.txt", "w")
+    file.write(line)
+    file.close()
+    file = open(f"saves/{str_val[0]}/data.txt", "w")
+    line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
+    file.write(line)
+    file.close()
+
+
+def erase_active_user_data():
+    file = open("saves/active_user.txt", "w")
+    file.close()
+
+
 # HUD functions
 def write_HUD_parts_value(screen, number_parts):
     text = str(number_parts)
@@ -256,10 +307,13 @@ def write_HUD_parts_value(screen, number_parts):
 
 
 def write_HUD_time_value(screen, time_value):
-    text = str(time_value)
-    adjust = len(text)*4
-    text_image = create_sized_text(100, 16, text, (0, 0, 0), 7)
-    screen.blit(text_image, (540-adjust, 670))
+    if time_value == "i":
+        screen.blit(pygame.image.load("images/HUD/infinite.png"), (529, 665))
+    else:
+        text = str(time_value)
+        adjust = len(text)*4
+        text_image = create_sized_text(100, 16, text, (0, 0, 0), 7)
+        screen.blit(text_image, (540-adjust, 670))
 
 
 def display_HUD_speed_meter(screen, speed):

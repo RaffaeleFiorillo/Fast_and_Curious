@@ -1,5 +1,5 @@
 import pygame
-import funcoes as f
+import functions as f
 
 
 class Button:
@@ -686,13 +686,15 @@ class Management:
         pygame.display.update()
 
 
-class Results:
-    def __init__(self, screen, precision, speed, parts_collected, resistance):
+class Results_AI:
+    def __init__(self, screen, precision, speed, parts_collected, resistance, time):
         self.screen = screen
-        self.image = pygame.image.load("images/menu/interfaces/Main/Results.png")
-        self.values_images = self.initiate_results(precision, speed, parts_collected, resistance)
+        self.image = pygame.image.load("images/menu/interfaces/Main/Results_AI.png")
+        self.requirements_satisfied = False
+        self.parts = 0
+        self.values_images = self.initiate_results(precision, speed, parts_collected, resistance, time)
 
-    def initiate_results(self, precision, speed, parts_collected, resistance):
+    def initiate_results(self, precision, speed, parts_collected, resistance, time):
         values = []
         # results about level requirements
         c_w = {True: "correct", False: "wrong"}
@@ -700,28 +702,90 @@ class Results:
         font1.set_bold(True)
         values.append(font1.render(str(int(precision)), True, (255, 255, 255)))
         values.append(font1.render(str(int(speed)), True, (255, 255, 255)))
-        precision2, speed2 = f.get_requirements()
+        speed2, precision2 = f.get_requirements()
         values.append(font1.render(str(precision2), True, (255, 255, 255)))
         values.append(font1.render(str(speed2), True, (255, 255, 255)))
         values.append(pygame.image.load(f"images/menu/interfaces/navigation/{c_w[speed>=speed2]}.png"))
-        values.append(pygame.image.load(f"images/menu/interfaces/navigation/{c_w[precision >= precision2]}.png"))
+        values.append(pygame.image.load(f"images/menu/interfaces/navigation/{c_w[precision>=precision2]}.png"))
         # results about parts
         font1 = pygame.font.SysFont('Times New Roman', 16)
         font1.set_bold(True)
         values.append(font1.render(str(parts_collected), True, (255, 255, 255)))
         values.append(font1.render(str(int(resistance)), True, (255, 255, 255)))
         values.append(font1.render(str((100-int(resistance))*3), True, (255, 255, 255)))
-        values.append(font1.render(str(parts_collected-(100-int(resistance))*3), True, (255, 255, 255)))
+        self.parts = parts_collected-(100-int(resistance))*3
+        values.append(font1.render(str(self.parts), True, (255, 255, 255)))
+        # verify if requirements were satisfied in order to proceed to next level
+        if speed>=speed2 and precision>=precision2 and int(time)>= 60:
+            self.requirements_satisfied = True
         return values
 
     def refresh(self):
-        coordinates = ((635, 360), (635, 300), (515, 300), (515, 360), (713, 275), (713, 336), (725, 457), (725, 425),
+        coordinates = ((635, 360), (635, 300), (515, 360), (515, 300), (713, 275), (713, 336), (725, 457), (725, 425),
                        (725, 494), (725, 530))
         self.screen.blit(self.image, (287, 40))
         [self.screen.blit(image, coo) for image, coo in zip(self.values_images, coordinates)]
         pygame.display.update()
 
-    def manage_buttons(self, keys):
+    @staticmethod
+    def manage_buttons(keys):
+        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+            return True
+        return False
+
+    def display_level_info_message(self):
+        message_dict = {True: "success5", False: "error8"}
+        time_dict = {True: 3, False: 6}
+        message = message_dict[self.requirements_satisfied]
+        time = time_dict[self.requirements_satisfied]
+        self.screen.blit(pygame.image.load(f"images/menu/messages/{message}.png"), (230, 200))
+        pygame.display.update()
+        f.wait(time)
+
+    def display(self):
+        clock = pygame.time.Clock()
+        keepGoing = True
+        while keepGoing:
+            clock.tick(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    if self.manage_buttons(pygame.key.get_pressed()):
+                        self.display_level_info_message()
+                        return self.requirements_satisfied, self.parts
+            self.refresh()
+
+
+class Results_Parts:
+    def __init__(self, screen, precision, speed, parts_collected, time):
+        self.screen = screen
+        self.image = pygame.image.load("images/menu/interfaces/Main/Results_Parts.png")
+        self.parts = 0
+        self.time = int(time)
+        self.values_images = self.initiate_results(precision, speed, parts_collected)
+
+    def initiate_results(self, precision, speed, parts_collected):
+        values = []
+        # results about parts
+        font1 = pygame.font.SysFont('Times New Roman', 16)
+        font1.set_bold(True)
+        values.append(font1.render(str(int(precision)), True, (255, 255, 255)))
+        values.append(font1.render(str(int(speed)), True, (255, 255, 255)))
+        values.append(font1.render(str(self.time), True, (255, 255, 255)))
+        values.append(font1.render(str(parts_collected), True, (255, 255, 255)))
+        self.parts = parts_collected-300
+        values.append(font1.render(str(self.parts), True, (255, 255, 255)))
+        return values
+
+    def refresh(self):
+        coordinates = ((725, 357), (725, 390),  (725, 426), (725, 457), (725, 529))
+        self.screen.blit(self.image, (287, 40))
+        [self.screen.blit(image, coo) for image, coo in zip(self.values_images, coordinates)]
+        pygame.display.update()
+
+    @staticmethod
+    def manage_buttons(keys):
         if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return True
         return False
@@ -736,5 +800,5 @@ class Results:
                     return False
                 if event.type == pygame.KEYDOWN:
                     if self.manage_buttons(pygame.key.get_pressed()):
-                        return None
+                        return self.parts
             self.refresh()

@@ -2,7 +2,7 @@ import random
 import pygame
 import math
 import classes_entidades
-import funcoes
+import functions
 
 
 def treino_jogo_autom (screen, background, individuo):
@@ -45,7 +45,7 @@ def treino_jogo_autom (screen, background, individuo):
         lista_obstaculos.remover_obstaculos()
         lista_obstaculos.criar_obstaculos()
 # Refresh screen
-        funcoes.refresh_game(screen, background, [estrada, lista_parts, lista_obstaculos, car])
+        functions.refresh_game(screen, background, [estrada, lista_parts, lista_obstaculos, car])
         #print(time_passed)
         if time_passed >= 500:
             break

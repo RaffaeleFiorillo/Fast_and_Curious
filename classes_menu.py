@@ -684,3 +684,57 @@ class Management:
         self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.codigo_ativo+1}.png"), (coo[0], coo[1]))
         self.draw_buttons()
         pygame.display.update()
+
+
+class Results:
+    def __init__(self, screen, precision, speed, parts_collected, resistance):
+        self.screen = screen
+        self.image = pygame.image.load("images/menu/interfaces/Main/Results.png")
+        self.values_images = self.initiate_results(precision, speed, parts_collected, resistance)
+
+    def initiate_results(self, precision, speed, parts_collected, resistance):
+        values = []
+        # results about level requirements
+        c_w = {True: "correct", False: "wrong"}
+        font1 = pygame.font.SysFont('Times New Roman', 20)
+        font1.set_bold(True)
+        values.append(font1.render(str(int(precision)), True, (255, 255, 255)))
+        values.append(font1.render(str(int(speed)), True, (255, 255, 255)))
+        precision2, speed2 = f.get_requirements()
+        values.append(font1.render(str(precision2), True, (255, 255, 255)))
+        values.append(font1.render(str(speed2), True, (255, 255, 255)))
+        values.append(pygame.image.load(f"images/menu/interfaces/navigation/{c_w[speed>=speed2]}.png"))
+        values.append(pygame.image.load(f"images/menu/interfaces/navigation/{c_w[precision >= precision2]}.png"))
+        # results about parts
+        font1 = pygame.font.SysFont('Times New Roman', 16)
+        font1.set_bold(True)
+        values.append(font1.render(str(parts_collected), True, (255, 255, 255)))
+        values.append(font1.render(str(int(resistance)), True, (255, 255, 255)))
+        values.append(font1.render(str((100-int(resistance))*3), True, (255, 255, 255)))
+        values.append(font1.render(str(parts_collected-(100-int(resistance))*3), True, (255, 255, 255)))
+        return values
+
+    def refresh(self):
+        coordinates = ((635, 360), (635, 300), (515, 300), (515, 360), (713, 275), (713, 336), (725, 457), (725, 425),
+                       (725, 494), (725, 530))
+        self.screen.blit(self.image, (287, 40))
+        [self.screen.blit(image, coo) for image, coo in zip(self.values_images, coordinates)]
+        pygame.display.update()
+
+    def manage_buttons(self, keys):
+        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+            return True
+        return False
+
+    def display(self):
+        clock = pygame.time.Clock()
+        keepGoing = True
+        while keepGoing:
+            clock.tick(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    if self.manage_buttons(pygame.key.get_pressed()):
+                        return None
+            self.refresh()

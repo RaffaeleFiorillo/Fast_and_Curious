@@ -96,8 +96,9 @@ def display_story(screen):
 
 def game_ai(screen):
     game = gc.Mission_AI(screen)
-    total_words, correct_words, precision, speed, parts_collected, energy, resistence = game.game_loop()
-    results_mission_ai(total_words, correct_words, precision, speed, parts_collected, energy, resistence)
+    precision, speed, parts_collected, resistance = game.game_loop()
+    results = cm.Results(screen, precision, speed, parts_collected, resistance)
+    results.display()
     return "continue"
 
 
@@ -165,10 +166,6 @@ def tutorial_e(screen):
 
 
 def tutorial_lu(screen):
-    pass
-
-
-def results_mission_ai(total_words, correct_words, precision, speed, parts_collected, energy, resistence):
     pass
 
 

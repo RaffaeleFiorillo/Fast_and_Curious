@@ -296,7 +296,7 @@ class HUD:
         self.speed = 0
         self.precision = 0
         self.energy = 0
-        self.resistence = 0
+        self.resistance = 0
         self.parts = 0
         self.modo = mode
         if mode:
@@ -309,10 +309,10 @@ class HUD:
         self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
         pygame.display.update()
 
-    def draw(self, number_parts, time, speed, precision, energy, resistence):
+    def draw(self, number_parts, time, speed, precision, energy, resistance):
         f.write_HUD_parts_value(self.screen, number_parts)
         f.write_HUD_time_value(self.screen, time)
         f.display_HUD_speed_meter(self.screen, speed)
         f.display_HUD_precision_meter(self.screen, precision)
         f.display_HUD_energy_bar(self.screen, energy)
-        f.display_HUD_resistence_bar(self.screen, resistence)
+        f.display_HUD_resistance_bar(self.screen, resistance)

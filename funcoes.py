@@ -241,6 +241,12 @@ def correct_letters_number(digited_word, original_word):
     return 0
 
 
+def get_requirements():
+    user_level = int(open("saves/active_user.txt", "r").readline().split(" ")[3])
+    values = open(f"parameters/levels info/{user_level}.txt", "r").readline().split(" ")
+    return int(values[0]), int(values[1])
+
+
 # HUD functions
 def write_HUD_parts_value(screen, number_parts):
     text = str(number_parts)
@@ -291,8 +297,8 @@ def display_HUD_energy_bar(screen, energy_level):
     screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png"), (296, 640))
 
 
-def display_HUD_resistence_bar(screen, resistence_level):
-    image_number = int(resistence_level/3.333)
+def display_HUD_resistance_bar(screen, resistance_level):
+    image_number = int(resistance_level/3.333)
     if image_number > 30:
         image_number = 30
     elif image_number < 0:

@@ -16,7 +16,7 @@ class Mission_AI:
         self.parts_collected = 0
         # HUD stuff
         self.energy = 100
-        self.resistence = 100
+        self.resistance = 100
         self.hud = ce.HUD(self.screen)
         self.speed = 0
         self.precision = 100
@@ -46,9 +46,9 @@ class Mission_AI:
         self.screen.blit(self.text_to_write_image, (280, 320))
         pygame.display.update()
 
-    def control_resistence_energy(self):
+    def control_resistance_energy(self):
         if self.car.x <= 290 and int(self.time_passed) % 2:
-            self.resistence -= 0.08*((300-self.car.x) // 8)
+            self.resistance -= 0.08*((300-self.car.x) // 8)
             self.energy -= 0.2 * ((300 - self.car.x) // 8)
         if self.energy > 0:
             self.energy -= 0.5
@@ -59,7 +59,7 @@ class Mission_AI:
         for entidade in entidades:
             entidade.draw(self.screen)
         time = 60-int(self.time_passed)
-        self.hud.draw(self.parts_collected, time, self.speed, self.precision, self.energy, self.resistence)
+        self.hud.draw(self.parts_collected, time, self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
         self.screen.blit(self.text_to_write_image, (280, 320))
         pygame.display.update()
@@ -78,7 +78,6 @@ class Mission_AI:
 
     def car_moviment_x(self):
         self.car.damage_period += 0.05
-        print(self.car.damage_period)
         if self.car.damage_period >= 1.0:
             self.car.x -= 1
             self.car.damage_period = 0
@@ -156,7 +155,7 @@ class Mission_AI:
                                                coordinates[self.line][1]+3))
 
     def continue_game(self):
-        if not int(self.resistence):
+        if not int(self.resistance):
             return False
         elif int(self.time_passed) >= 60:
             return False
@@ -193,12 +192,12 @@ class Mission_AI:
             if self.time_passed >= 4:
                 if damage_count >= 0.5:
                     if self.car.colisao_obstaculo(self.obstacles_list.lista):
-                        self.resistence -= 4
+                        self.resistance -= 4
                         self.car.x -= 10
                         damage_count = 0
                 else:
                     damage_count += 0.01
-            self.control_resistence_energy()
+            self.control_resistance_energy()
             self.parts_list.lista, value = self.car.colisao_parts(self.parts_list.lista)
             self.parts_collected += value
     # obstacles effects
@@ -210,8 +209,7 @@ class Mission_AI:
             if self.run:
                 self.run = self.continue_game()
             self.refresh_game()
-        return self.total_words, int(self.correct_letters/5), self.precision, self.speed, self.parts_collected, \
-            self.energy, self.resistence
+        return self.precision, self.speed, self.parts_collected, self.resistance
 
 
 class Mission_PARTS:
@@ -225,7 +223,7 @@ class Mission_PARTS:
         self.parts_collected = 0
         # HUD stuff
         self.energy = 100
-        self.resistence = 100
+        self.resistance = 100
         self.hud = ce.HUD(self.screen)
         self.speed = 0
         self.precision = 100
@@ -256,7 +254,7 @@ class Mission_PARTS:
         for entidade in entidades:
             entidade.draw(self.screen)
         time = 60 - int(self.time_passed)
-        self.hud.draw(self.parts_collected, time, self.speed, self.precision, self.energy, self.resistence)
+        self.hud.draw(self.parts_collected, time, self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
         self.screen.blit(self.text_to_write_image, (280, 320))
         pygame.display.update()
@@ -304,7 +302,7 @@ class Mission_PARTS:
             self.screen.blit(self.cursor, (coordinates[self.line][0], coordinates[self.line][1]))
 
     def continue_game(self):
-        if not self.resistence:
+        if not self.resistance:
             return False
         elif not self.energy:
             return False
@@ -333,7 +331,7 @@ class Mission_PARTS:
             if self.time_passed >= 4:
                 if damage_count >= 0.5:
                     if self.car.colisao_obstaculo(self.obstacles_list.lista):
-                        self.resistence -= 4
+                        self.resistance -= 4
                         self.car.x -= 10
                         damage_count = 0
                 else:
@@ -344,7 +342,6 @@ class Mission_PARTS:
             self.obstacles_list.remover_obstaculos()
             self.obstacles_list.criar_obstaculos()
             # Refresh screen
-            # print(f"words: {self.digited_word_number}; time: {self.time_passed}")
             self.speed = self.digited_word_number * 60 // self.time_passed
             self.run = self.continue_game()
             self.refresh_game()

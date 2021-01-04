@@ -22,25 +22,25 @@ class Game:
     def start(self, link, state=True):
         if state:
             keys_list = list(self.link_function_dict.keys())
-            self.previous_link = keys_list[keys_list.index(link)]
+            self.previous_link = keys_list[keys_list.index(link)]  # Current link is saved in case the state turns False
             state = self.link_function_dict[link](self.screen)
             if state:
                 link = state
                 state = True
-        else:
+        else:  # In case the user wants to exit the game by clicking on the red crux the state is set to False
             state = self.link_function_dict["exit1"](self.screen)
             link = self.previous_link
         self.start(link, state)
 
 
 pygame.init()
-# this dictionary has string keys and corresponding function values.
-links = {"exit1": lf.exit_game, "main_menu": lf.main_menu, "continue": lf.game_menu,
-         "new": lf.create_new_account, "exit2": lf.exit_game_menu, "tutorial": lf.tutorial, "exit3": lf.game_menu,
-         "story": lf.display_story, "mai": lf.game_ai, "change_password": lf.change_password, "save": lf.tutorial_s,
-         "level_up": lf.tutorial_lu, "enemy": lf.tutorial_e, "controls": lf.tutorial_c, "choose": lf.choose_user,
-         "m_part": lf.game_parts, "enter_password": lf.enter_password, "manage": lf.manage_account,
-         "eliminate_account": lf.delete_account
+# this dictionary has string keys and the corresponding function values.
+links = {"enter_password": lf.enter_password,
+         "main_menu": lf.main_menu, "game_menu": lf.game_menu, "tutorial": lf.tutorial, "manage": lf.manage_account,
+         "new": lf.create_new_account, "choose": lf.choose_user, "exit1": lf.exit_game,
+         "story": lf.display_story, "mai": lf.game_ai, "m_part": lf.game_parts, "exit2": lf.exit_game_menu,
+         "change_password": lf.change_password, "eliminate_account": lf.delete_account, "exit3": lf.game_menu,
+         "level_up": lf.tutorial_lu, "enemy": lf.tutorial_e, "controls": lf.tutorial_c, "save": lf.tutorial_s,
          }
 Fast_and_Curious = Game(700, 1080, "Fast and Curious", links)  # create the game
 Fast_and_Curious.start("main_menu")  # start the game

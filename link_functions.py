@@ -39,7 +39,7 @@ def create_new_account(screen):
     if effect == "new":
         return effect
     elif effect:
-        return "continue"
+        return "game_menu"
     return "main_menu"
 
 
@@ -71,7 +71,7 @@ def game_menu(screen):
 
 # A sequence of slides with the game's story images and texts. Leads to the Game Menu or to the next slide of the story
 def display_story(screen):
-    story_slides = cm.Menu_image_sequence(screen, "story", 10, "continue", "Story")
+    story_slides = cm.Menu_image_sequence(screen, "story", 10, "game_menu", "Story")
     effect = story_slides.display_menu()
     return effect
 
@@ -84,7 +84,7 @@ def game_ai(screen):
     results = cm.Results_AI(screen, precision, speed, parts_collected, resistance, time)
     go_to_next_level, parts = results.display()
     f.save_performance_ai(go_to_next_level, parts, speed)
-    return "continue"
+    return "game_menu"
 
 
 # Starts and manages the game (Parts collection). After the game ends, a window with the results is shown and the player
@@ -95,7 +95,7 @@ def game_parts(screen):
     results = cm.Results_Parts(screen, precision, speed, parts_collected, time)
     parts = results.display()
     f.save_performance_parts(parts, speed, time)
-    return "continue"
+    return "game_menu"
 
 
 # display the Tutorial Menu, leads to all the tutorials available or to the Game Menu
@@ -140,7 +140,7 @@ def exit_game_menu(screen):
     if cm.Exit("images/menu/exit/exit_menu.png", screen).display_menu():
         f.erase_active_user_data()
         return "main_menu"
-    return "continue"
+    return "game_menu"
 
 
 # ----------------------------------------------- TUTORIAL -------------------------------------------------------------
@@ -163,7 +163,7 @@ def tutorial_lu(screen):
 # activated when a user wants to exit the Tutorial Menu, leads to the Game Menu or Tutorial Menu
 def exit_tutorial(screen):
     if cm.Exit("images/menu/exit/exit_menu.png", screen).display_menu():
-        return "continue"
+        return "game_menu"
     return "tutorial"
 
 

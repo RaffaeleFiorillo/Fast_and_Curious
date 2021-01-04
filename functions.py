@@ -273,6 +273,8 @@ def save_performance_ai(go_to_next_level, parts, speed):
     if go_to_next_level:
         int_val[2] +=1
     int_val[3] += parts
+    if int_val[3] < 0:
+        int_val[3] = 0
     if int_val[0] < speed:
         int_val[0] = int(speed)
     line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"

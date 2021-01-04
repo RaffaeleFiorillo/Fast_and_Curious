@@ -597,7 +597,7 @@ class Enter_Password:
                 self.show_success_message()
                 if self.change:
                     return "main_menu"
-                return "continue"
+                return "game_menu"
             else:
                 self.show_error_message()
                 return "enter_password"
@@ -756,7 +756,7 @@ class Results_AI:
             clock.tick(30)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return False
+                    return self.requirements_satisfied, self.parts
                 if event.type == pygame.KEYDOWN:
                     if self.manage_buttons(pygame.key.get_pressed()):
                         self.display_level_info_message()
@@ -804,7 +804,7 @@ class Results_Parts:
             clock.tick(30)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return False
+                    return self.parts
                 if event.type == pygame.KEYDOWN:
                     if self.manage_buttons(pygame.key.get_pressed()):
                         return self.parts

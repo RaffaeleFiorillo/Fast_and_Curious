@@ -1,5 +1,9 @@
-import classes_entidades as ce
-from random import choice
+# This module contains two classes. This classes are responsible for managing the game's graphics,input and output (HUD)
+# They are both similar and most of the things they do are the same. They only differ in duration and returned values.
+# They utilize classes of the "entity_classes" module. This way we can think about both of them like an interaction
+# management system for the game's entities (dictating rules, changing attributes based on certain events, etc.)
+
+import entity_classes as ce
 import pygame
 import functions as f
 
@@ -8,10 +12,10 @@ class Mission_AI:
     def __init__(self, screen):
         self.screen = screen
         # Game objects
-        self.sp_ti_entity = ce.space_time_entity()
-        self.car = ce.carro()
-        self.estrada = ce.estrada()
-        self.obstacles_list = ce.obstaculos()
+        self.sp_ti_entity = ce.Space_Time_Entity()
+        self.car = ce.Car()
+        self.road = ce.Road()
+        self.obstacles_list = ce.Obstacles()
         self.parts_list = ce.parts()
         self.parts_collected = 0
         # HUD stuff
@@ -37,10 +41,10 @@ class Mission_AI:
         self.clock = pygame.time.Clock()
         self.run = True
         self.time_passed = 0
-        self.escolha = 0
+        self.choice = 0
 
     def set_up_texts(self):
-        self.text_name = choice(f.get_text_names())[:-4]
+        self.text_name = f.choice(f.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
         self.text_to_write = [line.split(" ") for line in open(f"texts/{self.text_name}.txt", "r").readlines()]
         self.screen.blit(self.text_to_write_image, (280, 320))
@@ -54,29 +58,29 @@ class Mission_AI:
             self.energy -= 0.5
 
     def refresh_game(self):
-        entidades = [self.estrada, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]
+        entities = [self.road, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]
         self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
-        for entidade in entidades:
-            entidade.draw(self.screen)
+        for entity in entities:
+            entity.draw(self.screen)
         time = 60-int(self.time_passed)
         self.hud.draw(self.parts_collected, time, self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
         self.screen.blit(self.text_to_write_image, (280, 320))
         pygame.display.update()
 
-    def car_moviment_y(self):
-        if not self.car.keepmoving and self.car.y in self.car.valores_y:
-            self.car.visao(self.screen)
-            self.escolha = f.make_a_choice(self.car.valores_vistos)
-        if self.escolha == 1:
-            self.car.movimento("DWN")
+    def car_movement_y(self):
+        if not self.car.keep_moving and self.car.y in self.car.y_values:
+            self.car.vision(self.screen)
+            self.choice = f.make_a_choice(self.car.seen_values)
+        if self.choice == 1:
+            self.car.movement("DWN")
             self.car.direction = "DWN"
-        elif self.escolha == -1:
-            self.car.movimento("UP")
+        elif self.choice == -1:
+            self.car.movement("UP")
             self.car.direction = "UP"
-        self.car.contin_mov()
+        self.car.continue_mov()
 
-    def car_moviment_x(self):
+    def car_movement_x(self):
         self.car.damage_period += 0.05
         if self.car.damage_period >= 1.0:
             self.car.x -= 1
@@ -86,7 +90,8 @@ class Mission_AI:
 
     def last_letter_correct(self):
         last_letter_index = len(self.written_text[-1][-1])-1
-        if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:  #every last written letter is wrong if the written word is longer than original
+        # every last written letter is wrong if the written word is longer than original
+        if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
             if self.car.speed > 3:
                 self.car.speed -= 1
             return False
@@ -115,7 +120,8 @@ class Mission_AI:
             else:  # prepare another text to write
                 pass
         elif keys[pygame.K_SPACE]:
-            if len(self.written_text[self.line]) == len(self.text_to_write[self.line]):  # go to next line in case written words are numericaly equal to words to wrtite
+            # go to next line in case written words are numerically equal to words to write
+            if len(self.written_text[self.line]) == len(self.text_to_write[self.line]):
                 self.written_text.append([""])
                 self.line += 1
                 self.current_word_index = 0
@@ -127,7 +133,8 @@ class Mission_AI:
                 self.written_text.pop()
                 self.line -= 1
                 self.current_word_index = len(self.written_text[-1]) - 1
-            elif self.written_text[-1] == [""] and len(self.written_text) == 1:  # prevents from going beyond deleting last word
+            # prevents from going beyond deleting last word
+            elif self.written_text[-1] == [""] and len(self.written_text) == 1:
                 pass
             elif self.written_text[-1][-1] != "":  # checks if a word is not empty to make sure letter can be deleted
                 if self.last_letter_correct():
@@ -151,16 +158,18 @@ class Mission_AI:
         self.written_text_images[self.line] = f.get_text_images(self.written_text[-1])
         for image, coo in zip(self.written_text_images, coordinates):
             self.screen.blit(image, coo)
-        if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodicaly
+        if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodically
             if self.written_text[-1][-1] == "" and self.written_text[-1] != [""]:
-                self.screen.blit(self.cursor, (coordinates[self.line][0]+self.written_text_images[self.line].get_size()[0]+5,
+                self.screen.blit(self.cursor, (coordinates[self.line][0]+
+                                               self.written_text_images[self.line].get_size()[0]+5,
                                                coordinates[self.line][1]+3))
             else:
-                self.screen.blit(self.cursor, (coordinates[self.line][0]+self.written_text_images[self.line].get_size()[0],
+                self.screen.blit(self.cursor, (coordinates[self.line][0]+
+                                               self.written_text_images[self.line].get_size()[0],
                                                coordinates[self.line][1]+3))
 
     def continue_game(self):
-        if not int(self.resistance):
+        if int(self.resistance) <= 0:
             return False
         elif int(self.time_passed) >= 60:
             return False
@@ -188,26 +197,26 @@ class Mission_AI:
                 if event.type == pygame.KEYDOWN:
                     self.manage_buttons(pygame.key.get_pressed(), event)
     # parts effects
-            self.parts_list.remover_parts(self.obstacles_list.lista)
-            self.parts_list.criar_parts()
-    # car moviment
-            self.car_moviment_y()
-            self.car_moviment_x()
-    # colision & damage
+            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.create_parts()
+    # car movement
+            self.car_movement_y()
+            self.car_movement_x()
+    # collision & damage
             if self.time_passed >= 4:
                 if damage_count >= 0.5:
-                    if self.car.colisao_obstaculo(self.obstacles_list.lista):
+                    if self.car.obstacle_collision(self.obstacles_list.internal_list):
                         self.resistance -= 4
                         self.car.x -= 10
                         damage_count = 0
                 else:
                     damage_count += 0.01
             self.control_resistance_energy()
-            self.parts_list.lista, value = self.car.colisao_parts(self.parts_list.lista)
+            self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
             self.parts_collected += value
     # obstacles effects
-            self.obstacles_list.remover_obstaculos()
-            self.obstacles_list.criar_obstaculos()
+            self.obstacles_list.remove_obstacles()
+            self.obstacles_list.create_obstacles()
     # Refresh screen
             self.update_speed()
             self.update_precision()
@@ -221,10 +230,10 @@ class Mission_PARTS:
     def __init__(self, screen):
         self.screen = screen
         # Game objects
-        self.sp_ti_entity = ce.space_time_entity()
-        self.car = ce.carro()
-        self.estrada = ce.estrada()
-        self.obstacles_list = ce.obstaculos()
+        self.sp_ti_entity = ce.Space_Time_Entity()
+        self.car = ce.Car()
+        self.road = ce.Road()
+        self.obstacles_list = ce.Obstacles()
         self.parts_list = ce.parts()
         self.parts_collected = 0
         # HUD stuff
@@ -250,10 +259,10 @@ class Mission_PARTS:
         self.clock = pygame.time.Clock()
         self.run = True
         self.time_passed = 0
-        self.escolha = 0
+        self.choice = 0
 
     def set_up_texts(self):
-        self.text_name = choice(f.get_text_names())[:-4]
+        self.text_name = f.choice(f.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
         self.text_to_write = [line.split(" ") for line in open(f"texts/{self.text_name}.txt", "r").readlines()]
         self.screen.blit(self.text_to_write_image, (280, 320))
@@ -267,29 +276,28 @@ class Mission_PARTS:
             self.energy -= 0.5
 
     def refresh_game(self):
-        entidades = [self.estrada, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]
+        entities = [self.road, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]
         self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
-        for entidade in entidades:
-            entidade.draw(self.screen)
-        time = 60-int(self.time_passed)
+        for entity in entities:
+            entity.draw(self.screen)
         self.hud.draw(self.parts_collected, "i", self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
         self.screen.blit(self.text_to_write_image, (280, 320))
         pygame.display.update()
 
-    def car_moviment_y(self):
-        if not self.car.keepmoving and self.car.y in self.car.valores_y:
-            self.car.visao(self.screen)
-            self.escolha = f.make_a_choice(self.car.valores_vistos)
-        if self.escolha == 1:
-            self.car.movimento("DWN")
+    def car_movement_y(self):
+        if not self.car.keep_moving and self.car.y in self.car.y_values:
+            self.car.vision(self.screen)
+            self.choice = f.make_a_choice(self.car.seen_values)
+        if self.choice == 1:
+            self.car.movement("DWN")
             self.car.direction = "DWN"
-        elif self.escolha == -1:
-            self.car.movimento("UP")
+        elif self.choice == -1:
+            self.car.movement("UP")
             self.car.direction = "UP"
-        self.car.contin_mov()
+        self.car.continue_mov()
 
-    def car_moviment_x(self):
+    def car_movement_x(self):
         self.car.damage_period += 0.05
         if self.car.damage_period >= 1.0:
             self.car.x -= 1
@@ -299,7 +307,8 @@ class Mission_PARTS:
 
     def last_letter_correct(self):
         last_letter_index = len(self.written_text[-1][-1])-1
-        if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:  #every last written letter is wrong if the written word is longer than original
+        # every last written letter is wrong if the written word is longer than original
+        if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
             if self.car.speed > 3:
                 self.car.speed -= 1
             return False
@@ -328,7 +337,8 @@ class Mission_PARTS:
             else:  # prepare another text to write
                 pass
         elif keys[pygame.K_SPACE]:
-            if len(self.written_text[self.line]) == len(self.text_to_write[self.line]):  # go to next line in case written words are numericaly equal to words to wrtite
+            # go to next line in case written words are numerically equal to words to write
+            if len(self.written_text[self.line]) == len(self.text_to_write[self.line]):
                 self.written_text.append([""])
                 self.line += 1
                 self.current_word_index = 0
@@ -340,7 +350,8 @@ class Mission_PARTS:
                 self.written_text.pop()
                 self.line -= 1
                 self.current_word_index = len(self.written_text[-1]) - 1
-            elif self.written_text[-1] == [""] and len(self.written_text) == 1:  # prevents from going beyond deleting last word
+            # prevents from going beyond deleting last word
+            elif self.written_text[-1] == [""] and len(self.written_text) == 1:
                 pass
             elif self.written_text[-1][-1] != "":  # checks if a word is not empty to make sure letter can be deleted
                 if self.last_letter_correct():
@@ -364,16 +375,18 @@ class Mission_PARTS:
         self.written_text_images[self.line] = f.get_text_images(self.written_text[-1])
         for image, coo in zip(self.written_text_images, coordinates):
             self.screen.blit(image, coo)
-        if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodicaly
+        if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodically
             if self.written_text[-1][-1] == "" and self.written_text[-1] != [""]:
-                self.screen.blit(self.cursor, (coordinates[self.line][0]+self.written_text_images[self.line].get_size()[0]+5,
+                self.screen.blit(self.cursor, (coordinates[self.line][0]+
+                                               self.written_text_images[self.line].get_size()[0]+5,
                                                coordinates[self.line][1]+3))
             else:
-                self.screen.blit(self.cursor, (coordinates[self.line][0]+self.written_text_images[self.line].get_size()[0],
+                self.screen.blit(self.cursor, (coordinates[self.line][0]+
+                                               self.written_text_images[self.line].get_size()[0],
                                                coordinates[self.line][1]+3))
 
     def continue_game(self):
-        if not int(self.resistance):
+        if int(self.resistance) <= 0:
             return False
         return True
 
@@ -399,26 +412,26 @@ class Mission_PARTS:
                 if event.type == pygame.KEYDOWN:
                     self.manage_buttons(pygame.key.get_pressed(), event)
     # parts effects
-            self.parts_list.remover_parts(self.obstacles_list.lista)
-            self.parts_list.criar_parts()
-    # car moviment
-            self.car_moviment_y()
-            self.car_moviment_x()
-    # colision & damage
+            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.create_parts()
+    # car movement
+            self.car_movement_y()
+            self.car_movement_x()
+    # collision & damage
             if self.time_passed >= 4:
                 if damage_count >= 0.5:
-                    if self.car.colisao_obstaculo(self.obstacles_list.lista):
+                    if self.car.obstacle_collision(self.obstacles_list.internal_list):
                         self.resistance -= 4
                         self.car.x -= 10
                         damage_count = 0
                 else:
                     damage_count += 0.01
             self.control_resistance_energy()
-            self.parts_list.lista, value = self.car.colisao_parts(self.parts_list.lista)
+            self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
             self.parts_collected += value
     # obstacles effects
-            self.obstacles_list.remover_obstaculos()
-            self.obstacles_list.criar_obstaculos()
+            self.obstacles_list.remove_obstacles()
+            self.obstacles_list.create_obstacles()
     # Refresh screen
             self.update_speed()
             self.update_precision()

@@ -2,7 +2,7 @@ import classes_menu as cm
 import functions as f
 import game_classes as gc
 import link_functions as lf
-import classes_entidades as ce
+import entity_classes as ce
 import pygame
 
 pygame.init()

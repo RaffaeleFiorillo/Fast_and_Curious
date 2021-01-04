@@ -1,17 +1,17 @@
 import random
 import pygame
 import math
-import classes_entidades
+import entity_classes
 import functions
 
 
 def treino_jogo_autom (screen, background, individuo):
 # Entidades
     print(individuo.weights, individuo.bias)
-    car = classes_entidades.carro()
-    estrada = classes_entidades.estrada()
-    lista_obstaculos = classes_entidades.obstaculos()
-    lista_parts = classes_entidades.parts()
+    car = entity_classes.Carro()
+    estrada = entity_classes.estrada()
+    lista_obstaculos = entity_classes.Obstacles()
+    lista_parts = entity_classes.parts()
 # loop stuff
     clock = pygame.time.Clock()
     keepGoing2 = True

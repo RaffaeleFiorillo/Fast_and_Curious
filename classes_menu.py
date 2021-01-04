@@ -3,25 +3,25 @@ import functions as f
 
 
 class Button:
-    def __init__(self, x, y, diretorio, efeito, codigo):
+    def __init__(self, x, y, directory, effect, code):
         self.x = x
         self.y = y
-        self.image = pygame.image.load(diretorio)
-        self.efeito = efeito
-        self.codigo = codigo
+        self.image = pygame.image.load(directory)
+        self.effect = effect
+        self.code = code
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
-    def change_image(self, diretorio):
-        self.image = pygame.image.load(diretorio)
+    def change_image(self, directory):
+        self.image = pygame.image.load(directory)
 
 
 class Button2(Button):
-    def __init__(self, x, y, diretorio, efeito, codigo, id_c):
-        super().__init__(x, y, diretorio, efeito, codigo)
+    def __init__(self, x, y, directory, effect, code, id_c):
+        super().__init__(x, y, directory, effect, code)
         self.value = 0
-        self.efeito = "manage"
+        self.effect = "manage"
         self.id = id_c
         self.value_image = pygame.image.load("images/menu/buttons/8/7.png")
         self.get_value()
@@ -71,10 +71,10 @@ class User:
         file.close()
 
     def get_texts(self) -> None:
-        self.best_time_text, self.coo_bt_t = f.writeble_best_time(self.best_time)
-        self.best_speed_text, self.coo_bs_t = f.writeble_best_speed(self.best_speed)
-        self.parts_text, self.coo_p_t = f.writeble_parts_number(self.parts)
-        self.name_text, self.coo_n_t = f.writeble_user_name(self.name)
+        self.best_time_text, self.coo_bt_t = f.writable_best_time(self.best_time)
+        self.best_speed_text, self.coo_bs_t = f.writable_best_speed(self.best_speed)
+        self.parts_text, self.coo_p_t = f.writable_parts_number(self.parts)
+        self.name_text, self.coo_n_t = f.writable_user_name(self.name)
 
     def draw_text(self, screen) -> None:
         screen.blit(self.best_time_text, self.coo_bt_t)
@@ -92,24 +92,26 @@ class User:
 
     def turn_active(self) -> None:
         file = open(f"saves/active_user.txt", "w")
-        file.write(f"{self.name} {self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} {self.music_volume} {self.sound_volume}")
+        file.write(f"{self.name} {self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} "+
+                   f"{self.music_volume} {self.sound_volume}")
         file.close()
 
     def save_info(self) -> None:
         file = open(f"saves/{self.name}/data.txt", "w")
-        data = f"{self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} {self.music_volume} {self.sound_volume}"
+        data = f"{self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} {self.music_volume}" \
+               f" {self.sound_volume}"
         file.write(data)
         file.close()
 
 
 class Menu_image_sequence:
-    def __init__(self, screen, pasta, num_paginas, func_link, name):
+    def __init__(self, screen, pasta, num_pages, func_link, name):
         self.screen = screen
         self.name = name
         self.background_image = pygame.image.load("images/menu/interfaces/Main/sequence.png")
-        self.images_list = [pygame.image.load(f"images/slides/{pasta}/{i+1}.png") for i in range(num_paginas)]
+        self.images_list = [pygame.image.load(f"images/slides/{pasta}/{i+1}.png") for i in range(num_pages)]
         self.slide_name = pygame.image.load(f"images/slides/{pasta}/name.png")
-        self.num_pages = num_paginas
+        self.num_pages = num_pages
         self.current_page = 0
         self.origin_link = func_link
 
@@ -152,42 +154,43 @@ class Menu_image_sequence:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    efeito = self.manage_buttons(pygame.key.get_pressed())
-                    if efeito is not None:
-                        return efeito
+                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    if effect is not None:
+                        return effect
             self.refresh()
 
 
 class Menu:
-    def __init__(self, buttons, diretorio, superficie, user=None):
-        self.lista = buttons
-        self.diretorio = diretorio
-        self.name = self.diretorio.split("/")[-1][:-4]
-        self.image_nome = pygame.image.load(diretorio)
+    def __init__(self, buttons, directory, screen, user=None):
+        self.internal_list = buttons
+        self.directory = directory
+        self.name = self.directory.split("/")[-1][:-4]
+        self.image_nome = pygame.image.load(directory)
         if self.name == "game menu":
-            self.efeito = [pygame.image.load(f"images/menu/effects/3/{i+1}.png") for i in range(4)]
+            self.effect = [pygame.image.load(f"images/menu/effects/3/{i+1}.png") for i in range(4)]
         else:
-            self.efeito = [pygame.image.load(f"images/menu/effects/1/{i+1}.png") for i in range(4)]
-        self.codigo_ativo = 0
-        self.screen = superficie
-        self.frame_atual = 0
+            self.effect = [pygame.image.load(f"images/menu/effects/1/{i+1}.png") for i in range(4)]
+        self.active_code = 0
+        self.screen = screen
+        self.current_frame = 0
         self.user = user
-        self.coord_efeito = (self.lista[0].x-12, self.lista[0].y-12)
+        self.coord_effect = (self.internal_list[0].x-12, self.internal_list[0].y-12)
 
     def draw_buttons(self):
-        coordenadas = {0: (680, 90), 1: (698, 192), 2: (685, 178)}
-        coordenadas2 = {0: (687, 90), 1: (687, 90), 2: (687, 192), 3: (687, 178), 4: (687, 178),  5: (687, 178)}
-        coordenadas3 = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178)}
-        ch = {"main menu": coordenadas, "game menu": coordenadas2, "tutorial": coordenadas3}
+        coordinates = {0: (680, 90), 1: (698, 192), 2: (685, 178)}
+        coordinates2 = {0: (687, 90), 1: (687, 90), 2: (687, 192), 3: (687, 178), 4: (687, 178),  5: (687, 178)}
+        coordinates3 = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178)}
+        ch = {"main menu": coordinates, "game menu": coordinates2, "tutorial": coordinates3}
         co_cho = ch[self.name]
-        coo = co_cho[self.codigo_ativo]
-        self.screen.blit(self.efeito[int(self.frame_atual)], self.coord_efeito)
-        self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.codigo_ativo+1}.png"), (coo[0], coo[1]))
-        for but in self.lista:
+        coo = co_cho[self.active_code]
+        self.screen.blit(self.effect[int(self.current_frame)], self.coord_effect)
+        self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.active_code+1}.png"),
+                         (coo[0], coo[1]))
+        for but in self.internal_list:
             but.draw(self.screen)
-        self.frame_atual += 0.25
-        if self.frame_atual > 3:
-            self.frame_atual = 0
+        self.current_frame += 0.25
+        if self.current_frame > 3:
+            self.current_frame = 0
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -201,9 +204,9 @@ class Menu:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    efeito = self.manage_buttons(pygame.key.get_pressed())
-                    if efeito is not None:
-                        return efeito
+                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    if effect is not None:
+                        return effect
             self.refresh(background)
 
     def manage_buttons(self, keys):
@@ -213,13 +216,13 @@ class Menu:
         elif keys[pygame.K_DOWN]:
             valor = 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            return self.lista[self.codigo_ativo].efeito
-        self.codigo_ativo += valor
-        if self.codigo_ativo > len(self.lista)-1:
-            self.codigo_ativo = 0
-        if self.codigo_ativo < 0:
-            self.codigo_ativo = len(self.lista)-1
-        self.coord_efeito = (self.lista[self.codigo_ativo].x-12, self.lista[self.codigo_ativo].y-12)
+            return self.internal_list[self.active_code].effect
+        self.active_code += valor
+        if self.active_code > len(self.internal_list)-1:
+            self.active_code = 0
+        if self.active_code < 0:
+            self.active_code = len(self.internal_list)-1
+        self.coord_effect = (self.internal_list[self.active_code].x-12, self.internal_list[self.active_code].y-12)
 
     def refresh(self, background):
         self.screen.blit(background, (0, 0))
@@ -227,7 +230,8 @@ class Menu:
         self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation.png"), (355, 620))
         if self.user is not None:
             coo = (20, 490)
-            self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.user.level}.png"), (0, 0))
+            self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.user.level}.png"),
+                             (0, 0))
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/records.png"), (coo[0], coo[1]-210))
             self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
             self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0] - 18, coo[1]))
@@ -237,22 +241,22 @@ class Menu:
 
 
 class Exit:
-    def __init__(self, diretorio, superficie):
-        self.image_nome = pygame.image.load(diretorio)
+    def __init__(self, directory, screen):
+        self.image_nome = pygame.image.load(directory)
         self.effects = (True, False)
-        self.efeito = [pygame.image.load(f"images/menu/effects/1/{i+1}.png") for i in range(4)]
-        self.codigo_ativo = 0
-        self.screen = superficie
-        self.frame_atual = 0
+        self.effect = [pygame.image.load(f"images/menu/effects/1/{i+1}.png") for i in range(4)]
+        self.active_code = 0
+        self.screen = screen
+        self.current_frame = 0
 
     def draw_buttons(self):
-        coordenadas = {0: (240, 410), 1: (570, 410)}
-        coo = coordenadas[self.codigo_ativo]
-        self.screen.blit(self.efeito[int(self.frame_atual)], coo)
-        self.screen.blit(pygame.image.load(f"images/menu/buttons/3/{self.codigo_ativo+1}.png"), (coo[0]+13, coo[1]+10))
-        self.frame_atual += 0.25
-        if self.frame_atual > 3:
-            self.frame_atual = 0
+        coordinates = {0: (240, 410), 1: (570, 410)}
+        coo = coordinates[self.active_code]
+        self.screen.blit(self.effect[int(self.current_frame)], coo)
+        self.screen.blit(pygame.image.load(f"images/menu/buttons/3/{self.active_code+1}.png"), (coo[0]+13, coo[1]+10))
+        self.current_frame += 0.25
+        if self.current_frame > 3:
+            self.current_frame = 0
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -266,9 +270,9 @@ class Exit:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    efeito = self.manage_buttons(pygame.key.get_pressed())
-                    if efeito is not None:
-                        return efeito
+                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    if effect is not None:
+                        return effect
             self.refresh()
 
     def manage_buttons(self, keys):
@@ -278,12 +282,12 @@ class Exit:
         elif keys[pygame.K_LEFT]:
             valor = -1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            return self.effects[self.codigo_ativo]
-        self.codigo_ativo += valor
-        if self.codigo_ativo > len(self.effects)-1:
-            self.codigo_ativo = 0
-        if self.codigo_ativo < 0:
-            self.codigo_ativo = 1
+            return self.effects[self.active_code]
+        self.active_code += valor
+        if self.active_code > len(self.effects)-1:
+            self.active_code = 0
+        if self.active_code < 0:
+            self.active_code = 1
 
     def refresh(self):
         self.screen.blit(self.image_nome, (0, 0))
@@ -293,34 +297,34 @@ class Exit:
 
 
 class Create_Account:
-    def __init__(self, diretorio, superficie, change=False):
-        self.image_nome = pygame.image.load(diretorio)
+    def __init__(self, directory, screen, change=False):
+        self.image_nome = pygame.image.load(directory)
         self.effects = (False, True)
-        self.efeito = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
-        self.codigo_ativo_x = 0
-        self.codigo_ativo_y = 0
+        self.effect = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
+        self.active_code_x = 0
+        self.active_code_y = 0
         self.hide = False
-        self.screen = superficie
+        self.screen = screen
         self.inputs = [[], []]
-        self.frame_atual = 0
+        self.current_frame = 0
         self.user = User()
         self.change = change
         if change:
             self.user.get_active_user()
 
     def draw_buttons(self) -> None:
-        coordenadas = {0: (325, 485), 1: (558, 485)}
-        coo = coordenadas[self.codigo_ativo_x]
-        self.screen.blit(self.efeito[int(self.frame_atual)], (coo[0]-5, coo[1]-10))
+        coordinates = {0: (325, 485), 1: (558, 485)}
+        coo = coordinates[self.active_code_x]
+        self.screen.blit(self.effect[int(self.current_frame)], (coo[0]-5, coo[1]-10))
         if self.change:
-            self.screen.blit(pygame.image.load(f"images/menu/buttons/9/{self.codigo_ativo_x + 1}.png"),
+            self.screen.blit(pygame.image.load(f"images/menu/buttons/9/{self.active_code_x + 1}.png"),
                              (coo[0] + 13, coo[1] + 10))
         else:
-            self.screen.blit(pygame.image.load(f"images/menu/buttons/5/{self.codigo_ativo_x+1}.png"),
+            self.screen.blit(pygame.image.load(f"images/menu/buttons/5/{self.active_code_x+1}.png"),
                              (coo[0]+13, coo[1]+10))
-        self.frame_atual += 0.2
-        if self.frame_atual > 3:
-            self.frame_atual = 0
+        self.current_frame += 0.2
+        if self.current_frame > 3:
+            self.current_frame = 0
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -334,14 +338,14 @@ class Create_Account:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    efeito = self.manage_buttons(pygame.key.get_pressed(), event)
-                    if efeito is not None:
-                        return efeito
+                    effect = self.manage_buttons(pygame.key.get_pressed(), event)
+                    if effect is not None:
+                        return effect
             self.refresh()
 
     def create_account(self) -> None:
         name = "".join(self.inputs[0])
-        f.criar_pasta(name)
+        f.create_folder(name)
 
     def validate_user_information(self) -> bool:
         first, second = "".join(self.inputs[0]), "".join(self.inputs[1])
@@ -356,7 +360,7 @@ class Create_Account:
                 f.show_error_message(self.screen, 4)
                 return False
         else:
-            if first in f.lista_utilizadores():
+            if first in f.list_users():
                 f.show_error_message(self.screen, 1)
                 return False
             elif len(self.inputs[0]) == 0:
@@ -372,28 +376,28 @@ class Create_Account:
 
     def manage_buttons(self, keys, event):
         if keys[pygame.K_RIGHT]:
-            self.codigo_ativo_x = 1
+            self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
-            self.codigo_ativo_x = 0
+            self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
-            self.codigo_ativo_y = 1
+            self.active_code_y = 1
         elif keys[pygame.K_UP]:
-            self.codigo_ativo_y = 0
+            self.active_code_y = 0
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            if self.effects[self.codigo_ativo_x]:
+            if self.effects[self.active_code_x]:
                 if self.validate_user_information():
                     if self.change:
                         self.user.password = "".join(self.inputs[1])
                         self.user.save_info()
                         self.user.turn_active()
-                        f.show_succes_message(self.screen, 4)
+                        f.show_success_message(self.screen, 4)
                     else:
                         self.user.name = "".join(self.inputs[0])
                         self.user.password = "".join(self.inputs[1])
                         self.create_account()
                         self.user.save_info()
                         self.user.turn_active()
-                        f.show_succes_message(self.screen, 1)
+                        f.show_success_message(self.screen, 1)
                     return True
                 else:
                     if self.change:
@@ -403,17 +407,17 @@ class Create_Account:
         elif keys[pygame.K_TAB]:
             self.hide = not self.hide
         elif event.key == pygame.K_BACKSPACE:
-            self.inputs[self.codigo_ativo_y] = self.inputs[self.codigo_ativo_y][:-1]
-        elif len(self.inputs[self.codigo_ativo_y]) <= 25 and self.codigo_ativo_y == 1:
-            self.inputs[self.codigo_ativo_y].append(event.unicode)
-        elif len(self.inputs[self.codigo_ativo_y]) <= 20 and self.codigo_ativo_y == 0:
-            self.inputs[self.codigo_ativo_y].append(event.unicode)
+            self.inputs[self.active_code_y] = self.inputs[self.active_code_y][:-1]
+        elif len(self.inputs[self.active_code_y]) <= 25 and self.active_code_y == 1:
+            self.inputs[self.active_code_y].append(event.unicode)
+        elif len(self.inputs[self.active_code_y]) <= 20 and self.active_code_y == 0:
+            self.inputs[self.active_code_y].append(event.unicode)
 
     def refresh(self) -> None:
         self.screen.blit(self.image_nome, (0, 0))
         self.draw_buttons()
         self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation3.png"), (355, 620))
-        f.write_name_passw(self.screen, self.inputs[0], self.inputs[1], self.codigo_ativo_y, self.hide)
+        f.write_name_password(self.screen, self.inputs[0], self.inputs[1], self.active_code_y, self.hide)
         pygame.display.update()
 
 
@@ -421,17 +425,17 @@ class Choose_Account:
     def __init__(self, screen):
         self.screen = screen
         self.image = pygame.image.load("images/menu/interfaces/Main/choose account.png")
-        self.efeito = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
+        self.effect = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
         self.passive_button_image = pygame.image.load("images/menu/buttons/6/2.png")
         self.active_button_image = pygame.image.load("images/menu/buttons/6/1.png")
         self.button_coordinates = [(322, 120), (322, 175), (322, 230), (322, 285), (322, 340), (322, 395), (322, 450)]
         self.account_name = None
-        self.frame_atual = 0
-        self.codigo_ativo_x = 1
-        self.codigo_ativo_y = 0
+        self.current_frame = 0
+        self.active_code_x = 1
+        self.active_code_y = 0
         self.buttons = []
         self.previous_button = 0
-        self.users = f.lista_utilizadores()
+        self.users = f.list_users()
         self.user_names_images_active, self.user_names_images_passive = f.get_users_images()
         self.user_names_images = None
         self.adjust_user_name_images()
@@ -440,8 +444,8 @@ class Choose_Account:
 
     def adjust_user_name_images(self):
         self.user_names_images = self.user_names_images_passive[:]
-        self.user_names_images[self.codigo_ativo_y] = self.user_names_images_active[self.codigo_ativo_y]
-        if self.previous_button != self.codigo_ativo_y:  # prevents getting wrong image in the initiation
+        self.user_names_images[self.active_code_y] = self.user_names_images_active[self.active_code_y]
+        if self.previous_button != self.active_code_y:  # prevents getting wrong image in the initiation
             self.user_names_images[self.previous_button] = self.user_names_images_passive[self.previous_button]
 
     def display_menu(self):
@@ -452,41 +456,41 @@ class Choose_Account:
         keepGoing = True
         while keepGoing:
             clock.tick(30)
-            self.frame_atual += 0.25
-            if self.frame_atual > 3:
-                self.frame_atual = 0
+            self.current_frame += 0.25
+            if self.current_frame > 3:
+                self.current_frame = 0
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
                     self.create_buttons()
-                    efeito = self.manage_buttons(pygame.key.get_pressed())
-                    if efeito is not None:
-                        return efeito
+                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    if effect is not None:
+                        return effect
             self.refresh()
 
     def manage_buttons(self, keys):
         if keys[pygame.K_RIGHT]:
-            self.codigo_ativo_x = 1
+            self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
-            self.codigo_ativo_x = 0
+            self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
-            self.codigo_ativo_y += 1
-            self.previous_button = self.codigo_ativo_y-1
+            self.active_code_y += 1
+            self.previous_button = self.active_code_y-1
         elif keys[pygame.K_UP]:
-            self.codigo_ativo_y -= 1
-            self.previous_button = self.codigo_ativo_y+1
+            self.active_code_y -= 1
+            self.previous_button = self.active_code_y+1
         self.control_previous_button()
-        if self.codigo_ativo_y > len(self.users)-1:
-            self.codigo_ativo_y = 0
+        if self.active_code_y > len(self.users)-1:
+            self.active_code_y = 0
             self.previous_button = len(self.users)-1
-        elif self.codigo_ativo_y < 0:
-            self.codigo_ativo_y = len(self.users)-1
+        elif self.active_code_y < 0:
+            self.active_code_y = len(self.users)-1
             self.previous_button = 0
         self.set_active_button()
         if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            if self.codigo_ativo_x:
-                self.user.name = self.users[self.codigo_ativo_y]
+            if self.active_code_x:
+                self.user.name = self.users[self.active_code_y]
                 self.user.get_info()
                 self.user.turn_active()
                 return "enter_password"
@@ -494,8 +498,8 @@ class Choose_Account:
                 return "main_menu"
 
     def control_previous_button(self):
-        if self.previous_button == self.codigo_ativo_y:
-            if self.codigo_ativo_y == 1:
+        if self.previous_button == self.active_code_y:
+            if self.active_code_y == 1:
                 self.previous_button = 0
             else:
                 self.previous_button = 1
@@ -510,16 +514,17 @@ class Choose_Account:
     def set_active_button(self):
         self.adjust_user_name_images()
         self.buttons[self.previous_button].image = self.passive_button_image
-        self.buttons[self.codigo_ativo_y].image = self.active_button_image
+        self.buttons[self.active_code_y].image = self.active_button_image
 
     def refresh(self):
-        coordenadas = {0: (325, 520), 1: (558, 520)}
-        coo = coordenadas[self.codigo_ativo_x]
+        coordinates = {0: (325, 520), 1: (558, 520)}
+        coo = coordinates[self.active_code_x]
         self.screen.blit(self.image, (0, 0))
-        self.screen.blit(self.efeito[int(int(self.frame_atual))], (coo[0]-5, coo[1]-20))
-        self.screen.blit(pygame.image.load(f"images/menu/buttons/7/{self.codigo_ativo_x+1}.png"), (coo[0]+13, coo[1]))
+        self.screen.blit(self.effect[int(int(self.current_frame))], (coo[0]-5, coo[1]-20))
+        self.screen.blit(pygame.image.load(f"images/menu/buttons/7/{self.active_code_x+1}.png"), (coo[0]+13, coo[1]))
         [self.buttons[i].draw(self.screen) for i in range(len(self.users))]
-        [self.screen.blit(self.user_names_images[i], (self.button_coordinates[i][0]+10, self.button_coordinates[i][1])) for i in range(len(self.users))]
+        [self.screen.blit(self.user_names_images[i], (self.button_coordinates[i][0]+10, self.button_coordinates[i][1]))
+         for i in range(len(self.users))]
         self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation3.png"), (355, 620))
         pygame.display.update()
 
@@ -540,13 +545,13 @@ class Enter_Password:
         self.user.get_info()
 
     def show_error_message(self) -> None:
-        pygame.image.save(self.screen, "images/menu/interfaces/provisory/provisory.png")
+        pygame.image.save(self.screen, "images/menu/interfaces/prov_image/prov_image.png")
         self.screen.blit(pygame.image.load(f"images/menu/messages/error5.png"), (230, 200))
         pygame.display.update()
         f.wait(3)
-        self.screen.blit(pygame.image.load("images/menu/interfaces/provisory/provisory.png"), (0, 0))
+        self.screen.blit(pygame.image.load("images/menu/interfaces/prov_image/prov_image.png"), (0, 0))
 
-    def show_succes_message(self) -> None:
+    def show_success_message(self) -> None:
         if self.change:
             self.screen.blit(pygame.image.load("images/menu/messages/success3.png"), (230, 200))
             time = 3
@@ -572,9 +577,9 @@ class Enter_Password:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    efeito = self.manage_buttons(pygame.key.get_pressed(), event)
-                    if efeito is not None:
-                        return efeito
+                    effect = self.manage_buttons(pygame.key.get_pressed(), event)
+                    if effect is not None:
+                        return effect
             self.refresh()
 
     def manage_buttons(self, keys, event):
@@ -589,7 +594,7 @@ class Enter_Password:
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             # self.password = "".join(self.password_list)
             if self.verify_password():
-                self.show_succes_message()
+                self.show_success_message()
                 if self.change:
                     return "main_menu"
                 return "continue"
@@ -607,29 +612,29 @@ class Enter_Password:
 
 
 class Management:
-    def __init__(self, buttons, diretorio, superficie, user=None):
+    def __init__(self, buttons, directory, screen, user=None):
         self.list = buttons
-        self.diretorio = diretorio
-        self.image_nome = pygame.image.load(diretorio)
-        self.efeito1 = [pygame.image.load(f"images/menu/effects/5/{i+1}.png") for i in range(4)]
-        self.efeito2 = [pygame.image.load(f"images/menu/effects/4/{i+1}.png") for i in range(4)]
-        self.codigo_ativo = 0
-        self.screen = superficie
-        self.frame_atual = 0
+        self.directory = directory
+        self.image_nome = pygame.image.load(directory)
+        self.effect1 = [pygame.image.load(f"images/menu/effects/5/{i+1}.png") for i in range(4)]
+        self.effect2 = [pygame.image.load(f"images/menu/effects/4/{i+1}.png") for i in range(4)]
+        self.active_code = 0
+        self.screen = screen
+        self.current_frame = 0
         self.name = "management"
         self.user = user
-        self.coord_efeito = (self.list[0].x-8, self.list[0].y-8)
+        self.coord_effect = (self.list[0].x-8, self.list[0].y-8)
 
     def draw_buttons(self):
-        if self.codigo_ativo < 2:
-            self.screen.blit(self.efeito2[int(self.frame_atual)], self.coord_efeito)
+        if self.active_code < 2:
+            self.screen.blit(self.effect2[int(self.current_frame)], self.coord_effect)
         else:
-            self.screen.blit(self.efeito1[int(self.frame_atual)], self.coord_efeito)
+            self.screen.blit(self.effect1[int(self.current_frame)], self.coord_effect)
         for but in self.list:
             but.draw(self.screen)
-        self.frame_atual += 0.25
-        if self.frame_atual > 3:
-            self.frame_atual = 0
+        self.current_frame += 0.25
+        if self.current_frame > 3:
+            self.current_frame = 0
 
     def display_menu(self):
         clock = pygame.time.Clock()
@@ -640,9 +645,9 @@ class Management:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    efeito = self.manage_buttons(pygame.key.get_pressed())
-                    if efeito is not None:
-                        return efeito
+                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    if effect is not None:
+                        return effect
             self.refresh()
 
     def update_user(self):
@@ -653,22 +658,22 @@ class Management:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_UP]:
-            self.codigo_ativo -= 1
+            self.active_code -= 1
         elif keys[pygame.K_DOWN]:
-            self.codigo_ativo += 1
-        elif self.codigo_ativo == 0 or self.codigo_ativo == 1:
+            self.active_code += 1
+        elif self.active_code == 0 or self.active_code == 1:
             if keys[pygame.K_LEFT]:
-                self.list[self.codigo_ativo].change_value(-1)
+                self.list[self.active_code].change_value(-1)
             elif keys[pygame.K_RIGHT]:
-                self.list[self.codigo_ativo].change_value(1)
+                self.list[self.active_code].change_value(1)
             self.update_user()
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
-            return self.list[self.codigo_ativo].efeito
-        if self.codigo_ativo > len(self.list)-1:
-            self.codigo_ativo = 0
-        if self.codigo_ativo < 0:
-            self.codigo_ativo = len(self.list)-1
-        self.coord_efeito = (self.list[self.codigo_ativo].x-12, self.list[self.codigo_ativo].y-12)
+            return self.list[self.active_code].effect
+        if self.active_code > len(self.list)-1:
+            self.active_code = 0
+        if self.active_code < 0:
+            self.active_code = len(self.list)-1
+        self.coord_effect = (self.list[self.active_code].x-12, self.list[self.active_code].y-12)
 
     def refresh(self):
         f.clean_background(self.screen)
@@ -680,9 +685,10 @@ class Management:
         self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
         self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0]-18, coo[1]))
         self.user.draw_text(self.screen)
-        coordenadas = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178), 5: (685, 178)}
-        coo = coordenadas[self.codigo_ativo]
-        self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.codigo_ativo+1}.png"), (coo[0], coo[1]))
+        coordinates = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178), 5: (685, 178)}
+        coo = coordinates[self.active_code]
+        self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.active_code+1}.png"),
+                         (coo[0], coo[1]))
         self.draw_buttons()
         pygame.display.update()
 

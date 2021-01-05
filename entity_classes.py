@@ -48,6 +48,7 @@ class Car:
     def obstacle_collision(self, l_obstacles):
         for obst in l_obstacles:
             if self.hit_box.overlap(obst.hit_box, (self.x - obst.x + obst.adjust, self.y - obst.y + obst.adjust)):
+                print("hit")
                 return True
         return False
 

@@ -16,14 +16,14 @@ cores_part = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [237,
               [120, 0, 120], [0, 255, 255], [0, 0, 255]]
 cores_estrada = [[0, 0, 0], [108, 108, 108]]
 code_meaning = {3: "unknown", 1: "road", 2: "parts", 0: "lava"}
-# AI variables
+# AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
 weights = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
 
-# --------------------------------------------- REIMPLEMENTED FUNCTIONS ------------------------------------------------
-# This functions are just a reimplementation of the module random. They are useful because other modules of this game
-# don't need to import the module random or time, just the module functions.
 
+# --------------------------------------------- REIMPLEMENTED FUNCTIONS ------------------------------------------------
+# This functions are just a reimplementation of random and time modules. They are useful because other modules of this
+# game don't need to import the module random or time, just the module functions.
 
 def choice(list_r):
     return random_choice(list_r)
@@ -40,21 +40,20 @@ def random():
 def wait(seconds):
     sleep(seconds)
 
-# ------------------------------------------------------- CAR AI -------------------------------------------------------
+
+# ----------------------------------------- CAR AI/VISION FUNCTIONS ----------------------------------------------------
 # This functions are used to make the car see the obstacles in the road and choose what to do
 
-
+# based on given screen coordinates, gives back what type of object is at that position
 def see(screen, coo):
     x, y = coo
     if y <= 0:
         return 0
-    elif y > 700:
+    elif y > 308:
         return 0
     cor = list(screen.get_at((x, y)))
     cor2 = cor[:-1]
-    if cor2 in cores_obst:
-        current_code = 0
-    elif cor2 in cores_estrada:
+    if cor2 in cores_estrada:
         current_code = 1
     elif cor2 in cores_part:
         current_code = 2
@@ -65,10 +64,9 @@ def see(screen, coo):
     return current_code
 
 
+# Given all seen values, gives back a code value for what to do
 def make_a_choice(info):
-    soma = 0
-    for i in range(len(info)):
-        soma += weights[i] * info[i] + bias[i]
+    soma = sum([weights[i] * info[i] + bias[i] for i in range(len(info))])
     refined_value = tanh(soma)
     if refined_value >= 0.70:
         return 1
@@ -83,12 +81,12 @@ def prep_cores():
     lines = file.readlines()
     lines = sorted(lines)
     f = open("parameters/cores.txt", "a")
-    for line in lines:
-        f.write(f"{line}")
+    [f.write(f"{line}") for line in lines]
     file.close()
     f.close()
 
 
+# -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------
 def show_error_message(screen, code):
     screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png"), (230, 200))
     pygame.display.update()
@@ -387,20 +385,9 @@ def save_text_image(name):
     file.close()
     text_font = pygame.font.SysFont('Times New Roman', 20)
     text_font.set_bold(True)
-    text1 = text_font.render(lines[0][:-1], True, (0, 0, 0))
-    text2 = text_font.render(lines[1][:-1], True, (0, 0, 0))
-    text3 = text_font.render(lines[2][:-1], True, (0, 0, 0))
-    text4 = text_font.render(lines[3][:-1], True, (0, 0, 0))
-    text5 = text_font.render(lines[4][:-1], True, (0, 0, 0))
-    text6 = text_font.render(lines[5][:-1], True, (0, 0, 0))
-    text7 = text_font.render(lines[6][:-1], True, (0, 0, 0))
+    coordinates = ((10, 7), (10, 24), (10, 39), (10, 54), (10, 69), (10, 84), (10, 99))
+    texts = [text_font.render(lines[i][:-1], True, (0, 0, 0)) for i in range(7)]
     screen2.blit(background, (0, 0))
-    screen2.blit(text1, (10, 7))
-    screen2.blit(text2, (10, 24))
-    screen2.blit(text3, (10, 39))
-    screen2.blit(text4, (10, 54))
-    screen2.blit(text5, (10, 69))
-    screen2.blit(text6, (10, 84))
-    screen2.blit(text7, (10, 99))
-    pygame.image.save(screen2, f"images/texts/{name}.png")
+    [screen2.blit(texts[i], coordinates[i]) for i in range(7)]
     pygame.display.update()
+    pygame.image.save(screen2, f"images/texts/{name}.png")

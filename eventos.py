@@ -7,5 +7,4 @@ import pygame
 
 pygame.init()
 
-screen = pygame.display.set_mode((1080, 700))
-lf.game_parts(screen)
+print(f.os_name())

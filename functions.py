@@ -3,6 +3,7 @@
 from time import sleep
 import pygame
 from os import walk, mkdir
+from sys import platform as system_name
 from shutil import rmtree
 from gc import collect
 from random import choice as random_choice, randint as random_randint, random as random_random
@@ -22,7 +23,7 @@ bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116
 
 
 # --------------------------------------------- REIMPLEMENTED FUNCTIONS ------------------------------------------------
-# This functions are just a reimplementation of random and time modules. They are useful because other modules of this
+# These functions are just a reimplementation of existing python packages. They are useful because other modules of this
 # game don't need to import the module random or time, just the module functions.
 
 def choice(list_r):
@@ -39,6 +40,10 @@ def random():
 
 def wait(seconds):
     sleep(seconds)
+
+
+def os_name():
+    return system_name
 
 
 # ----------------------------------------- CAR AI/VISION FUNCTIONS ----------------------------------------------------
@@ -104,8 +109,17 @@ def create_folder(nome_user):
 
 
 def list_users():
-    users = [x[0].split("\\") for x in walk("saves")][1:]
-    return [u[1] for u in users]
+    users = []
+    if os_name().startswith("win"):
+        users = [x[0].split("\\") for x in walk("saves")][1:]
+        users = [u[1] for u in users]
+    elif os_name().startswith("linux"):
+        users = [x[0].split("\\") for x in walk("saves")][1:]
+    elif os_name().startswith("darwin"):
+        users = [x[0].split("\\") for x in walk("saves")][1:]
+    else:
+        exit("ERROR!!! Unsupported OS")
+    return users
 
 
 def get_text_names():
@@ -309,7 +323,7 @@ def save_performance_parts(parts, speed, time):
     file.close()
 
 
-# HUD functions
+# --------------------------------------------- HUD FUNCTIONS ----------------------------------------------------------
 def write_HUD_parts_value(screen, number_parts):
     text = str(number_parts)
     adjust = len(text)*7

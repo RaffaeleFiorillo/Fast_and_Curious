@@ -809,3 +809,78 @@ class Results_Parts:
                     if self.manage_buttons(pygame.key.get_pressed()):
                         return self.parts
             self.refresh()
+
+
+class Unlock_Level:
+    def __init__(self, screen):
+        self.screen = screen
+        self.image = pygame.image.load("images/menu/interfaces/Main/unlock level.png")
+        self.user = None
+        self.parts_needed = None
+        self.create_user()
+
+    def create_user(self):
+        self.user = User()
+        self.user.get_active_user()
+        self.user.get_info()
+        file = open(f"parameters/levels info/{self.user.level}.txt", "r")
+        self.parts_needed = int(file.readline().split(" ")[2])
+        file.close()
+
+    def show_error_message(self) -> None:
+        self.screen.blit(pygame.image.load(f"images/menu/messages/error6.png"), (230, 200))
+        pygame.display.update()
+        f.wait(3)
+
+    def show_success_message(self) -> None:
+        self.screen.blit(pygame.image.load("images/menu/messages/success6.png"), (230, 200))
+        pygame.display.update()
+        f.wait(3)
+
+    def verify_parts_number(self):
+        return self.parts_needed <= self.user.parts
+
+    def save_state(self):
+        file = open(f"saves/{self.user.name}/next_level.txt", "w")
+        file.write("1")
+        file.close()
+        self.user.parts = self.user.parts - self.parts_needed
+        self.user.save_info()
+        self.user.turn_active()
+
+    def parts_image(self):
+        return f.create_sized_text(190, 50, str(self.parts_needed), (255, 180, 0))
+
+    def display_menu(self):
+        background = pygame.Surface(self.screen.get_size())
+        background = background.convert()
+        background.fill((0, 0, 0))
+        clock = pygame.time.Clock()
+        keepGoing = True
+        while keepGoing:
+            clock.tick(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    if effect is not None:
+                        return effect
+            self.refresh()
+
+    def manage_buttons(self, keys):
+        if keys[pygame.K_ESCAPE]:
+            return True
+        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+            if self.verify_parts_number():
+                self.show_success_message()
+                self.save_state()
+                return True
+            else:
+                self.show_error_message()
+                return True
+
+    def refresh(self):
+        self.screen.blit(self.image, (210, 250))
+        self.screen.blit(self.parts_image(), (635, 310))
+        pygame.display.update()

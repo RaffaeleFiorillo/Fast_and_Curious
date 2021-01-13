@@ -37,8 +37,8 @@ pygame.init()
 # this dictionary has string keys and the corresponding function values.
 links = {"enter_password": lf.enter_password,
          "main_menu": lf.main_menu, "game_menu": lf.game_menu, "tutorial": lf.tutorial, "manage": lf.manage_account,
-         "new": lf.create_new_account, "choose": lf.choose_user, "exit1": lf.exit_game,
-         "story": lf.display_story, "mai": lf.game_ai, "m_part": lf.game_parts, "exit2": lf.exit_game_menu,
+         "new": lf.create_new_account, "choose": lf.choose_user, "exit1": lf.exit_game, "nx_l": lf.unlock_next_level,
+         "story": lf.display_story, "m_ai": lf.game_ai, "m_part": lf.game_parts, "exit2": lf.exit_game_menu,
          "change_password": lf.change_password, "eliminate_account": lf.delete_account, "exit3": lf.game_menu,
          "level_up": lf.tutorial_lu, "enemy": lf.tutorial_e, "controls": lf.tutorial_c, "save": lf.tutorial_s,
          }

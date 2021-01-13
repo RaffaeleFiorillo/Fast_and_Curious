@@ -57,7 +57,7 @@ def exit_game(screen):
 def game_menu(screen):
     position_x_game = (1080 - 260) // 2
     position_y_game = [y for y in range(107, 600, 80)]
-    effects_game = ["story", "mai", "m_part", "tutorial", "manage", "exit2"]
+    effects_game = ["story", "m_ai", "m_part", "tutorial", "manage", "exit2"]
     buttons_game = [cm.Button(position_x_game, y, f"images/menu/buttons/2/{position_y_game.index(y) + 1}.png",
                               effects_game[position_y_game.index(y)], position_y_game.index(y)) for y in
                     position_y_game[:len(effects_game)]]
@@ -65,8 +65,11 @@ def game_menu(screen):
     user.get_active_user()
     user.get_texts()
     g_m = cm.Menu(buttons_game, f"images/menu/interfaces/Main/game menu.png", screen, user)
-    # f.erase_active_user_data()
-    return g_m.display_menu()
+    next_link = g_m.display_menu()
+    if next_link == "m_ai":
+        if not int(open(f"saves/{user.name}/next_level.txt").readline()):
+            next_link = "nx_l"
+    return next_link
 
 
 # A sequence of slides with the game's story images and texts. Leads to the Game Menu or to the next slide of the story
@@ -133,6 +136,12 @@ def manage_account(screen):
     user.get_texts()
     m = cm.Management(buttons, f"images/menu/interfaces/Main/management.png", screen, user)
     return m.display_menu()
+
+
+def unlock_next_level(screen):
+    nxt_lvl = cm.Unlock_Level(screen)
+    nxt_lvl.display_menu()
+    return "game_menu"
 
 
 # activated when a user wants to exit the Game Menu, leads to the Main Menu or Game Menu

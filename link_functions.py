@@ -10,6 +10,13 @@ import game_classes as gc
 import functions as f
 
 
+# ------------------------------------------ GAME START ----------------------------------------------------------------
+def start_page(screen):
+    start = cm.Start(screen)
+    start.display_menu()
+    return "main_menu"
+
+
 # ------------------------------------------- MAIN MENU ----------------------------------------------------------------
 # display and manage the Main Menu, leads to the Choose User Menu, New Game Menu or Exit Game Menu
 def main_menu(screen):

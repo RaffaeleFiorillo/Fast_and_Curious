@@ -884,3 +884,28 @@ class Unlock_Level:
         self.screen.blit(self.image, (210, 250))
         self.screen.blit(self.parts_image(), (635, 310))
         pygame.display.update()
+
+
+class Start:
+    def __init__(self, screen):
+        self.screen = screen
+        self.image = pygame.image.load("images/general/Fast and Curious Logo.png")
+
+    def display_menu(self):
+        background = pygame.Surface(self.screen.get_size())
+        background = background.convert()
+        background.fill((0, 0, 0))
+        clock = pygame.time.Clock()
+        keepGoing = True
+        while keepGoing:
+            clock.tick(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    return False
+            self.refresh()
+
+    def refresh(self):
+        self.screen.blit(self.image, (0, 0))
+        pygame.display.update()

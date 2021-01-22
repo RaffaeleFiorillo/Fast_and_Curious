@@ -35,7 +35,7 @@ class Game:
 
 pygame.init()
 # this dictionary has string keys and the corresponding function values.
-links = {"enter_password": lf.enter_password,
+links = {"enter_password": lf.enter_password, "initial": lf.start_page,
          "main_menu": lf.main_menu, "game_menu": lf.game_menu, "tutorial": lf.tutorial, "manage": lf.manage_account,
          "new": lf.create_new_account, "choose": lf.choose_user, "exit1": lf.exit_game, "nx_l": lf.unlock_next_level,
          "story": lf.display_story, "m_ai": lf.game_ai, "m_part": lf.game_parts, "exit2": lf.exit_game_menu,
@@ -43,4 +43,4 @@ links = {"enter_password": lf.enter_password,
          "level_up": lf.tutorial_lu, "enemy": lf.tutorial_e, "controls": lf.tutorial_c, "save": lf.tutorial_s,
          }
 Fast_and_Curious = Game(700, 1080, "Fast and Curious", links)  # create the game
-Fast_and_Curious.start("main_menu")  # start the game
+Fast_and_Curious.start("initial")  # start the game

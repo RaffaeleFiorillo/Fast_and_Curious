@@ -1,7 +1,17 @@
+# This module contains all the classes responsible for displaying and managing all the Menus and interfaces available
+# In the Game. There are also some classes that makes it easier for all the menu classes to do their job.
+# Every menu class has three major methods that are very similar if not the same: - display_menu(); - manage_buttons();
+# - refresh(); display_menu is the one called after instantiating a new object of a menu class, it is the only method
+# used externally of the class. It is the most important, and his job is to display the events of a menu.
+# The manage_buttons method is for transforming input from the keyboard into the correct output. And the refresh method
+# just updates the menu after every alteration the user makes.
+
+# ---------------------------------------------------- IMPORTS ---------------------------------------------------------
 import pygame
 import functions as f
 
 
+# ------------------------------------------------ SUPPORT CLASSES -----------------------------------------------------
 class Button:
     def __init__(self, x, y, directory, effect, code):
         self.x = x
@@ -104,6 +114,8 @@ class User:
         file.close()
 
 
+# ------------------------------------------------- MENU CLASSES -------------------------------------------------------
+# Used for "Story", and every Tutorial option
 class Menu_image_sequence:
     def __init__(self, screen, pasta, num_pages, func_link, name):
         self.screen = screen
@@ -160,6 +172,7 @@ class Menu_image_sequence:
             self.refresh()
 
 
+# Used for the Main Menu, Game Menu and Tutorial
 class Menu:
     def __init__(self, buttons, directory, screen, user=None):
         self.internal_list = buttons
@@ -240,6 +253,7 @@ class Menu:
         pygame.display.update()
 
 
+# Used whenever the user wants to leave the game
 class Exit:
     def __init__(self, directory, screen):
         self.image_nome = pygame.image.load(directory)
@@ -296,6 +310,7 @@ class Exit:
         pygame.display.update()
 
 
+# Used when the "New Game" option in the Main Menu is selected
 class Create_Account:
     def __init__(self, directory, screen, change=False):
         self.image_nome = pygame.image.load(directory)
@@ -424,6 +439,7 @@ class Create_Account:
         pygame.display.update()
 
 
+# Used when the "Continue" option in the Main Menu is selected
 class Choose_Account:
     def __init__(self, screen):
         self.screen = screen
@@ -532,6 +548,7 @@ class Choose_Account:
         pygame.display.update()
 
 
+# Used whenever is required the introduction of a password in order to complete a task
 class Enter_Password:
     def __init__(self, screen, change=False):
         self.screen = screen
@@ -614,6 +631,7 @@ class Enter_Password:
         pygame.display.update()
 
 
+# Used when the "Management" option in the Game Menu is selected
 class Management:
     def __init__(self, buttons, directory, screen, user=None):
         self.list = buttons
@@ -696,6 +714,7 @@ class Management:
         pygame.display.update()
 
 
+# Used every time a "Mission: AI" match is over and the game results must be displayed and processed
 class Results_AI:
     def __init__(self, screen, precision, speed, parts_collected, resistance, time):
         self.screen = screen
@@ -767,6 +786,7 @@ class Results_AI:
             self.refresh()
 
 
+# Used every time a "Mission: PARTS" match is over and the game results must be displayed and processed
 class Results_Parts:
     def __init__(self, screen, precision, speed, parts_collected, time):
         self.screen = screen
@@ -814,6 +834,7 @@ class Results_Parts:
             self.refresh()
 
 
+# Used every time a user manages to level up and he must unlock the "Mission: AI" option in the Game Menu
 class Unlock_Level:
     def __init__(self, screen):
         self.screen = screen
@@ -889,6 +910,7 @@ class Unlock_Level:
         pygame.display.update()
 
 
+# The first Interface that shows up when the game is executed. It shows "Fast and Curious"'s logo
 class Start:
     def __init__(self, screen):
         self.screen = screen

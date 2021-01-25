@@ -8,6 +8,7 @@ import pygame
 import functions as f
 
 
+# Creates a game where there is a time limit of 60 seconds
 class Mission_AI:
     def __init__(self, screen):
         self.screen = screen
@@ -251,6 +252,7 @@ class Mission_AI:
         return self.precision, self.speed, self.parts_collected, self.resistance, self.time_passed
 
 
+# Creates a game where the time limit is only imposed by the user's skills
 class Mission_PARTS:
     def __init__(self, screen):
         self.screen = screen

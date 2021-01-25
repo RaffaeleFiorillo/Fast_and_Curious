@@ -213,6 +213,11 @@ def delete_account(screen):
     return "manage"
 
 
+# display the Add Text Menu. It leads to the Management Menu for both successful and Unsuccessful outcome
+def create_text(screen):
+    pass
+
+
 # ----------------------------------------------- GLOBAL ---------------------------------------------------------------
 # display the Enter_Password_Menu which is needed whenever a validation needs to be done, where it leads depends on who
 # called him. Every time it is said "after password verification" in a commentary, this menu is used

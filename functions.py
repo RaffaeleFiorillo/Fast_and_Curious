@@ -47,7 +47,7 @@ def os_name():
 
 
 # ----------------------------------------- CAR AI/VISION FUNCTIONS ----------------------------------------------------
-# This functions are used to make the car see the obstacles in the road and choose what to do
+# These functions are used to make the car see the obstacles in the road and choose what to do
 
 # based on given screen coordinates, gives back what type of object is at that position
 def see(screen, coo):

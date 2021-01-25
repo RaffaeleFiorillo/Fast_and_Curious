@@ -345,7 +345,10 @@ class Create_Account:
 
     def create_account(self) -> None:
         name = "".join(self.inputs[0])
-        f.create_folder(name)
+        f.create_folder(name)  # create the user's folder
+        file = open(f"saves/{name}/next_level.txt", "w")  # create a file in the user's folder named next_level
+        file.write("1")  # this value means that the MISSION AI is available
+        file.close()
 
     def validate_user_information(self) -> bool:
         first, second = "".join(self.inputs[0]), "".join(self.inputs[1])

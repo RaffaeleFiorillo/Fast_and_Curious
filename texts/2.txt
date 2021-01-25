@@ -1,8 +1,6 @@
-Este texto tem de servir como exemplo haha hah.
-Posteriormente este texto vai ser deletado.
-Outro objetivo, fazer testes de posicionamento.
-Em teoria preciso de 8 linhas para obter algo.
-O numero maximo de carateres e quarenta e oito.
-Estou chegando mais proximo a ter oito linhas.
-tendo apenas estas linhas pode ser suficiente?
-Na duvida escrevi estas duas ultimas linhas.
+6
+The foot prints on the moon will stay there
+for hundred of million of years, because on
+the moon there is no athmosfere, which means
+there is no wind to erode the surface and no
+water to wash the footprints away.

@@ -1,8 +1,7 @@
-Este texto tem de servir como exemplo haha hah.
-Posteriormente este texto vai ser deletado.
-Outro objetivo, fazer testes de posicionamento.
-Em teoria preciso de 8 linhas para obter algo.
-O numero maximo de carateres e quarenta e oito.
-Estou chegando mais proximo a ter oito linhas.
-tendo apenas estas linhas pode ser suficiente?
-Na duvida escrevi estas duas ultimas linhas.
+7
+The biggest black hole ever measured is
+fourty billion times the mass of the sun.
+There are more possible games in chess than
+athoms in the Universe.
+A broken clock shows the right time two
+times in a day. but only if it's stuck.

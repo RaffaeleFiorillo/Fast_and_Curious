@@ -108,6 +108,7 @@ def create_folder(nome_user):
     mkdir(root_directory+nome_user)
 
 
+# returns a list with all the usernames currently existing, but only on windows, linux and Mac OS
 def list_users():
     users = []
     if os_name().startswith("win"):
@@ -122,12 +123,14 @@ def list_users():
     return users
 
 
+# returns a list with all the names of the texts that the user will type in the matches
 def get_text_names():
     texts = walk("texts")
     texts = [text for text in texts][0][1:][1]
     return texts
 
 
+# return a text image that fits into a set size, with some customizations (like color and font size)
 def create_sized_text(max_size_image, max_size_letter, text, color, min_size_letter=30):
     pygame.font.init()
     rendered_text = None
@@ -140,6 +143,7 @@ def create_sized_text(max_size_image, max_size_letter, text, color, min_size_let
     return rendered_text
 
 
+# writes the name and password typed by a user in the Create User Menu
 def write_name_password(screen, name, password, active, hide):
     coordinates1 = [(333, 203), (335, 349)]
     pygame.draw.rect(screen, (0, 0, 255), (coordinates1[active], (420, 57)), 8)
@@ -157,6 +161,8 @@ def write_name_password(screen, name, password, active, hide):
     screen.blit(password_text, coordinates2[1])
 
 
+# Writes the password typed by a user when a Insert Password Menu appears (hides it with "*" if the hide variable is set
+# to True
 def write_password(screen, password, hide):
     pygame.font.init()
     if hide:
@@ -169,19 +175,13 @@ def write_password(screen, password, hide):
     screen.blit(password_text, (290, 330))
 
 
+# Writes the user name into the Welcome interface. Changes the letter size in order to fit into the given space
 def write_name(screen, name):
-    pygame.font.init()
-    password = "".join(name)
-    text_font, name_text = None, None
-    for i in range(30, 50)[::-1]:
-        text_font = pygame.font.SysFont('Times New Roman', i)
-        text_font.set_bold(True)
-        name_text = text_font.render(password, True, (0, 255, 0))
-        if name_text.get_size()[0] <= 540:
-            break
+    name_text = create_sized_text(540, 50, name, (0, 255, 0))
     screen.blit(name_text, ((screen.get_width()-name_text.get_size()[0])//2+7, 330))
 
 
+# Writes the user's "best time" value in the Game Menu. Changes the letter size in order to fit into the given space
 def writable_best_time(best_time):
     pygame.font.init()
     coordinates = (135, 357)
@@ -192,6 +192,7 @@ def writable_best_time(best_time):
     return [image_text, coordinates]
 
 
+# Writes the user's "best speed" value in the Game Menu. Changes the letter size in order to fit into the given space
 def writable_best_speed(best_speed):
     pygame.font.init()
     coordinates = (185, 427)
@@ -202,34 +203,20 @@ def writable_best_speed(best_speed):
     return [image_text, coordinates]
 
 
+# Writes the user's username in the Game Menu. Changes the letter size in order to fit into the given space
 def writable_user_name(name):
     pygame.font.init()
-    image_text, size = None, None
-    for s in range(65)[::-1]:
-        text_font = pygame.font.SysFont('Times New Roman', s)
-        text_font.set_bold(True)
-        image_text = text_font.render(name, True, (0, 0, 0))
-        size = image_text.get_size()
-        if size[0] <= 253:
-            break
+    image_text = create_sized_text(253, 65, name, (0, 0, 0), 15)
+    size = image_text.get_size()
     coordinates = (107, 85-size[1]/2)
     return [image_text, coordinates]
 
 
+# Writes the user's collected Parts number in the Game Menu.Changes the letter size in order to fit into the given space
 def writable_parts_number(number):
-    pygame.font.init()
-    text_font = pygame.font.SysFont('Times New Roman', 12)
-    new_text = str(number)
-    image_text = None
-    for s in range(65)[::-1]:
-        text_font = pygame.font.SysFont('Times New Roman', s)
-        image_text = text_font.render(str(number), True, (0, 0, 0))
-        size = image_text.get_size()
-        if size[0] <= 170:
-            break
+    image_text = create_sized_text(170, 65, str(number), (255, 255, 0))
     size = image_text.get_size()
     coordinates = (132, 226-size[1]/2)
-    image_text = text_font.render(new_text, True, (255, 255, 255))
     return [image_text, coordinates]
 
 
@@ -275,6 +262,7 @@ def get_requirements():
     return int(values[0]), int(values[1])
 
 
+# updates user information after a played match is over, for Mission AI
 def save_performance_ai(go_to_next_level, parts, speed):
     # active user format: "Name speed best_time level parts password volume1 volume2"
     file = open("saves/active_user.txt", "r")
@@ -299,6 +287,7 @@ def save_performance_ai(go_to_next_level, parts, speed):
     file.close()
 
 
+# updates user information after a played match is over, for Mission Parts
 def save_performance_parts(parts, speed, time):
     # active user format: "Name speed best_time level parts password volume1 volume2"
     file = open("saves/active_user.txt", "r")
@@ -324,6 +313,10 @@ def save_performance_parts(parts, speed, time):
 
 
 # --------------------------------------------- HUD FUNCTIONS ----------------------------------------------------------
+# This section contains functions designed for the proper functioning of the game's HUD interface.
+# the job and description of a function can be understood by his name. the last two words of every functions refer to
+# what they are responsible for displaying on the game screen
+
 def write_HUD_parts_value(screen, number_parts):
     text = str(number_parts)
     adjust = len(text)*7
@@ -385,12 +378,14 @@ def display_HUD_resistance_bar(screen, resistance_level):
     screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png"), (605, 640))
 
 
+# turns a typed line into an image
 def get_text_images(line):
     text_font = pygame.font.SysFont('Times New Roman', 20)
     text_font.set_bold(True)
     return text_font.render(" ".join(line).strip(), True, (0, 0, 0))
 
 
+# creates a new text's image. those that will be chosen and displayed during a match
 def save_text_image(name):
     screen2 = pygame.display.set_mode((519, 135))
     background = pygame.image.load("images/texts/text_background.png")

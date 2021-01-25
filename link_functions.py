@@ -13,8 +13,10 @@ import functions as f
 # ------------------------------------------ GAME START ----------------------------------------------------------------
 def start_page(screen):
     start = cm.Start(screen)
-    start.display_menu()
-    return "main_menu"
+    output = start.display_menu()
+    if output:
+        return "main_menu"
+    return False
 
 
 # ------------------------------------------- MAIN MENU ----------------------------------------------------------------

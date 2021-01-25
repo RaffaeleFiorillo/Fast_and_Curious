@@ -1,11 +1,20 @@
+# This module contains all the classes that are used in the game classes in order to make the game work.
+# Everything that needs to appear in the game is an instance of these classes.
+# for those entities that need to appear multiple times, can be of different kinds or comes and goes from the screen,
+# there is a class that represents a group of these instances, and can be differentiated from the normal classes by
+# looking if his name is plural
+
+# ---------------------------------------------------- IMPORTS ---------------------------------------------------------
 import pygame
 import functions as f
 
+# ----------------------------------------------- GLOBAL VARIABLES -----------------------------------------------------
 obstacles_distance = 290
 parts_distance = 5
 space_between_obstacles = [o for o in range(300, 1290, obstacles_distance)]
 
 
+# ----------------------------------------------------- CAR ------------------------------------------------------------
 class Car:
     def __init__(self):
         self.y_values = [20, 130, 240]
@@ -48,7 +57,6 @@ class Car:
     def obstacle_collision(self, l_obstacles):
         for obst in l_obstacles:
             if self.hit_box.overlap(obst.hit_box, (self.x - obst.x + obst.adjust, self.y - obst.y + obst.adjust)):
-                print("hit")
                 return True
         return False
 
@@ -114,6 +122,7 @@ class Car:
             self.keep_moving = False
 
 
+# ----------------------------------------------- SPACE-TIME ENTITY ----------------------------------------------------
 class Space_Time_Entity:
     def __init__(self):
         self.images = [pygame.image.load(f"images/Characters/Space-Time Entity/{i + 1}.png") for i in range(6)]
@@ -126,6 +135,7 @@ class Space_Time_Entity:
         screen.blit(self.images[int(self.index)], (0, 0))
 
 
+# ----------------------------------------------------- ROAD -----------------------------------------------------------
 class Road:
     def __init__(self):
         self.current_frame = 0
@@ -139,6 +149,7 @@ class Road:
             self.current_frame = 0
 
 
+# ------------------------------------------------ SINGLE OBSTACLE -----------------------------------------------------
 class _obstacle:
     def __init__(self, location, ultimo_y):
         self.x = location
@@ -181,6 +192,7 @@ class _obstacle:
             self.image = pygame.image.load(change[self.x])
 
 
+# ---------------------------------------------- OBSTACLE COLLECTION ---------------------------------------------------
 class Obstacles:
     def __init__(self):
         self.internal_list = []
@@ -218,6 +230,7 @@ class Obstacles:
             obst.mover()
 
 
+# -------------------------------------------------- SINGLE PART -------------------------------------------------------
 class _part:
     def __init__(self, x, type_p, y, cardinality):
         self.type_p = type_p
@@ -247,6 +260,7 @@ class _part:
             self.upwards = not self.upwards
 
 
+# ----------------------------------------------- PARTS COLLECTION -----------------------------------------------------
 class parts:
     def __init__(self):
         self.internal_list = []
@@ -308,6 +322,7 @@ class parts:
             part.mover()
 
 
+# ------------------------------------------------ HUD INTERFACE -------------------------------------------------------
 class HUD:
     def __init__(self, screen, mode=False):
         self.screen = screen

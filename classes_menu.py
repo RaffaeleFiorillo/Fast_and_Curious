@@ -890,6 +890,13 @@ class Start:
     def __init__(self, screen):
         self.screen = screen
         self.image = pygame.image.load("images/general/Fast and Curious Logo.png")
+        self.time = 0
+
+    def show_directives(self):
+        if int(self.time) % 2 == 0:
+            text_font = pygame.font.SysFont('Times New Roman', 20)
+            text_font.set_bold(True)
+            self.screen.blit(text_font.render("Press any key to continue", True, (255, 255, 255)), (440, 670))
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -898,14 +905,15 @@ class Start:
         clock = pygame.time.Clock()
         keepGoing = True
         while keepGoing:
-            clock.tick(30)
+            self.time += clock.tick(30) / 990
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-                if event.type == pygame.KEYDOWN:
-                    return False
+                elif event.type == pygame.KEYDOWN:
+                    return True
             self.refresh()
 
     def refresh(self):
         self.screen.blit(self.image, (0, 0))
+        self.show_directives()
         pygame.display.update()

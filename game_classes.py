@@ -32,6 +32,7 @@ class Mission_AI:
         image = f.get_text_images("")
         self.written_text_images = [image, image, image, image, image, image, image, image]
         self.line = 0
+        self.max_lines = 8
         self.total_words = 0.0
         self.correct_letters = 0
         self.current_word_index = 0
@@ -46,8 +47,17 @@ class Mission_AI:
     def set_up_texts(self):
         self.text_name = f.choice(f.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
-        self.text_to_write = [line.split(" ") for line in open(f"texts/{self.text_name}.txt", "r").readlines()]
+        lines = open(f"texts/{self.text_name}.txt", "r").readlines()
+        self.text_to_write = [line.split(" ") for line in lines[1:]]
         self.screen.blit(self.text_to_write_image, (280, 320))
+        image = f.get_text_images("")
+        self.written_text_images = [image, image, image, image, image, image, image, image]
+        self.written_text = [[""]]
+        self.line = 0
+        self.max_lines = int(lines[0])
+        self.total_words = 0.0
+        self.correct_letters = 0
+        self.current_word_index = 0
         pygame.display.update()
 
     def control_resistance_energy(self):
@@ -66,6 +76,8 @@ class Mission_AI:
         self.hud.draw(self.parts_collected, time, self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
         self.screen.blit(self.text_to_write_image, (280, 320))
+        if self.line == self.max_lines:
+            self.set_up_texts()
         pygame.display.update()
 
     def car_movement_y(self):
@@ -188,8 +200,21 @@ class Mission_AI:
 
     def game_loop(self):
         damage_count = 4
+        next_image = 1
+        current = 0
+        while self.time_passed < 4.5:
+            self.time_passed += self.clock.tick(30) / 990
+            if self.time_passed <= 4:
+                current = int(self.time_passed) % 4
+            self.refresh_game()
+            self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png"), (420, 150))
+            pygame.display.update()
+            if current == next_image:
+                next_image += 1
+                # play sound here
+        self.time_passed = 0
         while self.run:
-            self.time_passed += self.clock.tick(30) / (33 * 30)
+            self.time_passed += self.clock.tick(30) / 990
     # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -250,6 +275,7 @@ class Mission_PARTS:
         image = f.get_text_images("")
         self.written_text_images = [image, image, image, image, image, image, image, image]
         self.line = 0
+        self.max_lines = 8
         self.total_words = 0.0
         self.correct_letters = 0
         self.current_word_index = 0
@@ -264,8 +290,17 @@ class Mission_PARTS:
     def set_up_texts(self):
         self.text_name = f.choice(f.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
-        self.text_to_write = [line.split(" ") for line in open(f"texts/{self.text_name}.txt", "r").readlines()]
+        lines = open(f"texts/{self.text_name}.txt", "r").readlines()
+        self.text_to_write = [line.split(" ") for line in lines[1:]]
         self.screen.blit(self.text_to_write_image, (280, 320))
+        image = f.get_text_images("")
+        self.written_text_images = [image, image, image, image, image, image, image, image]
+        self.written_text = [[""]]
+        self.line = 0
+        self.max_lines = int(lines[0])
+        self.total_words = 0.0
+        self.correct_letters = 0
+        self.current_word_index = 0
         pygame.display.update()
 
     def control_resistance_energy(self):
@@ -283,6 +318,8 @@ class Mission_PARTS:
         self.hud.draw(self.parts_collected, "i", self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
         self.screen.blit(self.text_to_write_image, (280, 320))
+        if self.line == self.max_lines:
+            self.set_up_texts()
         pygame.display.update()
 
     def car_movement_y(self):
@@ -403,8 +440,21 @@ class Mission_PARTS:
 
     def game_loop(self):
         damage_count = 4
+        next_image = 1
+        current = 0
+        while self.time_passed < 4.5:
+            self.time_passed += self.clock.tick(30) / 990
+            if self.time_passed <= 4:
+                current = int(self.time_passed) % 4
+            self.refresh_game()
+            self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png"), (420, 150))
+            pygame.display.update()
+            if current == next_image:
+                next_image += 1
+                # play sound here
+        self.time_passed = 0
         while self.run:
-            self.time_passed += self.clock.tick(30) / (33 * 30)
+            self.time_passed += self.clock.tick(30) / 990
     # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

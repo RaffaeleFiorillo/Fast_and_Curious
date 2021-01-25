@@ -1,0 +1,46 @@
+#################################################################################
+----------------------------- Elementos do grupo --------------------------------
+- Raffaele Fioirllo Junior;
+- Rui Jorge Santos Duarte Silva Varela;
+
+#################################################################################
+
+----------------- Especificaçoes de hardware&software usados --------------------
+- Desenvolvido em Windows 10;
+- Processador(es): AMD Ryzen 5, Intel Core i7, Intel Core i5;
+- RAM: 8Gb;
+
+#################################################################################
+
+--------------------------- Softwares utilizado ---------------------------------
+- Imagens: Paint(Criar e modificar imagens), Gimp(Remover backgrounds de imagens grandes), Pixelart(Remover backgrounds de imagens pequenas);
+- Sons: Audacity;
+- Editor para codigo: PyCharm;
+
+#################################################################################
+
+------------------ Requisitos minimos de Hardware&software ----------------------
+- Disco: 5Mb;
+- RAM: 70Mb;
+- OS: Windows 8, Linux (nao testado para versoes antes de 2018), Mac (nao testado para versoes antes de 2019);
+
+#################################################################################
+
+---------------------------- Recomendado para -----------------------------------
+- Idade: Minimo de 4 anos;
+- Profissao: Qualquer que envolva escrever com um teclado de um computador;
+- Personalidade: curiosa, humoristica, competitiva.
+- Idioma: Ingles;
+
+#################################################################################
+
+---------------------------- Como executar --------------------------------------
+executar "Fast_and_Curious.exe" encontrado na pasta Fast_and_Curious
+
+#################################################################################
+
+-------------------- Navegaçao/controles nos menus e jogo -----------------------
+ A navegaçao e o jogo em si responde apenas a comandos do teclado (com excepçao da
+seta vermelha usada para fechar uma janela). 
+ Cada Menu tem todas as instruçoes necessarias para poder navegar entre as varias
+opçoes que ele oferece, e para que cada uma destas opçoes serve.

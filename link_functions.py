@@ -5,7 +5,7 @@
 # A function's comment in this module has a description and the functions it can lead to when it finishes
 # This module is divided in categories like: --- CATEGORY NAME --- ; in order to make it more understandable
 
-import classes_menu as cm
+import menu_classes as cm
 import game_classes as gc
 import functions as f
 

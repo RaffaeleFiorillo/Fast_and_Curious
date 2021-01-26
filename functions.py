@@ -115,9 +115,9 @@ def list_users():
         users = [x[0].split("\\") for x in walk("saves")][1:]
         users = [u[1] for u in users]
     elif os_name().startswith("linux"):
-        users = [x[0].split("\\") for x in walk("saves")][1:]
+        users = list(walk("saves"))[0][1]
     elif os_name().startswith("darwin"):
-        users = [x[0].split("\\") for x in walk("saves")][1:]
+        users = list(walk("saves"))[0][1]
     else:
         exit("ERROR!!! Unsupported OS")
     return users

@@ -626,7 +626,8 @@ class Enter_Password:
 
     def refresh(self):
         self.screen.blit(self.image, (210, 250))
-        pygame.draw.rect(self.screen, (0, 0, 0), (550, 500, 213, 105), 20, True)
+        if not self.change:  # verifies if this class was called for login purposes. In this case it deletes extra stuff
+            self.screen.blit(pygame.image.load("images/menu/interfaces/prov_image/button.png"), (550, 500))
         f.write_password(self.screen, self.password_list, self.hide)
         pygame.display.update()
 

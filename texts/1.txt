@@ -1,4 +1,4 @@
-7
+6
 Venus has a slow axis rotation, which takes
 two hundred and forty three Earth days to
 complete a single day. It takes Venus two

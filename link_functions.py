@@ -130,7 +130,7 @@ def tutorial(screen):
 def manage_account(screen):
     position_x = (1080 - 260) // 2
     position_y = [y for y in range(155, 600, 70)]
-    effects = ["", "", "add_text", "change_password", "eliminate_account", "exit3"]
+    effects = ["", "", "add", "change_password", "eliminate_account", "exit3"]
     buttons = [cm.Button(position_x, y + 20, f"images/menu/buttons/8/{position_y.index(y) + 1}.png",
                          effects[position_y.index(y)], position_y.index(y))
                for y in position_y[:len(effects)]]
@@ -214,8 +214,10 @@ def delete_account(screen):
 
 
 # display the Add Text Menu. It leads to the Management Menu for both successful and Unsuccessful outcome
-def create_text(screen):
-    pass
+def add_text(screen):
+    at = cm.Add_Text(screen)
+    at.display_menu()
+    return "manage"
 
 
 # ----------------------------------------------- GLOBAL ---------------------------------------------------------------

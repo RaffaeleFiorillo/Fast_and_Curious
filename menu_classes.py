@@ -943,3 +943,114 @@ class Start:
         self.screen.blit(self.image, (0, 0))
         self.show_directives()
         pygame.display.update()
+
+
+# Used when the "New Game" option in the Main Menu is selected
+class Add_Text:
+    def __init__(self, screen):
+        self.image = pygame.image.load("images/menu/interfaces/Main/add text.png")
+        self.effects = (False, True)
+        self.effect = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
+        self.active_code_x = 0
+        self.screen = screen
+        self.character_number = 0
+        self.written_text = ""
+        self.error_code = 0
+        self.current_frame = 0
+
+    def draw_buttons(self) -> None:
+        coordinates = {0: (325, 485), 1: (558, 485)}
+        coo = coordinates[self.active_code_x]
+        self.screen.blit(self.effect[int(self.current_frame)], (coo[0]-5, coo[1]-10))
+        self.current_frame += 0.2
+        if self.current_frame > 3:
+            self.current_frame = 0
+
+    def show_error_message(self) -> None:
+        self.screen.blit(pygame.image.load(f"images/menu/messages/error{self.error_code}.png"), (230, 200))
+        pygame.display.update()
+        f.wait(3)
+
+    def show_success_message(self) -> None:
+        self.screen.blit(pygame.image.load("images/menu/messages/success7.png"), (230, 200))
+        pygame.display.update()
+        f.wait(3)
+
+    def display_menu(self):
+        background = pygame.Surface(self.screen.get_size())
+        background = background.convert()
+        background.fill((0, 0, 0))
+        clock = pygame.time.Clock()
+        keepGoing = True
+        while keepGoing:
+            clock.tick(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    effect = self.manage_buttons(pygame.key.get_pressed(), event)
+                    if effect is not None:
+                        if effect:
+                            if self.validate_text_information():
+                                self.create_text()
+                                self.show_success_message()
+                                return True
+                            else:
+                                self.show_error_message()
+                        else:
+                            return True
+
+            self.refresh()
+
+    def create_text(self) -> None:
+        pass
+
+    def validate_text_information(self) -> bool:
+        special = [",", ".", "'", " "]
+        if self.character_number < 192:
+            self.error_code = 10
+            return False
+        ch_list = set(self.written_text)
+        for char in ch_list:  # verify that there are no special characters or numbers
+            if char.isalpha():
+                continue
+            elif char in special:
+                continue
+            else:
+                self.error_code = 11
+                return False
+        return True
+
+    def manage_buttons(self, keys, event):
+        if keys[pygame.K_RIGHT]:
+            self.active_code_x = 1
+        elif keys[pygame.K_LEFT]:
+            self.active_code_x = 0
+        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+            if self.active_code_x:
+                return True
+            else:
+                return False
+        elif event.key == pygame.K_BACKSPACE:
+            self.written_text = self.written_text[:-1]
+            self.character_number-=1
+            if self.character_number < 0:
+                self.character_number = 0
+        elif self.character_number < 288:
+            special = [" ", ",", ".", "'"]
+            if event.unicode.isalpha() or event.unicode in special:
+                self.written_text+=event.unicode
+                self.character_number = len(self.written_text.strip())
+
+    def write_potential_text(self):
+        coordinates = [(325, 175), (325, 200), (325, 225), (325, 175), (325, 175), (325, 175)]
+        images = f.convert_text_to_images(self.written_text)
+        for img, coo in zip(images, coordinates):
+            self.screen.blit(img, coo)
+
+    def refresh(self) -> None:
+        self.screen.blit(self.image, (0, 0))
+        self.draw_buttons()
+        self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation3.png"), (355, 620))
+        self.write_potential_text()
+        pygame.display.update()

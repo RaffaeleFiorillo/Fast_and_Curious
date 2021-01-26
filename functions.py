@@ -110,17 +110,7 @@ def create_folder(nome_user):
 
 # returns a list with all the usernames currently existing, but only on windows, linux and Mac OS
 def list_users():
-    users = []
-    if os_name().startswith("win"):
-        users = [x[0].split("\\") for x in walk("saves")][1:]
-        users = [u[1] for u in users]
-    elif os_name().startswith("linux"):
-        users = list(walk("saves"))[0][1]
-    elif os_name().startswith("darwin"):
-        users = list(walk("saves"))[0][1]
-    else:
-        exit("ERROR!!! Unsupported OS")
-    return users
+    return list(walk("saves"))[0][1]
 
 
 # returns a list with all the names of the texts that the user will type in the matches
@@ -218,6 +208,27 @@ def writable_parts_number(number):
     size = image_text.get_size()
     coordinates = (132, 226-size[1]/2)
     return [image_text, coordinates]
+
+
+# Writes the user's collected Parts number in the Game Menu.Changes the letter size in order to fit into the given space
+def convert_text_to_images(text):
+    text = text.strip().split(" ")
+    lines, line, length = [], "", 0
+    for word in text:
+        if length + len(word) < 49:
+            length+=len(word)+1
+            line += " "+word
+        else:
+            first = False
+            lines.append(line)
+            line = ""
+            length = 0  # create lines with the text requirements
+    if line != "":
+        lines.append(line)
+    text_font = pygame.font.SysFont('Arial Rounded MT Bold', 20)
+    text_font.set_bold(True)
+    images = [text_font.render(lin, True, (0, 0, 0)) for lin in lines]
+    return images
 
 
 def clean_background(screen):

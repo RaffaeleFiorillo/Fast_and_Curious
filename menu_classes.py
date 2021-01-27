@@ -1043,7 +1043,7 @@ class Add_Text:
                 self.character_number = len(self.written_text.strip())
 
     def write_potential_text(self):
-        coordinates = [(325, 175), (325, 200), (325, 225), (325, 175), (325, 175), (325, 175)]
+        coordinates = [(325, 175), (325, 200), (325, 225), (325, 250), (325, 275), (325, 300)]
         images = f.convert_text_to_images(self.written_text)
         for img, coo in zip(images, coordinates):
             self.screen.blit(img, coo)

@@ -219,10 +219,9 @@ def convert_text_to_images(text):
             length+=len(word)+1
             line += " "+word
         else:
-            first = False
             lines.append(line)
-            line = ""
-            length = 0  # create lines with the text requirements
+            line = ""+word
+            length = 0+len(word)  # create lines with the text requirements
     if line != "":
         lines.append(line)
     text_font = pygame.font.SysFont('Arial Rounded MT Bold', 20)

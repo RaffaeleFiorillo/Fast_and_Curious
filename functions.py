@@ -24,7 +24,7 @@ bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116
 
 # --------------------------------------------- REIMPLEMENTED FUNCTIONS ------------------------------------------------
 # These functions are just a reimplementation of existing python packages. They are useful because other modules of this
-# game don't need to import the module random or time, just the module functions.
+# game don't need to import the module random or time (etc.), just this module functions.
 
 def choice(list_r):
     return random_choice(list_r)
@@ -210,7 +210,7 @@ def writable_parts_number(number):
     return [image_text, coordinates]
 
 
-# Writes the user's collected Parts number in the Game Menu.Changes the letter size in order to fit into the given space
+# converts the written text in the Add Text Menu, to images.Changes the letter size in order to fit into the given space
 def convert_text_to_images(text):
     text = text.strip().split(" ")
     lines, line, length = [], "", 0

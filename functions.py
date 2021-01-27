@@ -230,6 +230,13 @@ def convert_text_to_images(text):
     return images
 
 
+# returns the number of the last existing text
+def get_last_text_number():
+    texts = get_text_names()
+    last_text_name = texts[-1].split(".")[0]
+    return int(last_text_name)
+
+
 def clean_background(screen):
     background = pygame.Surface(screen.get_size())
     background = background.convert()

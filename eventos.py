@@ -11,3 +11,4 @@ screen = pygame.display.set_mode((1080, 700))
 pygame.display.set_caption("teste")
 cla = cm.Add_Text(screen)
 cla.display_menu()
+

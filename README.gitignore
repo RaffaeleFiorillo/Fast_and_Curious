@@ -5,14 +5,14 @@
 
 #################################################################################
 
------------------ Especificaçoes de hardware&software usados --------------------
+--------- Especificaçoes dos computadores utilizados no desenvolvimento ---------
 - Desenvolvido em Windows 10;
 - Processador(es): AMD Ryzen 5, Intel Core i7, Intel Core i5;
 - RAM: 8Gb;
 
 #################################################################################
 
---------------------------- Softwares utilizado ---------------------------------
+--------------------------- Softwares utilizados ---------------------------------
 - Imagens: Paint(Criar e modificar imagens), Gimp(Remover backgrounds de imagens grandes), Pixelart(Remover backgrounds de imagens pequenas);
 - Sons: Audacity;
 - Editor para codigo: PyCharm;
@@ -23,6 +23,10 @@
 - Disco: 5Mb;
 - RAM: 70Mb;
 - OS: Windows 8, Linux (nao testado para versoes antes de 2018);
+
+O computador deve ter aparelhos de som incorporados ou ligados (escutas, altifalantes, colunas, ...).
+Se este requisito nao for cumprido, o jogo nao poderá ser executado porque pygame nao vai saber onde
+enviar o output sonoro do jogo.
 
 obs:Em teoria deveria funcionar para qualquer sistema operativo, mas nao foi testado
 para outros sistemas operativos e pode ter falhas imprevistas ou comportamentos indesejados

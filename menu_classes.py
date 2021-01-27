@@ -952,6 +952,7 @@ class Add_Text:
         self.effects = (False, True)
         self.effect = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
         self.active_code_x = 0
+        self.text_lines_images = None
         self.screen = screen
         self.character_number = 0
         self.written_text = ""
@@ -1003,7 +1004,13 @@ class Add_Text:
             self.refresh()
 
     def create_text(self) -> None:
-        pass
+        coordinates = [(15, 15), (15, 35), (15, 55), (15, 75), (15, 95), (15, 115)]
+        text_background = pygame.Surface((519, 125))
+        text_background.blit(pygame.image.load("images/texts/background.png"), (0, 0))
+        for img, coo in zip(self.text_lines_images, coordinates):
+            text_background.blit(img, coo)
+        last_number_text = f.get_last_text_number()
+        pygame.image.save(text_background, f"images/texts/{last_number_text+1}.png")
 
     def validate_text_information(self) -> bool:
         special = [",", ".", "'", " "]
@@ -1047,6 +1054,7 @@ class Add_Text:
         images = f.convert_text_to_images(self.written_text)
         for img, coo in zip(images, coordinates):
             self.screen.blit(img, coo)
+        self.text_lines_images = images
 
     def refresh(self) -> None:
         self.screen.blit(self.image, (0, 0))

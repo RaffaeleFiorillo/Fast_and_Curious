@@ -1,5 +1,5 @@
 # This module contains functions that are used by all the others modules
-
+# -------------------------------------------- IMPORTS -----------------------------------------------------------------
 from time import sleep
 import pygame
 from os import walk, mkdir
@@ -22,6 +22,7 @@ code_meaning = {3: "unknown", 1: "road", 2: "parts", 0: "lava"}
 # AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
 weights = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
+SOUND_VOLUME = 1.0
 
 
 # ------------------------------------- REIMPLEMENTED FUNCTIONS --------------------------------------------------------
@@ -48,12 +49,22 @@ def os_name():
     return system_name
 
 
+# uses the pygame module to load a sound to memory and returns it
 def load_sound(location):
     return pygame.mixer.Sound(f"sounds/{location}")
 
 
+# plays a sound passed as argument
 def play(sound: pygame.mixer.Sound):
+    volume = get_sound_volume()
+    print(volume)
+    sound.set_volume(volume)
     sound.play()
+
+
+# stops all currently playing sounds
+def stop_all_sounds():
+    pygame.mixer.stop()
 
 
 # ------------------------------------------ SOUNDS --------------------------------------------------------------------
@@ -107,6 +118,16 @@ def prep_cores():
 
 
 # -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------
+def get_sound_volume():
+    file = open("saves/active_user.txt", "r")
+    line = file.readline().split(" ")
+    file.close()
+    if len(line) != 1:
+        return float(line[7])/10
+    else:
+        return 1.0
+
+
 def show_error_message(screen, code):
     play(error_sound)
     screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png"), (230, 200))

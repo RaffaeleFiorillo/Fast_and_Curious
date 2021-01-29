@@ -31,6 +31,7 @@ def start_page(screen):
 # ------------------------------------------- MAIN MENU ----------------------------------------------------------------
 # display and manage the Main Menu, leads to the Choose User Menu, New Game Menu or Exit Game Menu
 def main_menu(screen):
+    f.stop_all_sounds()
     f.play(change_menu_sound)
     position_x_main = (1080 - 260) // 2
     position_y_main = [y for y in range(150, 600, 150)]

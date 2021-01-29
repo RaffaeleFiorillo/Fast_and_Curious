@@ -13,6 +13,7 @@ import functions as f
 change_menu_sound = f.load_sound("menu/change_menu.WAV")        # sound for when a user enters a new menu
 delete_account_sound = f.load_sound("menu/delete_account.WAV")  # sound for deleting account
 enter_password_sound = f.load_sound("menu/enter_password.WAV")  # sound for when a password verification is required
+exit_sound = f.load_sound("menu/exit.WAV")                     # sound for when the user wants to exit or logout
 
 
 # ------------------------------------------ GAME START ----------------------------------------------------------------
@@ -62,6 +63,7 @@ def create_new_account(screen):
 
 # activated when a user wants to exit the Game, leads to finish the game's execution or Main Menu
 def exit_game(screen):
+    f.play(exit_sound)
     if cm.Exit("images/menu/exit/exit_game.png", screen).display_menu():
         f.erase_active_user_data()
         exit("Exit Game")
@@ -167,6 +169,7 @@ def unlock_next_level(screen):
 
 # activated when a user wants to exit the Game Menu, leads to the Main Menu or Game Menu
 def exit_game_menu(screen):
+    f.play(exit_sound)
     if cm.Exit("images/menu/exit/exit_menu.png", screen).display_menu():
         f.erase_active_user_data()
         return "main_menu"

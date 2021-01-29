@@ -9,7 +9,10 @@ import menu_classes as cm
 import game_classes as gc
 import functions as f
 
-change_menu_sound = f.load_sound("menu/change_menu.WAV")
+# -------------------------------------------- SOUNDS ------------------------------------------------------------------
+change_menu_sound = f.load_sound("menu/change_menu.WAV")        # sound for when a user enters a new menu
+delete_account_sound = f.load_sound("menu/delete_account.WAV")  # sound for deleting account
+enter_password_sound = f.load_sound("menu/enter_password.WAV")  # sound for when a password verification is required
 
 
 # ------------------------------------------ GAME START ----------------------------------------------------------------
@@ -223,6 +226,7 @@ def delete_account(screen):
         verification_password = cm.Enter_Password(screen, True).display_menu()
         file.close()
         if verification_password == "main_menu":
+            f.play(delete_account_sound)
             f.delete_user_account(line[0])
         return verification_password
     return "manage"
@@ -241,4 +245,5 @@ def add_text(screen):
 # called him. Every time it is said "after password verification" in a commentary, this menu is used
 def enter_password(screen):
     e_m = cm.Enter_Password(screen)
+    f.play(enter_password_sound)
     return e_m.display_menu()

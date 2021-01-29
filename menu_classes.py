@@ -11,8 +11,13 @@ import pygame
 import functions as f
 
 
-# --------------------------------------------------- GLOBALS ----------------------------------------------------------
-buttont_change_sound = f.load_sound("menu/button_activation.WAV")
+# --------------------------------------------------- SOUNDS ----------------------------------------------------------
+button_y_sound = f.load_sound("menu/button_activation.WAV")     # sound for changing button on y axis
+button_x_sound = f.load_sound("menu/button_lateral.WAV")        # sound for changing button on x axis
+volume_change_sound = f.load_sound("menu/volume_change.WAV")    # sound for changing volume
+erase_letter_sound = f.load_sound("menu/typing.WAV")            # sound for every time a letter is erased
+error_sound = f.load_sound("menu/error_message2.WAV")           # sound for every time an error occurs
+success_sound = f.load_sound("menu/success.WAV")                # sound for every time a success occurs
 
 
 # ------------------------------------------------ SUPPORT CLASSES -----------------------------------------------------
@@ -133,10 +138,10 @@ class Menu_image_sequence:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_RIGHT]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.current_page += 1
         elif keys[pygame.K_LEFT]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.current_page -= 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.current_page == self.num_pages:
@@ -231,10 +236,10 @@ class Menu:
     def manage_buttons(self, keys):
         valor = 0
         if keys[pygame.K_UP]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             valor = -1
         elif keys[pygame.K_DOWN]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             valor = 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.internal_list[self.active_code].effect
@@ -300,10 +305,10 @@ class Exit:
     def manage_buttons(self, keys):
         valor = 0
         if keys[pygame.K_RIGHT]:
-            # f.play()
+            f.play(button_x_sound)
             valor = 1
         elif keys[pygame.K_LEFT]:
-            # f.play()
+            f.play(button_x_sound)
             valor = -1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.effects[self.active_code]
@@ -404,14 +409,16 @@ class Create_Account:
 
     def manage_buttons(self, keys, event):
         if keys[pygame.K_RIGHT]:
+            f.play(button_x_sound)
             self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
+            f.play(button_x_sound)
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.active_code_y = 1
         elif keys[pygame.K_UP]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.active_code_y = 0
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.effects[self.active_code_x]:
@@ -437,6 +444,7 @@ class Create_Account:
         elif keys[pygame.K_TAB]:
             self.hide = not self.hide
         elif event.key == pygame.K_BACKSPACE:
+            f.play(erase_letter_sound)
             self.inputs[self.active_code_y] = self.inputs[self.active_code_y][:-1]
         elif len(self.inputs[self.active_code_y]) <= 25 and self.active_code_y == 1:
             self.inputs[self.active_code_y].append(event.unicode)
@@ -506,11 +514,11 @@ class Choose_Account:
         elif keys[pygame.K_LEFT]:
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.active_code_y += 1
             self.previous_button = self.active_code_y-1
         elif keys[pygame.K_UP]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.active_code_y -= 1
             self.previous_button = self.active_code_y+1
         self.control_previous_button()
@@ -579,6 +587,7 @@ class Enter_Password:
         self.user.get_info()
 
     def show_error_message(self) -> None:
+        f.play(error_sound)
         pygame.image.save(self.screen, "images/menu/interfaces/prov_image/prov_image.png")
         self.screen.blit(pygame.image.load(f"images/menu/messages/error5.png"), (230, 200))
         pygame.display.update()
@@ -586,6 +595,7 @@ class Enter_Password:
         self.screen.blit(pygame.image.load("images/menu/interfaces/prov_image/prov_image.png"), (0, 0))
 
     def show_success_message(self) -> None:
+        f.play(success_sound)
         if self.change:
             self.screen.blit(pygame.image.load("images/menu/messages/success3.png"), (230, 200))
             time = 3
@@ -618,6 +628,7 @@ class Enter_Password:
 
     def manage_buttons(self, keys, event):
         if event.key == pygame.K_BACKSPACE:
+            f.play(erase_letter_sound)
             self.password_list = self.password_list[:-1]
         elif keys[pygame.K_ESCAPE]:
             if self.change:
@@ -694,15 +705,17 @@ class Management:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_UP]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.active_code -= 1
         elif keys[pygame.K_DOWN]:
-            f.play(buttont_change_sound)
+            f.play(button_y_sound)
             self.active_code += 1
         elif self.active_code == 0 or self.active_code == 1:
             if keys[pygame.K_LEFT]:
+                f.play(volume_change_sound)
                 self.list[self.active_code].change_value(-1)
             elif keys[pygame.K_RIGHT]:
+                f.play(volume_change_sound)
                 self.list[self.active_code].change_value(1)
             self.update_user()
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
@@ -781,9 +794,11 @@ class Results_AI:
 
     def display_level_info_message(self):
         message_dict = {True: "success5", False: "error8"}
-        time_dict = {True: 3, False: 6}
+        time_dict = {True: 3, False: 3}
+        sound_dict = {True: success_sound, False: error_sound}
         message = message_dict[self.requirements_satisfied]
         time = time_dict[self.requirements_satisfied]
+        f.play(sound_dict[self.requirements_satisfied])
         self.screen.blit(pygame.image.load(f"images/menu/messages/{message}.png"), (230, 200))
         pygame.display.update()
         f.wait(time)
@@ -869,11 +884,13 @@ class Unlock_Level:
         file.close()
 
     def show_error_message(self) -> None:
+        f.play(error_sound)
         self.screen.blit(pygame.image.load(f"images/menu/messages/error6.png"), (230, 200))
         pygame.display.update()
         f.wait(3)
 
     def show_success_message(self) -> None:
+        f.play(success_sound)
         self.screen.blit(pygame.image.load("images/menu/messages/success6.png"), (230, 200))
         pygame.display.update()
         f.wait(3)
@@ -984,11 +1001,13 @@ class Add_Text:
             self.current_frame = 0
 
     def show_error_message(self) -> None:
+        f.play(error_sound)
         self.screen.blit(pygame.image.load(f"images/menu/messages/error{self.error_code}.png"), (230, 200))
         pygame.display.update()
         f.wait(3)
 
     def show_success_message(self) -> None:
+        f.play(success_sound)
         self.screen.blit(pygame.image.load("images/menu/messages/success7.png"), (230, 200))
         pygame.display.update()
         f.wait(3)
@@ -1046,8 +1065,10 @@ class Add_Text:
 
     def manage_buttons(self, keys, event):
         if keys[pygame.K_RIGHT]:
+            f.play(button_x_sound)
             self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
+            f.play(button_x_sound)
             self.active_code_x = 0
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.active_code_x:
@@ -1055,6 +1076,7 @@ class Add_Text:
             else:
                 return False
         elif event.key == pygame.K_BACKSPACE:
+            f.play(erase_letter_sound)
             self.written_text = self.written_text[:-1]
             self.character_number-=1
             if self.character_number < 0:

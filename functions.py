@@ -24,7 +24,7 @@ weights = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.1709
 bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
 
 
-# --------------------------------------------- REIMPLEMENTED FUNCTIONS ------------------------------------------------
+# ------------------------------------- REIMPLEMENTED FUNCTIONS --------------------------------------------------------
 # These functions are just a reimplementation of existing python packages. They are useful because other modules of this
 # game don't need to import the module random or time (etc.), just this module functions.
 
@@ -54,6 +54,11 @@ def load_sound(location):
 
 def play(sound: pygame.mixer.Sound):
     sound.play()
+
+
+# ------------------------------------------ SOUNDS --------------------------------------------------------------------
+error_sound = load_sound("menu/error_message2.WAV")  # sound for every time an error occurs
+success_sound = load_sound("menu/success.WAV")       # sound for every time a success occurs
 
 
 # ----------------------------------------- CAR AI/VISION FUNCTIONS ----------------------------------------------------
@@ -103,12 +108,14 @@ def prep_cores():
 
 # -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------
 def show_error_message(screen, code):
+    play(error_sound)
     screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png"), (230, 200))
     pygame.display.update()
     wait(3)
 
 
 def show_success_message(screen, code) -> None:
+    play(success_sound)
     screen.blit(pygame.image.load(f"images/menu/messages/success{code}.png"), (230, 200))
     pygame.display.update()
     wait(3)

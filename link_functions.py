@@ -13,12 +13,15 @@ import functions as f
 change_menu_sound = f.load_sound("menu/change_menu.WAV")        # sound for when a user enters a new menu
 delete_account_sound = f.load_sound("menu/delete_account.WAV")  # sound for deleting account
 enter_password_sound = f.load_sound("menu/enter_password.WAV")  # sound for when a password verification is required
-exit_sound = f.load_sound("menu/exit.WAV")                     # sound for when the user wants to exit or logout
+exit_sound = f.load_sound("menu/exit.WAV")                      # sound for when the user wants to exit or logout
+start_sound = f.load_sound("menu/ignition.WAV")                 # sound for when the game is executed
 
 
 # ------------------------------------------ GAME START ----------------------------------------------------------------
+# this is the first interface the user sees when he opens the game
 def start_page(screen):
     start = cm.Start(screen)
+    f.play(start_sound)
     output = start.display_menu()
     if output:
         return "main_menu"

@@ -11,6 +11,10 @@ import pygame
 import functions as f
 
 
+# --------------------------------------------------- GLOBALS ----------------------------------------------------------
+buttont_change_sound = f.load_sound("menu/button_activation.WAV")
+
+
 # ------------------------------------------------ SUPPORT CLASSES -----------------------------------------------------
 class Button:
     def __init__(self, x, y, directory, effect, code):
@@ -129,8 +133,10 @@ class Menu_image_sequence:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_RIGHT]:
+            f.play(buttont_change_sound)
             self.current_page += 1
         elif keys[pygame.K_LEFT]:
+            f.play(buttont_change_sound)
             self.current_page -= 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.current_page == self.num_pages:
@@ -225,8 +231,10 @@ class Menu:
     def manage_buttons(self, keys):
         valor = 0
         if keys[pygame.K_UP]:
+            f.play(buttont_change_sound)
             valor = -1
         elif keys[pygame.K_DOWN]:
+            f.play(buttont_change_sound)
             valor = 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.internal_list[self.active_code].effect
@@ -292,8 +300,10 @@ class Exit:
     def manage_buttons(self, keys):
         valor = 0
         if keys[pygame.K_RIGHT]:
+            # f.play()
             valor = 1
         elif keys[pygame.K_LEFT]:
+            # f.play()
             valor = -1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.effects[self.active_code]
@@ -398,8 +408,10 @@ class Create_Account:
         elif keys[pygame.K_LEFT]:
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
+            f.play(buttont_change_sound)
             self.active_code_y = 1
         elif keys[pygame.K_UP]:
+            f.play(buttont_change_sound)
             self.active_code_y = 0
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.effects[self.active_code_x]:
@@ -494,9 +506,11 @@ class Choose_Account:
         elif keys[pygame.K_LEFT]:
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
+            f.play(buttont_change_sound)
             self.active_code_y += 1
             self.previous_button = self.active_code_y-1
         elif keys[pygame.K_UP]:
+            f.play(buttont_change_sound)
             self.active_code_y -= 1
             self.previous_button = self.active_code_y+1
         self.control_previous_button()
@@ -680,8 +694,10 @@ class Management:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_UP]:
+            f.play(buttont_change_sound)
             self.active_code -= 1
         elif keys[pygame.K_DOWN]:
+            f.play(buttont_change_sound)
             self.active_code += 1
         elif self.active_code == 0 or self.active_code == 1:
             if keys[pygame.K_LEFT]:

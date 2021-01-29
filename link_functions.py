@@ -9,6 +9,8 @@ import menu_classes as cm
 import game_classes as gc
 import functions as f
 
+change_menu_sound = f.load_sound("menu/change_menu.WAV")
+
 
 # ------------------------------------------ GAME START ----------------------------------------------------------------
 def start_page(screen):
@@ -22,6 +24,7 @@ def start_page(screen):
 # ------------------------------------------- MAIN MENU ----------------------------------------------------------------
 # display and manage the Main Menu, leads to the Choose User Menu, New Game Menu or Exit Game Menu
 def main_menu(screen):
+    f.play(change_menu_sound)
     position_x_main = (1080 - 260) // 2
     position_y_main = [y for y in range(150, 600, 150)]
     effects_main = ["choose", "new", "exit1"]
@@ -34,12 +37,14 @@ def main_menu(screen):
 
 # display Choose User Menu, leads to the Game Menu(after password verification), itself or the Main Menu.
 def choose_user(screen):
+    f.play(change_menu_sound)
     m_m = cm.Choose_Account(screen)
     return m_m.display_menu()
 
 
 # display the Create Account Menu, leads to the Game Menu or to the Main Menu
 def create_new_account(screen):
+    f.play(change_menu_sound)
     if len(f.list_users()) == 7:
         f.show_error_message(screen, 6)
         return "main_menu"
@@ -64,6 +69,7 @@ def exit_game(screen):
 # display and manage the Game Menu, leads to the Manage Menu, Tutorial Menu, display Story, Game AI and Parts
 # or Exit Game Menu
 def game_menu(screen):
+    f.play(change_menu_sound)
     position_x_game = (1080 - 260) // 2
     position_y_game = [y for y in range(107, 600, 80)]
     effects_game = ["story", "m_ai", "m_part", "tutorial", "manage", "exit2"]
@@ -83,6 +89,7 @@ def game_menu(screen):
 
 # A sequence of slides with the game's story images and texts. Leads to the Game Menu or to the next slide of the story
 def display_story(screen):
+    f.play(change_menu_sound)
     story_slides = cm.Menu_image_sequence(screen, "story", 10, "game_menu", "Story")
     effect = story_slides.display_menu()
     return effect
@@ -112,6 +119,7 @@ def game_parts(screen):
 
 # display the Tutorial Menu, leads to all the tutorials available or to the Game Menu
 def tutorial(screen):
+    f.play(change_menu_sound)
     position_x_tutorial = (1080 - 260) // 2
     position_y_tutorial = [y for y in range(110, 600, 100)]
     effects_tutorial = ["commands", "t_save", "enemies", "level_up", "exit3"]
@@ -128,6 +136,7 @@ def tutorial(screen):
 
 # display the Management Menu. It leads to the Game Menu, Delete Account Menu, Change Password Menu or Add Text Menu
 def manage_account(screen):
+    f.play(change_menu_sound)
     position_x = (1080 - 260) // 2
     position_y = [y for y in range(155, 600, 70)]
     effects = ["", "", "add", "change_password", "eliminate_account", "exit3"]
@@ -163,18 +172,22 @@ def exit_game_menu(screen):
 
 # ----------------------------------------------- TUTORIAL -------------------------------------------------------------
 def tutorial_s(screen):
+    f.play(change_menu_sound)
     pass
 
 
 def tutorial_c(screen):
+    f.play(change_menu_sound)
     pass
 
 
 def tutorial_e(screen):
+    f.play(change_menu_sound)
     pass
 
 
 def tutorial_lu(screen):
+    f.play(change_menu_sound)
     pass
 
 
@@ -188,6 +201,7 @@ def exit_tutorial(screen):
 # --------------------------------------------- MANAGEMENT -------------------------------------------------------------
 # display the Change Password Menu. It leads to the Management Menu (after password verification)
 def change_password(screen):
+    f.play(change_menu_sound)
     if len(f.list_users()) == 7:
         f.show_error_message(screen, 6)
         return "main_menu"
@@ -202,6 +216,7 @@ def change_password(screen):
 
 # display the Delete Account Menu. It leads to the Main Menu (after password verification) or Management Menu
 def delete_account(screen):
+    f.play(change_menu_sound)
     if cm.Exit("images/menu/exit/delete_account.png", screen).display_menu():
         file = open("saves/active_user.txt", "r")
         line = file.readline().split(" ")
@@ -215,6 +230,7 @@ def delete_account(screen):
 
 # display the Add Text Menu. It leads to the Management Menu for both successful and Unsuccessful outcome
 def add_text(screen):
+    f.play(change_menu_sound)
     at = cm.Add_Text(screen)
     at.display_menu()
     return "manage"

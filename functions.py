@@ -9,6 +9,8 @@ from gc import collect
 from random import choice as random_choice, randint as random_randint, random as random_random
 from math import tanh
 
+pygame.mixer.init()
+
 # ---------------------------------------- GLOBAL VARIABLES ------------------------------------------------------------
 root_directory = "saves/"
 cores_obst = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 130, 18], [255, 17, 11], [255, 18, 11],
@@ -44,6 +46,14 @@ def wait(seconds):
 
 def os_name():
     return system_name
+
+
+def load_sound(location):
+    return pygame.mixer.Sound(f"sounds/{location}")
+
+
+def play(sound: pygame.mixer.Sound):
+    sound.play()
 
 
 # ----------------------------------------- CAR AI/VISION FUNCTIONS ----------------------------------------------------
@@ -135,8 +145,8 @@ def create_sized_text(max_size_image, max_size_letter, text, color, min_size_let
 
 # writes the name and password typed by a user in the Create User Menu
 def write_name_password(screen, name, password, active, hide):
-    coordinates1 = [(333, 203), (335, 349)]
-    pygame.draw.rect(screen, (0, 0, 255), (coordinates1[active], (420, 57)), 8)
+    coordinates1 = [(330, 205), (330, 351)]
+    pygame.draw.rect(screen, (0, 0, 255), (coordinates1[active], (422, 57)), 8)
     screen.blit(pygame.image.load("images/menu/interfaces/navigation/pointer.png"), (coordinates1[active][0]+450,
                                                                                      coordinates1[active][1]))
     coordinates2 = [(385, 217), (385, 363)]

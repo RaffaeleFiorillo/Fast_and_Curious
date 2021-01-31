@@ -1,6 +1,5 @@
 # This module contains functions that are used by all the others modules
 # -------------------------------------------- IMPORTS -----------------------------------------------------------------
-from time import sleep
 import pygame
 from os import walk, mkdir
 from sys import platform as system_name
@@ -9,9 +8,10 @@ from gc import collect
 from random import choice as random_choice, randint as random_randint, random as random_random
 from math import tanh
 
-pygame.mixer.init()
 
 # ---------------------------------------- GLOBAL VARIABLES ------------------------------------------------------------
+pygame.mixer.init()
+
 root_directory = "saves/"
 cores_obst = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 130, 18], [255, 17, 11], [255, 18, 11],
               [255, 18, 12], [195, 195, 195], [163, 73, 164], [248, 12, 35], [255, 255, 255]]
@@ -22,7 +22,6 @@ code_meaning = {3: "unknown", 1: "road", 2: "parts", 0: "lava"}
 # AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
 weights = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
-SOUND_VOLUME = 1.0
 
 
 # ------------------------------------- REIMPLEMENTED FUNCTIONS --------------------------------------------------------
@@ -42,7 +41,7 @@ def random():
 
 
 def wait(seconds):
-    sleep(seconds)
+    pygame.time.wait(seconds*1000)
 
 
 def os_name():
@@ -55,11 +54,16 @@ def load_sound(location):
 
 
 # plays a sound passed as argument
-def play(sound: pygame.mixer.Sound):
-    volume = get_sound_volume()
-    print(volume)
-    sound.set_volume(volume)
-    sound.play()
+def play(sound: pygame.mixer.Sound, is_music=False):
+    if is_music:
+        sound = load_sound("menu/music.WAV")
+        volume = get_music_volume()
+        sound.set_volume(volume)
+        sound.play(-1)
+    else:
+        volume = get_sound_volume()
+        sound.set_volume(volume)
+        sound.play()
 
 
 # stops all currently playing sounds
@@ -126,6 +130,16 @@ def get_sound_volume():
         return float(line[7])/10
     else:
         return 1.0
+
+
+def get_music_volume():
+    file = open("saves/active_user.txt", "r")
+    line = file.readline().split(" ")
+    file.close()
+    if len(line) != 1:
+        return float(line[6])/20
+    else:
+        return 0.5
 
 
 def show_error_message(screen, code):

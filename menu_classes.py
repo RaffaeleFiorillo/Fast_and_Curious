@@ -6,7 +6,7 @@
 # The manage_buttons method is for transforming input from the keyboard into the correct output. And the refresh method
 # just updates the menu after every alteration the user makes.
 
-# ---------------------------------------------------- IMPORTS ---------------------------------------------------------
+# -------------------------------------------------- IMPORTS -----------------------------------------------------------
 import pygame
 import functions as f
 
@@ -57,8 +57,11 @@ class Button2(Button):
         self.value += add
         if self.value > 10:
             self.value = 10
+            return False
         elif self.value < 0:
             self.value = 0
+            return False
+        return True
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -138,10 +141,16 @@ class Menu_image_sequence:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_RIGHT]:
-            f.play(button_y_sound)
+            if self.current_page+1 == self.num_pages:
+                f.play(error_sound)
+            else:
+                f.play(button_y_sound)
             self.current_page += 1
         elif keys[pygame.K_LEFT]:
-            f.play(button_y_sound)
+            if self.current_page == 0:
+                f.play(error_sound)
+            else:
+                f.play(button_y_sound)
             self.current_page -= 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.current_page == self.num_pages:
@@ -161,10 +170,15 @@ class Menu_image_sequence:
         else:
             return 200, 640, 1, 1
 
+    def write_page_number(self):
+        page_image = f.create_sized_text(20, 50, str(self.current_page+1), (255, 255, 255))
+        self.screen.blit(page_image, (515, 640))
+
     def refresh(self):
         self.screen.blit(self.background_image, (0, 0))
         self.screen.blit(self.images_list[self.current_page], (108, 120))
         self.screen.blit(self.slide_name, (400, 0))
+        self.write_page_number()
         pygame.draw.rect(self.screen, (0, 0, 0), self.get_rectangle())
         pygame.display.update()
 
@@ -295,7 +309,7 @@ class Exit:
             clock.tick(30)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return False
+                    exit("Game Exit")
                 if event.type == pygame.KEYDOWN:
                     effect = self.manage_buttons(pygame.key.get_pressed())
                     if effect is not None:
@@ -510,8 +524,10 @@ class Choose_Account:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_RIGHT]:
+            f.play(button_x_sound)
             self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
+            f.play(button_x_sound)
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
             f.play(button_y_sound)
@@ -712,11 +728,15 @@ class Management:
             self.active_code += 1
         elif self.active_code == 0 or self.active_code == 1:
             if keys[pygame.K_LEFT]:
-                f.play(volume_change_sound)
-                self.list[self.active_code].change_value(-1)
+                play_sound = self.list[self.active_code].change_value(-1)  # change_value returns True if max is reached
+                if play_sound:  # if volume is max or min, then the sound is played
+                    f.play(volume_change_sound)
             elif keys[pygame.K_RIGHT]:
-                f.play(volume_change_sound)
-                self.list[self.active_code].change_value(1)
+                play_sound = self.list[self.active_code].change_value(1)  # change_value returns True if max is reached
+                if play_sound is True:  # if volume is max or min, then the sound is not played
+                    f.play(volume_change_sound)
+                else:
+                    f.play(error_sound)
             self.update_user()
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.list[self.active_code].effect

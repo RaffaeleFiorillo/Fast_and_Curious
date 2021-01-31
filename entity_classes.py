@@ -8,6 +8,11 @@
 import pygame
 import functions as f
 
+# ---------------------------------------------------- SOUNDS ----------------------------------------------------------
+fire_sound = f.load_sound("game/level failed.WAV")
+part_sound = f.load_sound("game/part_collection.WAV")
+hit_sound = f.load_sound("game/impact.WAV")
+
 # ----------------------------------------------- GLOBAL VARIABLES -----------------------------------------------------
 obstacles_distance = 290
 parts_distance = 5
@@ -43,6 +48,7 @@ class Car:
         if self.fire_image_time < 1:
             self.fire_image_time += 1
         if fire_type:
+            f.play(fire_sound)
             self.fire_image = pygame.image.load("images/cars/car effects/nitro/blue.png")
         else:
             self.fire_image = pygame.image.load("images/cars/car effects/nitro/red.png")
@@ -57,6 +63,7 @@ class Car:
     def obstacle_collision(self, l_obstacles):
         for obst in l_obstacles:
             if self.hit_box.overlap(obst.hit_box, (self.x - obst.x + obst.adjust, self.y - obst.y + obst.adjust)):
+                f.play(hit_sound)
                 return True
         return False
 
@@ -72,6 +79,7 @@ class Car:
             if part.x + 44 >= self.rect[0] and part.x <= self.rect[0] + self.rect[2]:
                 if part.y + 24 >= self.rect[1] and part.y <= self.rect[1] + self.rect[3]:
                     value += part.value
+                    f.play(part_sound)
                     continue
                 else:
                     new_parts.append(part)
@@ -135,7 +143,7 @@ class Space_Time_Entity:
         screen.blit(self.images[int(self.index)], (0, 0))
 
 
-# ----------------------------------------------------- ROAD -----------------------------------------------------------
+# ---------------------------------------------------- ROAD ------------------------------------------------------------
 class Road:
     def __init__(self):
         self.current_frame = 0

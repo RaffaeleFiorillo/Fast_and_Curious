@@ -2,12 +2,17 @@
 # They are both similar and most of the things they do are the same. They only differ in duration and returned values.
 # They utilize classes of the "entity_classes" module. This way we can think about both of them like an interaction
 # management system for the game's entities (dictating rules, changing attributes based on certain events, etc.)
-
+# ----------------------------------------------- IMPORTS --------------------------------------------------------------
 import entity_classes as ce
 import pygame
 import functions as f
 
+# ----------------------------------------------- SOUNDS ---------------------------------------------------------------
+go_sound = f.load_sound("game/car_ignition.WAV")
+count_down_sound = f.load_sound("game/count_down.WAV")
 
+
+# ----------------------------------------------- CLASSES --------------------------------------------------------------
 # Creates a game where there is a time limit of 60 seconds
 class Mission_AI:
     def __init__(self, screen):
@@ -203,6 +208,7 @@ class Mission_AI:
         damage_count = 4
         next_image = 1
         current = 0
+        f.play(count_down_sound)
         while self.time_passed < 4.5:
             self.time_passed += self.clock.tick(30) / 990
             if self.time_passed <= 4:
@@ -211,8 +217,9 @@ class Mission_AI:
             self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png"), (420, 150))
             pygame.display.update()
             if current == next_image:
+                f.play(count_down_sound)
                 next_image += 1
-                # play sound here
+        f.play(go_sound)
         self.time_passed = 0
         while self.run:
             self.time_passed += self.clock.tick(30) / 990
@@ -220,6 +227,7 @@ class Mission_AI:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
+    # controls
                 if event.type == pygame.KEYDOWN:
                     self.manage_buttons(pygame.key.get_pressed(), event)
     # parts effects

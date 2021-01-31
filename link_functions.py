@@ -5,6 +5,7 @@
 # A function's comment in this module has a description and the functions it can lead to when it finishes
 # This module is divided in categories like: --- CATEGORY NAME --- ; in order to make it more understandable
 
+# -------------------------------------------- IMPORTS -----------------------------------------------------------------
 import menu_classes as cm
 import game_classes as gc
 import functions as f
@@ -131,7 +132,7 @@ def tutorial(screen):
     f.play(change_menu_sound)
     position_x_tutorial = (1080 - 260) // 2
     position_y_tutorial = [y for y in range(110, 600, 100)]
-    effects_tutorial = ["commands", "t_save", "enemies", "level_up", "exit3"]
+    effects_tutorial = ["controls", "save", "enemy", "level_up", "exit3"]
     buttons_tutorial = [
         cm.Button(position_x_tutorial, y, f"images/menu/buttons/4/{position_y_tutorial.index(y) + 1}.png",
                   effects_tutorial[position_y_tutorial.index(y)], position_y_tutorial.index(y)) for y in
@@ -183,29 +184,30 @@ def exit_game_menu(screen):
 # ----------------------------------------------- TUTORIAL -------------------------------------------------------------
 def tutorial_s(screen):
     f.play(change_menu_sound)
-    pass
+    tut_s_slides = cm.Menu_image_sequence(screen, "tutorial_save", 2, "tutorial", "Save")
+    effect = tut_s_slides.display_menu()
+    return effect
 
 
 def tutorial_c(screen):
     f.play(change_menu_sound)
-    pass
+    tut_c_slides = cm.Menu_image_sequence(screen, "tutorial_controls", 5, "tutorial", "Controls")
+    effect = tut_c_slides.display_menu()
+    return effect
 
 
 def tutorial_e(screen):
     f.play(change_menu_sound)
-    pass
+    tut_e_slides = cm.Menu_image_sequence(screen, "tutorial_enemies", 2, "tutorial", "Enemies")
+    effect = tut_e_slides.display_menu()
+    return effect
 
 
 def tutorial_lu(screen):
     f.play(change_menu_sound)
-    pass
-
-
-# activated when a user wants to exit the Tutorial Menu, leads to the Game Menu or Tutorial Menu
-def exit_tutorial(screen):
-    if cm.Exit("images/menu/exit/exit_menu.png", screen).display_menu():
-        return "game_menu"
-    return "tutorial"
+    tut_lu_slides = cm.Menu_image_sequence(screen, "tutorial_level_up", 3, "tutorial", "Level Up")
+    effect = tut_lu_slides.display_menu()
+    return effect
 
 
 # --------------------------------------------- MANAGEMENT -------------------------------------------------------------
@@ -254,3 +256,8 @@ def enter_password(screen):
     e_m = cm.Enter_Password(screen)
     f.play(enter_password_sound)
     return e_m.display_menu()
+
+
+def play_music():
+    f.stop_all_sounds()
+    f.play(None, True)

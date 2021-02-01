@@ -1117,6 +1117,5 @@ class Add_Text:
     def refresh(self) -> None:
         self.screen.blit(self.image, (0, 0))
         self.draw_buttons()
-        self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation3.png"), (355, 620))
         self.write_potential_text()
         pygame.display.update()

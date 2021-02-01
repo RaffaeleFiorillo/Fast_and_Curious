@@ -256,8 +256,3 @@ def enter_password(screen):
     e_m = cm.Enter_Password(screen)
     f.play(enter_password_sound)
     return e_m.display_menu()
-
-
-def play_music():
-    f.stop_all_sounds()
-    f.play(None, True)

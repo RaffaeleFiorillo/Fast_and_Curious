@@ -8,8 +8,13 @@ import pygame
 import functions as f
 
 # ----------------------------------------------- SOUNDS ---------------------------------------------------------------
-go_sound = f.load_sound("game/car_ignition.WAV")
-count_down_sound = f.load_sound("game/count_down.WAV")
+go_sound = f.load_sound("game/car_ignition.WAV")                # sound of after the final count down alert (GO)
+count_down_sound = f.load_sound("game/count_down.WAV")          # sound of the usual count down (3, 2, 1)
+space_time_hit_sound = f.load_sound("game/space_time_hit.WAV")  # sound of the space-time entity hitting
+tic_toc_sound = f.load_sound("game/tic_toc.WAV")                # sound of the final clock ticking
+game_over_sound = f.load_sound("game/game_over.WAV")            # sound of the match ending
+start_sound = f.load_sound("game/go.WAV")                       # sound of the GO image
+wrong_letter_sound = f.load_sound("game/letter_wrong.WAV")      # sound of the user typing a character wrong
 
 
 # ----------------------------------------------- CLASSES --------------------------------------------------------------
@@ -44,6 +49,8 @@ class Mission_AI:
         self.current_word_index = 0
         self.text_to_write = None
         self.set_up_texts()
+        # sound stuff
+        self.play_tic_toc = True
         # loop stuff
         self.clock = pygame.time.Clock()
         self.run = True
@@ -68,6 +75,7 @@ class Mission_AI:
 
     def control_resistance_energy(self):
         if self.car.x <= 290 and int(self.time_passed) % 2:
+            f.play(space_time_hit_sound)
             self.resistance -= 0.08*((300-self.car.x) // 8)
             self.energy -= 0.2 * ((300 - self.car.x) // 8)
         if self.energy > 0:
@@ -112,6 +120,7 @@ class Mission_AI:
         if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
             if self.car.speed > 3:
                 self.car.speed -= 1
+            f.play(wrong_letter_sound)
             return False
         elif self.written_text[-1][-1][-1] == self.text_to_write[self.line][self.current_word_index][last_letter_index]:
             if self.car.speed < 7:
@@ -127,6 +136,7 @@ class Mission_AI:
             return True
         if self.car.speed > 3:
             self.car.speed -= 1
+        f.play(wrong_letter_sound)
         return False
 
     def manage_buttons(self, keys, event):
@@ -217,9 +227,13 @@ class Mission_AI:
             self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png"), (420, 150))
             pygame.display.update()
             if current == next_image:
-                f.play(count_down_sound)
+                if next_image< 3:
+                    f.play(count_down_sound)
+                else:
+                    f.play(start_sound)
                 next_image += 1
         f.play(go_sound)
+        f.play_music()
         self.time_passed = 0
         while self.run:
             self.time_passed += self.clock.tick(30) / 990
@@ -256,7 +270,12 @@ class Mission_AI:
             self.update_precision()
             if self.run:
                 self.run = self.continue_game()
+            if int(self.time_passed) == 51 and self.play_tic_toc:
+                f.play(tic_toc_sound)
+                self.play_tic_toc = False
             self.refresh_game()
+        f.stop_all_sounds()
+        f.play(game_over_sound)
         return self.precision, self.speed, self.parts_collected, self.resistance, self.time_passed
 
 
@@ -315,6 +334,7 @@ class Mission_PARTS:
 
     def control_resistance_energy(self):
         if self.car.x <= 290 and int(self.time_passed) % 2:
+            f.play(space_time_hit_sound)
             self.resistance -= 0.08*((300-self.car.x) // 8)
             self.energy -= 0.2 * ((300 - self.car.x) // 8)
         if self.energy > 0:
@@ -416,6 +436,8 @@ class Mission_PARTS:
             self.written_text[self.line][self.current_word_index] += event.unicode
             if self.last_letter_correct():
                 self.correct_letters += 1
+            else:
+                f.play(wrong_letter_sound)
 
     def display_text(self):
         coordinates = [(290, 454), (290, 469), (290, 484), (290, 499), (290, 514), (290, 529), (290, 544), (290, 559)]
@@ -452,6 +474,7 @@ class Mission_PARTS:
         damage_count = 4
         next_image = 1
         current = 0
+        f.play(count_down_sound)
         while self.time_passed < 4.5:
             self.time_passed += self.clock.tick(30) / 990
             if self.time_passed <= 4:
@@ -460,8 +483,13 @@ class Mission_PARTS:
             self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png"), (420, 150))
             pygame.display.update()
             if current == next_image:
+                if next_image< 3:
+                    f.play(count_down_sound)
+                else:
+                    f.play(start_sound)
                 next_image += 1
-                # play sound here
+        f.play_music()
+        f.play(go_sound)
         self.time_passed = 0
         while self.run:
             self.time_passed += self.clock.tick(30) / 990
@@ -498,4 +526,6 @@ class Mission_PARTS:
             if self.run:
                 self.run = self.continue_game()
             self.refresh_game()
+        f.stop_all_sounds()
+        f.play(game_over_sound)
         return self.precision, self.speed, self.parts_collected, self.time_passed

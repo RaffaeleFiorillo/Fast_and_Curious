@@ -54,16 +54,21 @@ def load_sound(location):
 
 
 # plays a sound passed as argument
-def play(sound: pygame.mixer.Sound, is_music=False):
-    if is_music:
-        sound = load_sound("menu/music.WAV")
-        volume = get_music_volume()
-        sound.set_volume(volume)
-        sound.play(-1)
-    else:
-        volume = get_sound_volume()
-        sound.set_volume(volume)
-        sound.play()
+def play(sound: pygame.mixer.Sound):
+    volume = get_sound_volume()
+    sound.set_volume(volume)
+    sound.play()
+
+
+def play_music():
+    sound = music_sound
+    volume = get_music_volume()
+    sound.set_volume(volume)
+    sound.play(-1)
+
+
+def music_fade_out():
+    music_sound.fadeout(2)
 
 
 # stops all currently playing sounds
@@ -74,6 +79,7 @@ def stop_all_sounds():
 # ------------------------------------------ SOUNDS --------------------------------------------------------------------
 error_sound = load_sound("menu/error_message2.WAV")  # sound for every time an error occurs
 success_sound = load_sound("menu/success.WAV")       # sound for every time a success occurs
+music_sound = load_sound("game/music.WAV")
 
 
 # ----------------------------------------- CAR AI/VISION FUNCTIONS ----------------------------------------------------
@@ -137,7 +143,7 @@ def get_music_volume():
     line = file.readline().split(" ")
     file.close()
     if len(line) != 1:
-        return float(line[6])/20
+        return float(line[6])/20.0
     else:
         return 0.5
 

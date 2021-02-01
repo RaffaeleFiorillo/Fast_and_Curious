@@ -120,7 +120,6 @@ class Mission_AI:
         if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
             if self.car.speed > 3:
                 self.car.speed -= 1
-            f.play(wrong_letter_sound)
             return False
         elif self.written_text[-1][-1][-1] == self.text_to_write[self.line][self.current_word_index][last_letter_index]:
             if self.car.speed < 7:
@@ -136,7 +135,6 @@ class Mission_AI:
             return True
         if self.car.speed > 3:
             self.car.speed -= 1
-        f.play(wrong_letter_sound)
         return False
 
     def manage_buttons(self, keys, event):
@@ -180,6 +178,8 @@ class Mission_AI:
             self.written_text[self.line][self.current_word_index] += event.unicode
             if self.last_letter_correct():
                 self.correct_letters += 1
+            else:
+                f.play(wrong_letter_sound)
 
     def display_text(self):
         coordinates = [(290, 454), (290, 469), (290, 484), (290, 499), (290, 514), (290, 529), (290, 544), (290, 559)]

@@ -4,8 +4,7 @@ import link_functions as lf
 
 # Generic game class that takes some parameters and creates a screen and a dictionary of string keys and
 # function values. The keys are a returned value that depends on the link_function in use (see more in the module:
-# link_functions). Basically this class just creates the connection between the different menus,scenes and
-# functionalities.
+# link_functions). Basically this class just creates the connection between the different menus, functionalities, (...).
 class Game:
     link_function_dict: dict
 

@@ -25,34 +25,39 @@
 #################################################################################
 
 ------------------ Requisitos minimos de Hardware&software ----------------------
-- Disco: 25Mb;
+- Disco: 50Mb;
 - RAM: 80Mb;
-- OS: Windows 8, Linux (nao testado para versoes antes de 2018);
+- OS: Windows 8, Linux (não testado para versoes antes de 2018);
 
 O computador deve ter aparelhos de som incorporados ou ligados (escutas, altifalantes, colunas, ...).
 Se este requisito nao for cumprido, o jogo nao poderá ser executado porque pygame nao vai saber onde
 enviar o output sonoro do jogo.
 
-obs:Em teoria deveria funcionar para qualquer sistema operativo, mas nao foi testado
-para outros sistemas operativos e pode ter falhas imprevistas ou comportamentos indesejados
+obs:Em teoria deveria funcionar para qualquer sistema operativo, mas não foi testado
+para outros sistemas operativos e pode ter falhas imprevistas ou comportamentos indesejados.
 
-#################################################################################
-
----------------------------- Recomendado para -----------------------------------
-- Idade: Minimo de 12 anos;
-- Profissao/interesse: Qualquer que envolva escrever com um teclado de um computador;
-- Personalidade: curiosa, humoristica, competitiva.
-- Idioma: Ingles;
+O executavel não vai funcionar em Linux! Mas o codigo pode ser rodado.
 
 #################################################################################
 
 ---------------------------- Como executar --------------------------------------
-executar "Fast_and_Curious.exe" encontrado na pasta Fast_and_Curious
+executar (clicar duas vezes ou selecionar e dar enter em) o executavel "game" encontrado na pasta "Fast and Curious" (pode demorar alguns segundos
+para abrir).
+Comando usado para criar o executavel:
+	 "pyinstaller --onefile --noconsole -- windowed --icon=fire.ICO main.py"
+Nota: fire.ICO é o nome do icone do executavel. estava na mesma pasta do main quando o comando foi executado.
 
 #################################################################################
 
--------------------- Navegaçao/controles nos menus e jogo -----------------------
- A navegaçao e o jogo em si responde apenas a comandos do teclado (com excepçao da
+-------------------- Navegação/controles nos menus e jogo -----------------------
+ A navegação e o jogo em si responde apenas a comandos do teclado (com excepção da
 seta vermelha usada para fechar uma janela). 
- Cada Menu tem todas as instruçoes necessarias para poder navegar entre as varias
-opçoes que ele oferece, e informaçoes para esplicar para que cada uma destas opçoes serve.
+ Cada Menu tem todas as instruções necessarias para poder navegar entre as várias
+opções que ele oferece, e informações para explicar para que cada uma destas opções serve.
+
+##################################################################################
+----------------------------------- NOTAS ----------------------------------------
+Nota1: Em cada sub-pasta dentro da pasta "Fast and Curious" tem um ficheiro txt chamado "README" que contém informaçoes sobre o conteudo da mesma.
+
+Nota2: O jogo sob a forma de executavel foi testado e nunca resultou em erros. Caso ocorra um erro (nunca se
+sabe) seria bom contactar qualquer um dos elementos do grupo para entender/solucionar o problema ou ver como proceder. Obrigado!

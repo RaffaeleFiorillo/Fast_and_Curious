@@ -71,7 +71,7 @@ def exit_game(screen):
     f.play(exit_sound)
     if cm.Exit("images/menu/exit/exit_game.png", screen).display_menu():
         f.erase_active_user_data()
-        exit("Exit Game")
+        f.terminate_execution()
     return "main_menu"
 
 

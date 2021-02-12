@@ -2,7 +2,7 @@
 # -------------------------------------------- IMPORTS -----------------------------------------------------------------
 import pygame
 from os import walk, mkdir
-from sys import platform as system_name
+from sys import exit as exit_2
 from shutil import rmtree
 from gc import collect
 from random import choice as random_choice, randint as random_randint, random as random_random
@@ -15,7 +15,7 @@ pygame.mixer.init()
 root_directory = "saves/"
 cores_obst = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 130, 18], [255, 17, 11], [255, 18, 11],
               [255, 18, 12], [195, 195, 195], [163, 73, 164], [248, 12, 35], [255, 255, 255]]
-cores_part = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [237, 28, 36], [163, 73, 164], [255, 0, 255],
+cores_part = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [237, 28, 36], [255, 0, 255],
               [120, 0, 120], [0, 255, 255], [0, 0, 255]]
 cores_estrada = [[0, 0, 0], [108, 108, 108]]
 code_meaning = {3: "unknown", 1: "road", 2: "parts", 0: "lava"}
@@ -44,8 +44,8 @@ def wait(seconds):
     pygame.time.wait(seconds*1000)
 
 
-def os_name():
-    return system_name
+def terminate_execution():
+    exit_2()
 
 
 # uses the pygame module to load a sound to memory and returns it
@@ -174,8 +174,8 @@ def list_users():
 # returns a list with all the names of the texts that the user will type in the matches
 def get_text_names():
     texts = walk("texts")
-    texts = [text for text in texts][0][1:][1]
-    return texts
+    texts = [text for text in texts][0][1:][1][:-1]
+    return texts[:-1]
 
 
 # return a text image that fits into a set size, with some customizations (like color and font size)

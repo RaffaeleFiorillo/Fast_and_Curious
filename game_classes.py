@@ -45,19 +45,24 @@ class Mission_AI:
         self.line = 0
         self.max_lines = 8
         self.total_words = 0.0
+        self.total_words_all = 0.0
         self.correct_letters = 0
         self.current_word_index = 0
         self.text_to_write = None
-        self.set_up_texts()
+        self.set_up_texts(True)
         # sound stuff
         self.play_tic_toc = True
         # loop stuff
+        self.terminate = False
         self.clock = pygame.time.Clock()
         self.run = True
         self.time_passed = 0
         self.choice = 0
 
-    def set_up_texts(self):
+    def set_up_texts(self, first=False):
+        if not first:
+            self.terminate = True
+            return None
         self.text_name = f.choice(f.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
         lines = open(f"texts/{self.text_name}.txt", "r").readlines()
@@ -68,9 +73,6 @@ class Mission_AI:
         self.written_text = [[""]]
         self.line = 0
         self.max_lines = int(lines[0])
-        self.total_words = 0.0
-        self.correct_letters = 0
-        self.current_word_index = 0
         pygame.display.update()
 
     def control_resistance_energy(self):
@@ -201,6 +203,8 @@ class Mission_AI:
             return False
         elif int(self.time_passed) >= 60:
             return False
+        elif self.terminate:
+            return False
         return True
 
     def update_speed(self):
@@ -296,6 +300,8 @@ class Mission_PARTS:
         self.hud = ce.HUD(self.screen)
         self.speed = 0
         self.precision = 100
+        self.speed_list = []
+        self.precision_list = []
         # text stuff
         self.cursor = pygame.image.load("images/texts/cursor.png")
         self.written_text = [[""]]
@@ -309,14 +315,15 @@ class Mission_PARTS:
         self.correct_letters = 0
         self.current_word_index = 0
         self.text_to_write = None
-        self.set_up_texts()
+        self.set_up_texts(True)
         # loop stuff
         self.clock = pygame.time.Clock()
         self.run = True
         self.time_passed = 0
+        self.total_time = 0.0
         self.choice = 0
 
-    def set_up_texts(self):
+    def set_up_texts(self, first=False):
         self.text_name = f.choice(f.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
         lines = open(f"texts/{self.text_name}.txt", "r").readlines()
@@ -327,7 +334,12 @@ class Mission_PARTS:
         self.written_text = [[""]]
         self.line = 0
         self.max_lines = int(lines[0])
+        if not first:
+            self.speed_list.append(self.speed)
+            self.precision_list.append(self.precision)
+            self.total_time += self.time_passed
         self.total_words = 0.0
+        self.time_passed = 0.0
         self.correct_letters = 0
         self.current_word_index = 0
         pygame.display.update()
@@ -528,4 +540,7 @@ class Mission_PARTS:
             self.refresh_game()
         f.stop_all_sounds()
         f.play(game_over_sound)
-        return self.precision, self.speed, self.parts_collected, self.time_passed
+        self.set_up_texts()
+        pre = sum(self.precision_list) // len(self.precision_list)
+        speed = sum(self.speed_list) // len(self.speed_list)
+        return pre, speed, self.parts_collected, self.total_time

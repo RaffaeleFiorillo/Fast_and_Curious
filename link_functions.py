@@ -109,8 +109,8 @@ def display_story(screen):
 # info is updated.
 def game_ai(screen):
     game = gc.Mission_AI(screen)
-    precision, speed, parts_collected, resistance, time = game.game_loop()
-    results = cm.Results_AI(screen, precision, speed, parts_collected, resistance, time)
+    precision, speed, parts_collected, resistance, time, finished = game.game_loop()
+    results = cm.Results_AI(screen, precision, speed, parts_collected, resistance, time, finished)
     go_to_next_level, parts = results.display()
     f.save_performance_ai(go_to_next_level, parts, speed)
     return "game_menu"
@@ -214,9 +214,6 @@ def tutorial_lu(screen):
 # display the Change Password Menu. It leads to the Management Menu (after password verification)
 def change_password(screen):
     f.play(change_menu_sound)
-    if len(f.list_users()) == 7:
-        f.show_error_message(screen, 6)
-        return "main_menu"
     cp = cm.Create_Account("images/menu/interfaces/Main/change password.png", screen, True)
     effect = cp.display_menu()
     if effect == "change_password":

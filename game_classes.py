@@ -280,7 +280,7 @@ class Mission_AI:
             self.refresh_game()
         f.stop_all_sounds()
         f.play(game_over_sound)
-        return self.precision, self.speed, self.parts_collected, self.resistance, self.time_passed
+        return self.precision, self.speed, self.parts_collected, self.resistance, self.time_passed, self.terminate
 
 
 # Creates a game where the time limit is only imposed by the user's skills

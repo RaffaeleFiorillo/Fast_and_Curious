@@ -766,14 +766,14 @@ class Management:
 
 # Used every time a "Mission: AI" match is over and the game results must be displayed and processed
 class Results_AI:
-    def __init__(self, screen, precision, speed, parts_collected, resistance, time):
+    def __init__(self, screen, precision, speed, parts_collected, resistance, time, finished):
         self.screen = screen
         self.image = pygame.image.load("images/menu/interfaces/Main/Results_AI.png")
         self.requirements_satisfied = False
         self.parts = 0
-        self.values_images = self.initiate_results(precision, speed, parts_collected, resistance, time)
+        self.values_images = self.initiate_results(precision, speed, parts_collected, resistance, time, finished)
 
-    def initiate_results(self, precision, speed, parts_collected, resistance, time):
+    def initiate_results(self, precision, speed, parts_collected, resistance, time, finished):
         values = []
         # results about level requirements
         c_w = {True: "correct", False: "wrong"}
@@ -795,7 +795,7 @@ class Results_AI:
         self.parts = parts_collected-(100-int(resistance))*3
         values.append(font1.render(str(self.parts), True, (255, 255, 255)))
         # verify if requirements were satisfied in order to proceed to next level
-        if speed>=speed2 and precision>=precision2 and int(time)>= 60:
+        if speed>=speed2 and precision>=precision2 and (int(time)>= 60 or finished):
             self.requirements_satisfied = True
         return values
 

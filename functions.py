@@ -356,6 +356,9 @@ def save_performance_ai(go_to_next_level, parts, speed):
     file = open("saves/active_user.txt", "w")
     file.write(line)
     file.close()
+    file = open(f"saves/{str_val[0]}/next_level.txt", "w")
+    file.write("0")
+    file.close()
     file = open(f"saves/{str_val[0]}/data.txt", "w")
     line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
     file.write(line)

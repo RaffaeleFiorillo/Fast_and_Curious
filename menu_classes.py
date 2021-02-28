@@ -905,7 +905,7 @@ class Unlock_Level:
 
     def show_error_message(self) -> None:
         f.play(error_sound)
-        self.screen.blit(pygame.image.load(f"images/menu/messages/error6.png"), (230, 200))
+        self.screen.blit(pygame.image.load(f"images/menu/messages/error9.png"), (230, 200))
         pygame.display.update()
         f.wait(3)
 

@@ -309,7 +309,7 @@ class Exit:
             clock.tick(30)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit("Game Exit")
+                    f.terminate_execution()
                 if event.type == pygame.KEYDOWN:
                     effect = self.manage_buttons(pygame.key.get_pressed())
                     if effect is not None:

@@ -343,7 +343,7 @@ def save_performance_ai(go_to_next_level, parts, speed):
     file = open("saves/active_user.txt", "r")
     values_p = file.readline().split(" ")
     file.close()
-    str_val = [values_p[0], values_p[5]],
+    str_val = [values_p[0], values_p[5]]
     int_val = [int(value) for value in values_p if value.isdigit()]
     if go_to_next_level:
         int_val[2] +=1

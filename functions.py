@@ -343,10 +343,13 @@ def save_performance_ai(go_to_next_level, parts, speed):
     file = open("saves/active_user.txt", "r")
     values_p = file.readline().split(" ")
     file.close()
-    str_val = [values_p[0], values_p[5]]
+    str_val = [values_p[0], values_p[5]],
     int_val = [int(value) for value in values_p if value.isdigit()]
     if go_to_next_level:
         int_val[2] +=1
+        file = open(f"saves/{str_val[0]}/next_level.txt", "w")
+        file.write("0")
+        file.close()
     int_val[3] += parts
     if int_val[3] < 0:
         int_val[3] = 0
@@ -355,9 +358,6 @@ def save_performance_ai(go_to_next_level, parts, speed):
     line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
     file = open("saves/active_user.txt", "w")
     file.write(line)
-    file.close()
-    file = open(f"saves/{str_val[0]}/next_level.txt", "w")
-    file.write("0")
     file.close()
     file = open(f"saves/{str_val[0]}/data.txt", "w")
     line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"

@@ -530,13 +530,15 @@ class Choose_Account:
             f.play(button_x_sound)
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
-            f.play(button_y_sound)
-            self.active_code_y += 1
-            self.previous_button = self.active_code_y-1
+            if len(self.buttons) > 1:
+                f.play(button_y_sound)
+                self.active_code_y += 1
+                self.previous_button = self.active_code_y-1
         elif keys[pygame.K_UP]:
-            f.play(button_y_sound)
-            self.active_code_y -= 1
-            self.previous_button = self.active_code_y+1
+            if len(self.buttons) > 1:
+                f.play(button_y_sound)
+                self.active_code_y -= 1
+                self.previous_button = self.active_code_y+1
         self.control_previous_button()
         if self.active_code_y > len(self.users)-1:
             self.active_code_y = 0
@@ -569,9 +571,12 @@ class Choose_Account:
         self.set_active_button()
 
     def set_active_button(self):
-        self.adjust_user_name_images()
-        self.buttons[self.previous_button].image = self.passive_button_image
-        self.buttons[self.active_code_y].image = self.active_button_image
+        if len(self.users) > 1:
+            self.adjust_user_name_images()
+            self.buttons[self.previous_button].image = self.passive_button_image
+            self.buttons[self.active_code_y].image = self.active_button_image
+        else:
+            self.buttons[self.previous_button].image = self.active_button_image
 
     def refresh(self):
         coordinates = {0: (325, 520), 1: (558, 520)}

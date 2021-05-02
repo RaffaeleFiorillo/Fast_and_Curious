@@ -8,7 +8,7 @@
  
  2nd -> Put them all in the same directory;
  
- 3rd -> Run game.exe
+ 3rd -> Run "game.exe";
  
  4rth -> Enjoy!!!
  

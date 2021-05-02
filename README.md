@@ -26,6 +26,7 @@
   -> Multiplayer Option: 
       - Local: Connect with local friends and compete with each other;
       - Online:  Connect with online friends and compete with each other. Possible to see other players scores;
+      
   -> Player Statistics:
       - Statistical data of the player learning journey;
       - Smart suggestions/specific directions for improvement;

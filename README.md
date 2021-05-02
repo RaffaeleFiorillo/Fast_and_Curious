@@ -30,7 +30,7 @@
       
   -> Player Statistics:
   
-      - Statistical data of the player learning journey;
+      - Statistical data of the player's learning journey;
       - Smart suggestions/specific directions for improvement;
 
 ## How to support the game:

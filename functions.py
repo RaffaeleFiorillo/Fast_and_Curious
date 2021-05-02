@@ -175,7 +175,7 @@ def list_users():
 def get_text_names():
     texts = walk("texts")
     texts = [text for text in texts][0][1:][1][:-1]
-    return texts[:-1]
+    return texts
 
 
 # return a text image that fits into a set size, with some customizations (like color and font size)
@@ -282,10 +282,11 @@ def convert_text_to_images(text):
             length = 0+len(word)  # create lines with the text requirements
     if line != "":
         lines.append(line)
+    lines[0] = lines[0][1:]  # to remove the additional space (" ") at the beginning
     text_font = pygame.font.SysFont('Arial Rounded MT Bold', 20)
     text_font.set_bold(True)
     images = [text_font.render(lin, True, (0, 0, 0)) for lin in lines]
-    return images
+    return lines, images
 
 
 # returns the number of the last existing text
@@ -472,7 +473,7 @@ def save_text_image(name):
     file.close()
     text_font = pygame.font.SysFont('Times New Roman', 20)
     text_font.set_bold(True)
-    coordinates = ((10, 7), (10, 24), (10, 39), (10, 54), (10, 69), (10, 84), (10, 99))
+    coordinates = ((12, 6), (12, 22), (12, 38), (12, 53), (12, 68), (12, 83), (12, 98))
     texts = [text_font.render(lines[i][:-1], True, (0, 0, 0)) for i in range(7)]
     screen2.blit(background, (0, 0))
     [screen2.blit(texts[i], coordinates[i]) for i in range(7)]

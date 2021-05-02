@@ -1016,6 +1016,7 @@ class Add_Text:
         self.written_text = ""
         self.error_code = 0
         self.current_frame = 0
+        self.text_lines = []
 
     def draw_buttons(self) -> None:
         coordinates = {0: (325, 485), 1: (558, 485)}
@@ -1064,13 +1065,18 @@ class Add_Text:
             self.refresh()
 
     def create_text(self) -> None:
-        coordinates = [(15, 15), (15, 35), (15, 55), (15, 75), (15, 95), (15, 115)]
+        # creating the image
+        coordinates = [(15, 15), (15, 33), (15, 51), (15, 69), (15, 87), (15, 100)]
         text_background = pygame.Surface((519, 125))
         text_background.blit(pygame.image.load("images/texts/background.png"), (0, 0))
         for img, coo in zip(self.text_lines_images, coordinates):
             text_background.blit(img, coo)
         last_number_text = f.get_last_text_number()
         pygame.image.save(text_background, f"images/texts/{last_number_text+1}.png")
+        # creating the txt file
+        with open(f"texts/{last_number_text+1}.txt", "w") as file:
+            for line in self.text_lines:
+                file.write(line+"\n")
 
     def validate_text_information(self) -> bool:
         special = [",", ".", "'", " "]
@@ -1114,7 +1120,7 @@ class Add_Text:
 
     def write_potential_text(self):
         coordinates = [(325, 175), (325, 200), (325, 225), (325, 250), (325, 275), (325, 300)]
-        images = f.convert_text_to_images(self.written_text)
+        self.text_lines, images = f.convert_text_to_images(self.written_text)
         for img, coo in zip(images, coordinates):
             self.screen.blit(img, coo)
         self.text_lines_images = images

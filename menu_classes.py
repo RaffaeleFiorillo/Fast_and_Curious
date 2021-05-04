@@ -126,6 +126,29 @@ class User:
         file.close()
 
 
+class Firework:
+    x = f.randint(520, 560)
+    y = 720
+    max_height = f.randint(170, 200)
+    colors = f.create_firework_colors(f.randint(3, 6))
+    x_speed = f.randint(1, 3)
+    y_speed = f.randint(10, 15)
+    alive = True
+
+    def draw(self, screen):
+        for i in range(f.randint(10, 20)):
+            r_x, r_y = self.x+f.randint(4, 8)*f.choice([-1, 1]), self.y+f.randint(4, 8)*f.choice([-1, 1])
+            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+        self.x += self.x_speed
+        self.y += self.y_speed
+        if self.y >= self.max_height:
+            self.alive = False
+
+
+class Fireworks:
+    f_stock = [Firework() for _ in range(5)]
+
+
 # ------------------------------------------------- MENU CLASSES -------------------------------------------------------
 # Used for "Story", and every Tutorial option
 class Menu_image_sequence:
@@ -974,13 +997,14 @@ class Start:
     def __init__(self, screen):
         self.screen = screen
         self.image = pygame.image.load("images/general/Fast and Curious Logo.png")
+        text_font = pygame.font.SysFont('Times New Roman', 20)
+        text_font.set_bold(True)
+        self.directives_image = text_font.render("Press any key to continue", True, (255, 255, 255))
         self.time = 0
 
     def show_directives(self):
         if int(self.time) % 2 == 0:
-            text_font = pygame.font.SysFont('Times New Roman', 20)
-            text_font.set_bold(True)
-            self.screen.blit(text_font.render("Press any key to continue", True, (255, 255, 255)), (440, 670))
+            self.screen.blit(self.directives_image, (440, 670))
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -1129,4 +1153,46 @@ class Add_Text:
         self.screen.blit(self.image, (0, 0))
         self.draw_buttons()
         self.write_potential_text()
+        pygame.display.update()
+
+
+# Winner_Winner_Chicken_Dinner!!! This Class is used when the user finishes the game (passes at level 13)
+class Winner_Menu:
+    time = 0
+    image = pygame.image.load("images/menu/interfaces/Main/winner.png")
+    fireworks = Fireworks()
+
+    def __init__(self, screen):
+        self.screen = screen
+        text_font = pygame.font.SysFont('Times New Roman', 20)
+        text_font.set_bold(True)
+        self.directives_image = text_font.render("Press any key to continue", True, (255, 255, 255))
+        self.time = 0
+
+    def show_directives(self):
+        if int(self.time) % 2 == 0:
+            self.screen.blit(self.directives_image, (440, 670))
+
+    def update_fireworks(self):
+        pass
+
+    def display_menu(self):
+        background = pygame.Surface(self.screen.get_size())
+        background = background.convert()
+        background.fill((0, 0, 0))
+        clock = pygame.time.Clock()
+        keepGoing = True
+        while keepGoing:
+            self.time += clock.tick(30) / 990
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                elif event.type == pygame.KEYDOWN:
+                    return True
+            self.refresh()
+
+    def refresh(self):
+        self.screen.blit(self.image, (0, 0))
+        self.update_fireworks()
+        self.show_directives()
         pygame.display.update()

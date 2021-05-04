@@ -479,3 +479,20 @@ def save_text_image(name):
     [screen2.blit(texts[i], coordinates[i]) for i in range(7)]
     pygame.display.update()
     pygame.image.save(screen2, f"images/texts/{name}.png")
+
+
+def modify_color(color: tuple):
+    new_color = []
+    for i in range(3):
+        while True:
+            new_tone = color[i]+randint(0, 50)*choice([-1, 1])
+            if 0 <= new_tone < 256:
+                break
+        new_color.append(new_tone)
+    return tuple(new_color)
+
+
+def create_firework_colors(color_number):
+    base_colors = [(255, 0, 0), (34, 177, 76), (0, 0, 255), (0, 255, 0), (255, 255, 0), (0, 255, 255), (255, 0, 255),
+                   (255, 90, 0), (130, 0, 255)]
+    return [modify_color(choice(base_colors)) for _ in range(color_number)]

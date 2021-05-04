@@ -19,17 +19,17 @@ class Game:
         pygame.display.set_caption(lable)
 
     def start(self, link, state=True):
-        if state:
-            keys_list = list(self.link_function_dict.keys())
-            self.previous_link = keys_list[keys_list.index(link)]  # Current link is saved in case the state turns False
-            state = self.link_function_dict[link](self.screen)
+        while True:
             if state:
-                link = state
-                state = True
-        else:  # In case the user wants to exit the game by clicking on the red crux the state is set to False
-            state = self.link_function_dict["exit1"](self.screen)
-            link = self.previous_link
-        self.start(link, state)
+                keys_list = list(self.link_function_dict.keys())
+                self.previous_link = keys_list[keys_list.index(link)]  # saving current link in case the state is False
+                state = self.link_function_dict[link](self.screen)
+                if state:
+                    link = state
+                    state = True
+            else:  # In case the user wants to exit the game by clicking on the red crux the state is set to False
+                state = self.link_function_dict["exit1"](self.screen)
+                link = self.previous_link
 
 
 pygame.init()
@@ -43,4 +43,4 @@ links = {"enter_password": lf.enter_password, "initial": lf.start_page,
          "add": lf.add_text
          }
 Fast_and_Curious = Game(700, 1080, "Fast and Curious", links)  # create the game
-Fast_and_Curious.start("main_menu")  # start the game
+Fast_and_Curious.start("initial")  # start the game

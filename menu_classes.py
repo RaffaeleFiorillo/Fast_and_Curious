@@ -126,25 +126,6 @@ class User:
         file.close()
 
 
-class Sparkle:
-    def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
-        self.max_life = f.randint(50, 60)
-        self.colors = color
-        self.x_speed = f.randint(5, 7)*f.choice([-1, 1])
-        self.y_speed = -f.randint(10, 15)
-        self.alive = True
-
-    def draw(self, screen):
-        pygame.draw.circle(screen, f.choice(self.colors), (self.x, self.y), 1, 1)
-        self.x += self.x_speed
-        self.y += self.y_speed
-        self.max_life -= 1
-        if self.max_life <= 0:
-            self.alive = False
-
-
 class Firework:
     def __init__(self, y):
         self.x = f.randint(520, 560)
@@ -155,20 +136,26 @@ class Firework:
         self.y_speed = -f.randint(10, 15)
         self.alive = True
 
+    def draw_ascendent(self, screen):
+        for i in range(f.randint(7, 10)):
+            r_x, r_y = self.x + f.randint(2, 5) * f.choice([-1, 1]), self.y + f.randint(2, 5) * f.choice([-1, 1])
+            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+        pygame.draw.circle(screen, f.choice(self.colors), (self.x, self.y), 3, 1)
+        self.x += self.x_speed
+        self.y += self.y_speed
+
+    def draw_explosion(self, screen):
+        pass
+
     def draw(self, screen):
         if self.y >= self.max_height:
-            for i in range(f.randint(7, 10)):
-                r_x, r_y = self.x+f.randint(2, 5)*f.choice([-1, 1]), self.y+f.randint(2, 5)*f.choice([-1, 1])
-                pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
-            pygame.draw.circle(screen, f.choice(self.colors), (self.x, self.y), 1, 1)
-            self.x += self.x_speed
-            self.y += self.y_speed
+            self.draw_ascendent(screen)
         else:
             self.alive = False
 
 
 class Fireworks:
-    y_values = [720, 790, 830, 870, 910, 950, 990, 1030, 1070]
+    y_values = list(range(720, 2000, 40))[:15]
 
     def __init__(self):
         self.firework_stock = [Firework(self.y_values[i]) for i in range(len(self.y_values))]

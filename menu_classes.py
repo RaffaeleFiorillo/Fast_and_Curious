@@ -126,33 +126,56 @@ class User:
         file.close()
 
 
-class Firework:
-    def __init__(self):
-        self.x = f.randint(520, 560)
-        self.y = f.randint(720, 800)
-        self.max_height = f.randint(170, 200)
-        self.colors = f.create_firework_colors(f.randint(3, 6))
+class Sparkle:
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.max_life = f.randint(50, 60)
+        self.colors = color
         self.x_speed = f.randint(5, 7)*f.choice([-1, 1])
         self.y_speed = -f.randint(10, 15)
         self.alive = True
 
     def draw(self, screen):
-        for i in range(f.randint(10, 20)):
-            r_x, r_y = self.x+f.randint(4, 8)*f.choice([-1, 1]), self.y+f.randint(4, 8)*f.choice([-1, 1])
-            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
         pygame.draw.circle(screen, f.choice(self.colors), (self.x, self.y), 1, 1)
         self.x += self.x_speed
         self.y += self.y_speed
-        if self.y <= self.max_height:
+        self.max_life -= 1
+        if self.max_life <= 0:
+            self.alive = False
+
+
+class Firework:
+    def __init__(self, y):
+        self.x = f.randint(520, 560)
+        self.y = y+f.randint(0, 50)*f.choice([-1, 1])
+        self.max_height = f.randint(170, 200)
+        self.colors = f.create_firework_colors(f.randint(3, 6))
+        self.x_speed = f.randint(0, 4)*f.choice([-1, 1])
+        self.y_speed = -f.randint(10, 15)
+        self.alive = True
+
+    def draw(self, screen):
+        if self.y >= self.max_height:
+            for i in range(f.randint(7, 10)):
+                r_x, r_y = self.x+f.randint(2, 5)*f.choice([-1, 1]), self.y+f.randint(2, 5)*f.choice([-1, 1])
+                pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+            pygame.draw.circle(screen, f.choice(self.colors), (self.x, self.y), 1, 1)
+            self.x += self.x_speed
+            self.y += self.y_speed
+        else:
             self.alive = False
 
 
 class Fireworks:
-    firework_stock = [Firework() for _ in range(5)]
+    y_values = [720, 790, 830, 870, 910, 950, 990, 1030, 1070]
+
+    def __init__(self):
+        self.firework_stock = [Firework(self.y_values[i]) for i in range(len(self.y_values))]
 
     def update(self):
         if not self.firework_stock[-1].alive:
-            self.firework_stock = [Firework() for _ in range(5)]
+            self.firework_stock = [Firework(self.y_values[i]) for i in range(len(self.y_values))]
 
     def display(self, screen):
         for firework in self.firework_stock:

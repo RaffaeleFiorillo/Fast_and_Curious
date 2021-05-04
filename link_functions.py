@@ -29,6 +29,16 @@ def start_page(screen):
     return False
 
 
+# ------------------------------------------- WINNER MENU --------------------------------------------------------------
+def winner(screen):
+    w_class = cm.Winner_Menu(screen)
+    # f.play(start_sound)
+    output = w_class.display_menu()
+    if output:
+        return "game_menu"
+    return False
+
+
 # ------------------------------------------- MAIN MENU ----------------------------------------------------------------
 # display and manage the Main Menu, leads to the Choose User Menu, New Game Menu or Exit Game Menu
 def main_menu(screen):

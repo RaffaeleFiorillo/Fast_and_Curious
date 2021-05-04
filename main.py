@@ -40,7 +40,7 @@ links = {"enter_password": lf.enter_password, "initial": lf.start_page,
          "story": lf.display_story, "m_ai": lf.game_ai, "m_part": lf.game_parts, "exit2": lf.exit_game_menu,
          "change_password": lf.change_password, "eliminate_account": lf.delete_account, "exit3": lf.game_menu,
          "level_up": lf.tutorial_lu, "enemy": lf.tutorial_e, "controls": lf.tutorial_c, "save": lf.tutorial_s,
-         "add": lf.add_text
+         "add": lf.add_text, "winner": lf.winner
          }
 Fast_and_Curious = Game(700, 1080, "Fast and Curious", links)  # create the game
-Fast_and_Curious.start("initial")  # start the game
+Fast_and_Curious.start("winner")  # start the game

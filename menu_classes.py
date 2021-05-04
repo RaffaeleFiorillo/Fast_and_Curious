@@ -127,26 +127,37 @@ class User:
 
 
 class Firework:
-    x = f.randint(520, 560)
-    y = 720
-    max_height = f.randint(170, 200)
-    colors = f.create_firework_colors(f.randint(3, 6))
-    x_speed = f.randint(1, 3)
-    y_speed = f.randint(10, 15)
-    alive = True
+    def __init__(self):
+        self.x = f.randint(520, 560)
+        self.y = f.randint(720, 800)
+        self.max_height = f.randint(170, 200)
+        self.colors = f.create_firework_colors(f.randint(3, 6))
+        self.x_speed = f.randint(5, 7)*f.choice([-1, 1])
+        self.y_speed = -f.randint(10, 15)
+        self.alive = True
 
     def draw(self, screen):
         for i in range(f.randint(10, 20)):
             r_x, r_y = self.x+f.randint(4, 8)*f.choice([-1, 1]), self.y+f.randint(4, 8)*f.choice([-1, 1])
             pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+        pygame.draw.circle(screen, f.choice(self.colors), (self.x, self.y), 1, 1)
         self.x += self.x_speed
         self.y += self.y_speed
-        if self.y >= self.max_height:
+        if self.y <= self.max_height:
             self.alive = False
 
 
 class Fireworks:
-    f_stock = [Firework() for _ in range(5)]
+    firework_stock = [Firework() for _ in range(5)]
+
+    def update(self):
+        if not self.firework_stock[-1].alive:
+            self.firework_stock = [Firework() for _ in range(5)]
+
+    def display(self, screen):
+        for firework in self.firework_stock:
+            firework.draw(screen)
+        self.update()
 
 
 # ------------------------------------------------- MENU CLASSES -------------------------------------------------------
@@ -1007,9 +1018,6 @@ class Start:
             self.screen.blit(self.directives_image, (440, 670))
 
     def display_menu(self):
-        background = pygame.Surface(self.screen.get_size())
-        background = background.convert()
-        background.fill((0, 0, 0))
         clock = pygame.time.Clock()
         keepGoing = True
         while keepGoing:
@@ -1173,13 +1181,7 @@ class Winner_Menu:
         if int(self.time) % 2 == 0:
             self.screen.blit(self.directives_image, (440, 670))
 
-    def update_fireworks(self):
-        pass
-
     def display_menu(self):
-        background = pygame.Surface(self.screen.get_size())
-        background = background.convert()
-        background.fill((0, 0, 0))
         clock = pygame.time.Clock()
         keepGoing = True
         while keepGoing:
@@ -1193,6 +1195,7 @@ class Winner_Menu:
 
     def refresh(self):
         self.screen.blit(self.image, (0, 0))
-        self.update_fireworks()
+        self.fireworks.display(self.screen)
+        pygame.draw.circle(self.screen, (255, 255, 255), (540, 300), 1, 1)
         self.show_directives()
         pygame.display.update()

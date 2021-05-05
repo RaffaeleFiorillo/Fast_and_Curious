@@ -150,8 +150,8 @@ class Firework:
         min_sparkle_number = (200-self.time_alive)*200//100 - 30
         max_sparkle_number = (200 - self.time_alive) * 2 + 30
         for i in range(f.randint(min_sparkle_number, max_sparkle_number)):
-            r_x = self.x+f.randint(0, int(self.radius))*f.choice([-1, 1])
-            r_y = self.y+f.randint(0, int(self.radius))*f.choice([-1, 1])
+            calculate_rs = f.choice([f.calculate_rs_rhomb, f.calculate_rs_square])  # chooses randomly to create a star
+            r_x, r_y = calculate_rs(self.x, self.y, self.radius)
             pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
         self.time_alive -= 1
         self.radius += self.radius*0.1

@@ -496,3 +496,25 @@ def create_firework_colors(color_number):
     base_colors = [(255, 0, 0), (34, 177, 76), (0, 0, 255), (0, 255, 0), (255, 255, 0), (0, 255, 255), (255, 0, 255),
                    (255, 90, 0), (130, 0, 255)]
     return [modify_color(choice(base_colors)) for _ in range(color_number)]
+
+
+# returns x and y values for a rhomb like firework
+def calculate_rs_rhomb(x, y, radius):
+    if random() > 0.5:
+        additional = randint(0, int(radius)) * choice([-1, 1])
+        r_x = x + additional
+        max_y_size = int(radius-abs(additional))
+        r_y = y + randint(0, max_y_size) * choice([-1, 1])
+    else:
+        additional = randint(0, int(radius)) * choice([-1, 1])
+        r_y = y + additional
+        max_x_size = int(radius-abs(additional))
+        r_x = x + randint(0, max_x_size) * choice([-1, 1])
+    return r_x, r_y
+
+
+# returns x and y values for a squared like firework
+def calculate_rs_square(x, y, radius):
+    r_x = x + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
+    r_y = y + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
+    return r_x, r_y

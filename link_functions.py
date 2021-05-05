@@ -123,6 +123,8 @@ def game_ai(screen):
     results = cm.Results_AI(screen, precision, speed, parts_collected, resistance, time, finished)
     go_to_next_level, parts = results.display()
     f.save_performance_ai(go_to_next_level, parts, speed)
+    if f.get_user_level() == 13 and not f.user_is_a_winner():
+        return "winner"
     return "game_menu"
 
 

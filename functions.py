@@ -347,7 +347,8 @@ def save_performance_ai(go_to_next_level, parts, speed):
     str_val = [values_p[0], values_p[5]]
     int_val = [int(value) for value in values_p if value.isdigit()]
     if go_to_next_level:
-        int_val[2] +=1
+        if get_user_level() < 14:
+            int_val[2] +=1
         file = open(f"saves/{str_val[0]}/next_level.txt", "w")
         file.write("0")
         file.close()
@@ -389,6 +390,21 @@ def save_performance_parts(parts, speed, time):
     line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
     file.write(line)
     file.close()
+
+
+def get_user_level():
+    with open("saves/active_user.txt", "r") as file:
+        user_level = int(file.readline().split(" ")[3])
+    return user_level
+
+
+def user_is_a_winner():
+    with open("saves/active_user.txt", "r") as file:
+        user_name = file.readline().split(" ")[0]
+    with open(f"saves/{user_name}/next_level.txt", "r") as file:
+        file.readline()  # ignore the first line
+        is_a_winner = int(file.readline())
+    return is_a_winner
 
 
 # --------------------------------------------- HUD FUNCTIONS ----------------------------------------------------------

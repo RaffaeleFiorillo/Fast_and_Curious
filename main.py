@@ -43,4 +43,4 @@ links = {"enter_password": lf.enter_password, "initial": lf.start_page,
          "add": lf.add_text, "winner": lf.winner
          }
 Fast_and_Curious = Game(700, 1080, "Fast and Curious", links)  # create the game
-Fast_and_Curious.start("winner")  # start the game
+Fast_and_Curious.start("main_menu")  # start the game

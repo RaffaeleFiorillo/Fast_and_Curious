@@ -131,15 +131,15 @@ class Firework:
         self.type = f.choice(["circle", "star"])
         self.x = f.randint(520, 560)
         self.y = y+f.randint(0, 50)*f.choice([-1, 1])
-        self.max_height = f.randint(130, 300)
+        self.max_height = f.randint(130, 320)
         self.colors = f.create_firework_colors(f.randint(3, 6))
-        self.x_speed = f.randint(0, 4)*f.choice([-1, 1])
+        self.x_speed = f.randint(0, 8)*f.choice([-1, 1])
         self.y_speed = -f.randint(10, 15)
         self.alive = True
         self.time_alive = f.randint(100, 200)
         self.radius = 10
 
-    def draw_ascendent(self, screen):
+    def draw_ascending(self, screen):
         for i in range(f.randint(7, 10)):
             r_x, r_y = self.x + f.randint(2, 5) * f.choice([-1, 1]), self.y + f.randint(2, 5) * f.choice([-1, 1])
             pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
@@ -162,15 +162,16 @@ class Firework:
         min_sparkle_number = (200-self.time_alive)*200//100 - 30
         max_sparkle_number = (200 - self.time_alive) * 2 + 30
         types_of_firework = {"star": self.draw_star, "circle": self.draw_circle}
+        # noinspection PyArgumentList
         types_of_firework[self.type](screen, min_sparkle_number, max_sparkle_number)
         self.time_alive -= 1
         self.radius += self.radius*0.1
-        if self.radius > 70:
+        if self.radius > 100:
             self.alive = False
 
     def draw(self, screen):
         if self.y >= self.max_height:
-            self.draw_ascendent(screen)
+            self.draw_ascending(screen)
         else:
             self.draw_explosion(screen)
 

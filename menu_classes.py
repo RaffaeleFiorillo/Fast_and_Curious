@@ -130,11 +130,13 @@ class Firework:
     def __init__(self, y):
         self.x = f.randint(520, 560)
         self.y = y+f.randint(0, 50)*f.choice([-1, 1])
-        self.max_height = f.randint(170, 200)
+        self.max_height = f.randint(130, 300)
         self.colors = f.create_firework_colors(f.randint(3, 6))
         self.x_speed = f.randint(0, 4)*f.choice([-1, 1])
         self.y_speed = -f.randint(10, 15)
         self.alive = True
+        self.time_alive = f.randint(100, 200)
+        self.radius = 10
 
     def draw_ascendent(self, screen):
         for i in range(f.randint(7, 10)):
@@ -145,13 +147,22 @@ class Firework:
         self.y += self.y_speed
 
     def draw_explosion(self, screen):
-        pass
+        min_sparkle_number = (200-self.time_alive)*200//100 - 30
+        max_sparkle_number = (200 - self.time_alive) * 2 + 30
+        for i in range(f.randint(min_sparkle_number, max_sparkle_number)):
+            r_x = self.x+f.randint(0, int(self.radius))*f.choice([-1, 1])
+            r_y = self.y+f.randint(0, int(self.radius))*f.choice([-1, 1])
+            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+        self.time_alive -= 1
+        self.radius += self.radius*0.1
+        if self.radius > 70:
+            self.alive = False
 
     def draw(self, screen):
         if self.y >= self.max_height:
             self.draw_ascendent(screen)
         else:
-            self.alive = False
+            self.draw_explosion(screen)
 
 
 class Fireworks:
@@ -161,8 +172,10 @@ class Fireworks:
         self.firework_stock = [Firework(self.y_values[i]) for i in range(len(self.y_values))]
 
     def update(self):
-        if not self.firework_stock[-1].alive:
-            self.firework_stock = [Firework(self.y_values[i]) for i in range(len(self.y_values))]
+        self.firework_stock = [firework if firework.alive else Firework(720) for firework in self.firework_stock]
+        if len(self.y_values) != len(self.firework_stock):
+            for y in self.y_values[:len(self.y_values)-len(self.firework_stock)]:
+                self.firework_stock.append(Firework(y))
 
     def display(self, screen):
         for firework in self.firework_stock:
@@ -1206,6 +1219,5 @@ class Winner_Menu:
     def refresh(self):
         self.screen.blit(self.image, (0, 0))
         self.fireworks.display(self.screen)
-        pygame.draw.circle(self.screen, (255, 255, 255), (540, 300), 1, 1)
         self.show_directives()
         pygame.display.update()

@@ -518,3 +518,15 @@ def calculate_rs_square(x, y, radius):
     r_x = x + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
     r_y = y + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
     return r_x, r_y
+
+
+# returns x and y values for a circle like firework
+def calculate_rs_circle(x, y, radius):
+    # condition for a point to be inside a circle: (x - center_x)**2 + (y - center_y)**2 < radius**2
+    if random() > 0.5:
+        r_x = x + randint(0, int(radius))*choice([-1, 1])
+        r_y = y + randint(0, int(abs(((r_x-x)**2 - radius**2)**(1/2)))) * choice([-1, 1])
+    else:
+        r_y = y + randint(0, int(radius))*choice([-1, 1])
+        r_x = x + randint(0, int(abs(((r_y-y)**2 - radius**2)**(1/2)))) * choice([-1, 1])
+    return r_x, r_y

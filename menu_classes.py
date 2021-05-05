@@ -128,6 +128,7 @@ class User:
 
 class Firework:
     def __init__(self, y):
+        self.type = f.choice(["circle", "star"])
         self.x = f.randint(520, 560)
         self.y = y+f.randint(0, 50)*f.choice([-1, 1])
         self.max_height = f.randint(130, 300)
@@ -146,13 +147,22 @@ class Firework:
         self.x += self.x_speed
         self.y += self.y_speed
 
-    def draw_explosion(self, screen):
-        min_sparkle_number = (200-self.time_alive)*200//100 - 30
-        max_sparkle_number = (200 - self.time_alive) * 2 + 30
+    def draw_star(self, screen, min_sparkle_number, max_sparkle_number):
         for i in range(f.randint(min_sparkle_number, max_sparkle_number)):
             calculate_rs = f.choice([f.calculate_rs_rhomb, f.calculate_rs_square])  # chooses randomly to create a star
             r_x, r_y = calculate_rs(self.x, self.y, self.radius)
             pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+
+    def draw_circle(self, screen, min_sparkle_number, max_sparkle_number):
+        for i in range(f.randint(min_sparkle_number, max_sparkle_number)):
+            r_x, r_y = f.calculate_rs_circle(self.x, self.y, self.radius)
+            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+
+    def draw_explosion(self, screen):
+        min_sparkle_number = (200-self.time_alive)*200//100 - 30
+        max_sparkle_number = (200 - self.time_alive) * 2 + 30
+        types_of_firework = {"star": self.draw_star, "circle": self.draw_circle}
+        types_of_firework[self.type](screen, min_sparkle_number, max_sparkle_number)
         self.time_alive -= 1
         self.radius += self.radius*0.1
         if self.radius > 70:

@@ -30,6 +30,7 @@ def start_page(screen):
 
 
 # ------------------------------------------- WINNER MENU --------------------------------------------------------------
+# the interface that is displayed when a user wins level 12 of the game, and goes to level 13
 def winner(screen):
     w_class = cm.Winner_Menu(screen)
     # f.play(start_sound)
@@ -178,6 +179,7 @@ def manage_account(screen):
     return m.display_menu()
 
 
+# activated when a user wants to unlock the ability to go to next level for the current level
 def unlock_next_level(screen):
     nxt_lvl = cm.Unlock_Level(screen)
     nxt_lvl.display_menu()

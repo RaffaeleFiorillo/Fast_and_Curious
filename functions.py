@@ -148,6 +148,7 @@ def get_music_volume():
         return 0.5
 
 
+# displays on the screen an error message specified by his code
 def show_error_message(screen, code):
     play(error_sound)
     screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png"), (230, 200))
@@ -155,6 +156,7 @@ def show_error_message(screen, code):
     wait(3)
 
 
+# displays on the screen a success message specified by his code
 def show_success_message(screen, code) -> None:
     play(success_sound)
     screen.blit(pygame.image.load(f"images/menu/messages/success{code}.png"), (230, 200))
@@ -162,6 +164,7 @@ def show_success_message(screen, code) -> None:
     wait(3)
 
 
+# creates a folder inside the root_directory with the name of the user creating the account
 def create_folder(nome_user):
     mkdir(root_directory+nome_user)
 
@@ -299,6 +302,7 @@ def get_last_text_number():
     return int(last_text_name)
 
 
+# cleans the background of the screen in order for it to take images correctly
 def clean_background(screen):
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -306,15 +310,18 @@ def clean_background(screen):
     screen.blit(background, (0, 0))
 
 
+# erases the data inside the file: "active user data.txt" when the user logs out or exits the game
 def erase_active_user_data():
     file = open("saves/active_user.txt", "w")
     file.close()
 
 
+# deletes the folder that has the data of the users that is requesting it to be deleted
 def delete_user_account(user_name):
     rmtree(f'saves/{user_name}')
 
 
+# creates buttons images for the "Choose Account" menu. For both cases when the button is on and of
 def get_users_images():
     collect()
     users = list_users()
@@ -402,12 +409,14 @@ def save_performance_parts(parts, speed, time):
     file.close()
 
 
+# returns the current user's level
 def get_user_level():
     with open("saves/active_user.txt", "r") as file:
         user_level = int(file.readline().split(" ")[3])
     return user_level
 
 
+# returns True if the user has already won the game before, and False in the opposite case
 def user_is_a_winner():
     with open("saves/active_user.txt", "r") as file:
         user_name = file.readline().split(" ")[0]
@@ -507,6 +516,7 @@ def save_text_image(name):
     pygame.image.save(screen2, f"images/texts/{name}.png")
 
 
+# modifies a specific color turning it slightly different from the original
 def modify_color(color: tuple):
     new_color = []
     for i in range(3):
@@ -518,6 +528,7 @@ def modify_color(color: tuple):
     return tuple(new_color)
 
 
+# creates a sample of colors, which are slightly modifications of pre-existing colors
 def create_firework_colors(color_number):
     base_colors = [(255, 0, 0), (34, 177, 76), (0, 0, 255), (0, 255, 0), (255, 255, 0), (0, 255, 255), (255, 0, 255),
                    (255, 90, 0), (130, 0, 255)]

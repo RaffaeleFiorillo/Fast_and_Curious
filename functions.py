@@ -269,7 +269,7 @@ def writable_parts_number(number):
 
 
 # converts the written text in the Add Text Menu, to images.Changes the letter size in order to fit into the given space
-def convert_text_to_images(text):
+def convert_text_to_images(text, real_application=False):
     text = text.strip().split(" ")
     lines, line, length = [], "", 0
     for word in text:
@@ -283,8 +283,11 @@ def convert_text_to_images(text):
     if line != "":
         lines.append(line)
     lines[0] = lines[0][1:]  # to remove the additional space (" ") at the beginning
-    text_font = pygame.font.SysFont('Arial Rounded MT Bold', 20)
-    text_font.set_bold(True)
+    if real_application:
+        text_font = pygame.font.SysFont("Arial", 23)
+    else:
+        text_font = pygame.font.SysFont("Arial", 19)
+        text_font.set_bold(True)
     images = [text_font.render(lin, True, (0, 0, 0)) for lin in lines]
     return lines, images
 

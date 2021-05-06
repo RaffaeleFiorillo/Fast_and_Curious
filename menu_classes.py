@@ -1139,8 +1139,9 @@ class Add_Text:
 
     def create_text(self) -> None:
         # creating the image
-        coordinates = [(15, 15), (15, 33), (15, 51), (15, 69), (15, 87), (15, 100)]
-        text_background = pygame.Surface((519, 125))
+        self.text_lines, self.text_lines_images = f.convert_text_to_images(self.written_text, True)
+        coordinates = [(15, 5), (15, 25), (15, 45), (15, 65), (15, 85), (15, 105)]
+        text_background = pygame.Surface((519, 132))
         text_background.blit(pygame.image.load("images/texts/background.png"), (0, 0))
         for img, coo in zip(self.text_lines_images, coordinates):
             text_background.blit(img, coo)
@@ -1148,6 +1149,7 @@ class Add_Text:
         pygame.image.save(text_background, f"images/texts/{last_number_text+1}.png")
         # creating the txt file
         with open(f"texts/{last_number_text+1}.txt", "w") as file:
+            file.write(f"{len(self.text_lines)} \n")  # first line of these files holds the number of lines in the text
             for line in self.text_lines:
                 file.write(line+"\n")
 
@@ -1192,7 +1194,7 @@ class Add_Text:
                 self.character_number = len(self.written_text.strip())
 
     def write_potential_text(self):
-        coordinates = [(325, 175), (325, 200), (325, 225), (325, 250), (325, 275), (325, 300)]
+        coordinates = [(327, 175), (327, 200), (327, 225), (327, 250), (327, 275), (327, 300)]
         self.text_lines, images = f.convert_text_to_images(self.written_text)
         for img, coo in zip(images, coordinates):
             self.screen.blit(img, coo)

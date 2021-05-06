@@ -332,10 +332,17 @@ def get_users_images():
     return user_images_active, user_images_passive
 
 
+# gets the requirement values in order to verify if user has leveled up from the parameters file and returns them
 def get_requirements():
     user_level = int(open("saves/active_user.txt", "r").readline().split(" ")[3])
     values = open(f"parameters/levels info/{user_level}.txt", "r").readline().split(" ")
     return int(values[0]), int(values[1])
+
+
+# updates the data in the next_level.txt file
+def save_next_level_data(user_name, m_ai_data, winner_data):
+    with open(f"saves/{user_name}/next_level.txt", "w") as file:
+        file.write(f"{m_ai_data} \n{winner_data}")
 
 
 # updates user information after a played match is over, for Mission AI
@@ -346,12 +353,12 @@ def save_performance_ai(go_to_next_level, parts, speed):
     file.close()
     str_val = [values_p[0], values_p[5]]
     int_val = [int(value) for value in values_p if value.isdigit()]
-    if go_to_next_level:
-        if get_user_level() < 14:
+    if go_to_next_level:  # change user data in case he levels up
+        if get_user_level() < 13:  # level 13 is the highest in the game
             int_val[2] +=1
-        file = open(f"saves/{str_val[0]}/next_level.txt", "w")
-        file.write("0")
-        file.close()
+            save_next_level_data(str_val[0], 0, 0)
+        else:
+            save_next_level_data(str_val[0], 0, 1)
     int_val[3] += parts
     if int_val[3] < 0:
         int_val[3] = 0

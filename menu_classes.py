@@ -312,7 +312,13 @@ class Menu:
                 if event.type == pygame.KEYDOWN:
                     effect = self.manage_buttons(pygame.key.get_pressed())
                     if effect is not None:
-                        return effect
+                        if effect == "m_ai":
+                            if f.get_user_level() < 13:
+                                return effect
+                            else:
+                                f.show_error_message(self.screen, 12)
+                        else:
+                            return effect
             self.refresh(background)
 
     def manage_buttons(self, keys):
@@ -459,7 +465,7 @@ class Create_Account:
         name = "".join(self.inputs[0])
         f.create_folder(name)  # create the user's folder
         file = open(f"saves/{name}/next_level.txt", "w")  # create a file in the user's folder named next_level
-        file.write("1")  # this value means that the MISSION AI is available
+        file.write("1 \n")  # this value means that the MISSION AI is available
         file.write("0")  # this value means that the user has not yet won the game
         file.close()
 

@@ -39,6 +39,7 @@
       - Boosts;
       
   -> New Modes to play:
+  
       - New types of Missions. The new Missions must be ways to improve typing skills in funny and enjoyable ways.
       
 ## How to support the game:

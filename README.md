@@ -14,7 +14,7 @@
  
 ## More about the game in this documentation:
   - Portuguese:
-    ->[GDD Fast and Curious.pdf](https://github.com/RaffaeleFiorillo/Fast_and_Curious/files/6411915/GDD.Fast.and.Curious.pdf)
+    ->[GDD Fast and Curious.pdf](https://github.com/RaffaeleFiorillo/Fast_and_Curious/files/6441116/GDD.Fast.and.Curious.pdf)
     
  - English:
     Coming Soon!

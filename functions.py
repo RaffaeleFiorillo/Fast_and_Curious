@@ -494,8 +494,7 @@ def display_HUD_resistance_bar(screen, resistance_level):
 
 # turns a typed line into an image
 def get_text_images(line):
-    text_font = pygame.font.SysFont('Times New Roman', 20)
-    text_font.set_bold(True)
+    text_font = pygame.font.SysFont('Arial', 22)
     return text_font.render(" ".join(line).strip(), True, (0, 0, 0))
 
 

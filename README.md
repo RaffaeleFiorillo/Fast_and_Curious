@@ -23,6 +23,11 @@
     Coming Soon!
 
 ## Ideas for the future:
+  -> More Levels:
+  
+      - Extend the number of levels so that the game could take the user furhter in the learning journey;
+      - More car evolutions;
+  
   -> Multiplayer Option: 
   
       - Local: Connect with local friends and compete with each other;

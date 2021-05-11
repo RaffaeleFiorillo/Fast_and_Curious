@@ -47,6 +47,10 @@
   
       - New types of Missions. The new Missions must be ways to improve typing skills in funny and enjoyable ways.
       
+  -> Achievements:
+  
+      - Challanges that make the player win some prizes (could be exclusive car skins, parts,...) when he completes them;
+      
 ## How to support the game:
   If you find a bug in the game, need assistance or just have some ideas that could make the game better, you are more than welcome to contact me by email: raffadeus8@gmail.com.
   Make sure that the subject of the email is "Fast and Curious support".

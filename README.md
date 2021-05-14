@@ -3,14 +3,17 @@
 
 ## How to set up and play the game:
  1st -> Download these files from the repository: 
-            - game(.exe); - parameters(folder); images(folder);
-            - texts(folder); - saves(folder); - sounds(folder);
+            
+       - game(.exe); - parameters(folder); images(folder);
+       - texts(folder); - saves(folder); - sounds(folder);
  
- 2nd -> Put them all in the same directory;
+ 2nd -> Create a new folder and call it: "Fast and Curious";
  
- 3rd -> Run "game.exe";
+ 3rd -> Put all the game files in the folder ("Fast and Curious");
  
- 4rth -> Enjoy!!!
+ 4th -> Run "game.exe";
+ 
+ 5th -> Enjoy!!!
  
 ## More about the game in this documentation:
   - Portuguese:

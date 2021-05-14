@@ -6,7 +6,7 @@
             - game(.exe); - parameters(folder); images(folder);
             - texts(folder); - saves(folder); - sounds(folder);
  
- 2nd -> Put them all in the same directory;
+ 2nd -> Put them all in the same directory (it is preferable for them to be in a folder and call the folder "Fast and Curious");
  
  3rd -> Run "game.exe";
  

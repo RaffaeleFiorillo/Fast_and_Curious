@@ -4,6 +4,10 @@ import math
 import game_classes
 
 
+def normalize(max_value, min_value, value):
+    return (value-min_value) / (max_value-min_value)
+
+
 class Individual:
     def __init__(self, input_number, name, mc):
         self.name = name
@@ -16,8 +20,14 @@ class Individual:
         self.parts = 0
 
     def fitness_level(self):
-        print(self.parts, self.time_alive, sep=" | ")
-        self.fitness = self.parts * 2 + self.time_alive * 0.8
+        parts_contribute = normalize(3500, 0, self.parts) * 0.3  # contribute of parts collected between 0 and 1
+        time_contribute = normalize(180, 0, self.time_alive) * 0.5  # contribute of time survived between 0 and 1
+        """print(f"parts: {self.parts} | contribute: {parts_contribute}")
+        print(f"time: {self.time_alive} | contribute: {time_contribute}")"""
+        self.fitness = parts_contribute + time_contribute
+
+    def __str__(self):
+        return f"Name: {self.name} | Fitness: {self.fitness}"
 
     def save_existence(self):
         file = open("parameters/Current_generation.txt", "a")
@@ -151,25 +161,23 @@ class Population:
 
 pygame.init()
 
-# screen
+# screen stuff
 screen = pygame.display.set_mode((1080, 700))
 pygame.display.set_caption("Fast and Curious-AI Training")
 
-# background
-background = pygame.Surface(screen.get_size())
-background = background.convert()
-background.fill((0, 255, 0))
-
-# simulation
+# simulation stuff
 keepGoing = True
 pop = Population(5, 10, 0.2)
 world = game_classes.Training_World(screen)
-"""w = [0.9849777777777572, 0.03444444444426724, 0.28495822222222262, 0.14811111117294833, 1.0254444434875984]
-b = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
-pop.select_best()
-pop.create_family()"""
 
-print(len(pop.internal_list))
+"""w = functions.WEIGHTS
+b = functions.BIAS
+perfect_being = Individual(5, 0, 0.2)
+perfect_being.get_wb(w, b)
+
+world.individual_is_perfect(perfect_being)
+print(perfect_being)"""
+
 
 while True:
     print(f"Generation: {pop.generation}")
@@ -177,7 +185,7 @@ while True:
         if world.individual_is_perfect(p):  # returns True when AI gets good enough
             p.save_existence()
             exit("The individual has been trained successfully")
-        print(p.fitness)
+        print(p)
         world.__init__(screen)  # Prevents from making current AI continue where previous left
     pop.ler_attributes_individuals()
     pop.select_best()

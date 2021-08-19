@@ -20,8 +20,8 @@ cores_part = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [237,
 cores_estrada = [[0, 0, 0], [108, 108, 108]]
 code_meaning = {3: "unknown", 1: "road", 2: "parts", 0: "lava"}
 # AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
-weights = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
-bias = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
+WEIGHTS = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
+BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
 
 
 # ------------------------------------- REIMPLEMENTED FUNCTIONS --------------------------------------------------------
@@ -106,7 +106,9 @@ def see(screen, coo):
 
 
 # Given all seen values, gives back a code value for what to do
-def make_a_choice(info):
+def make_a_choice(info, weights=None, bias=None):
+    if weights is None:
+        weights, bias = WEIGHTS, BIAS
     soma = sum([weights[i] * info[i] + bias[i] for i in range(len(info))])
     refined_value = tanh(soma)
     if refined_value >= 0.70:
@@ -151,7 +153,7 @@ def get_music_volume():
 # displays on the screen an error message specified by his code
 def show_error_message(screen, code):
     play(error_sound)
-    screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png"), (230, 200))
+    screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png").convert_alpha(), (230, 200))
     pygame.display.update()
     wait(3)
 
@@ -159,7 +161,7 @@ def show_error_message(screen, code):
 # displays on the screen a success message specified by his code
 def show_success_message(screen, code) -> None:
     play(success_sound)
-    screen.blit(pygame.image.load(f"images/menu/messages/success{code}.png"), (230, 200))
+    screen.blit(pygame.image.load(f"images/menu/messages/success{code}.png").convert_alpha(), (230, 200))
     pygame.display.update()
     wait(3)
 
@@ -191,15 +193,15 @@ def create_sized_text(max_size_image, max_size_letter, text, color, min_size_let
         rendered_text = text_font.render(text, True, color)
         if rendered_text.get_size()[0] <= max_size_image:
             break
-    return rendered_text
+    return rendered_text.convert_alpha()
 
 
 # writes the name and password typed by a user in the Create User Menu
 def write_name_password(screen, name, password, active, hide):
     coordinates1 = [(330, 205), (330, 351)]
     pygame.draw.rect(screen, (0, 0, 255), (coordinates1[active], (422, 57)), 8)
-    screen.blit(pygame.image.load("images/menu/interfaces/navigation/pointer.png"), (coordinates1[active][0]+450,
-                                                                                     coordinates1[active][1]))
+    screen.blit(pygame.image.load("images/menu/interfaces/navigation/pointer.png").convert_alpha(),
+                (coordinates1[active][0]+450, coordinates1[active][1]))
     coordinates2 = [(385, 217), (385, 363)]
     if hide:
         password = "".join(["*" for letter in password if str(letter).isalnum()])
@@ -222,7 +224,7 @@ def write_password(screen, password, hide):
         password = "".join(password)
     text_font = pygame.font.SysFont('Times New Roman', 32)
     text_font.set_bold(True)
-    password_text = text_font.render(password, True, (0, 0, 0))
+    password_text = text_font.render(password, True, (0, 0, 0)).convert_alpha()
     screen.blit(password_text, (290, 330))
 
 
@@ -291,7 +293,7 @@ def convert_text_to_images(text, real_application=False):
     else:
         text_font = pygame.font.SysFont("Arial", 19)
         text_font.set_bold(True)
-    images = [text_font.render(lin, True, (0, 0, 0)) for lin in lines]
+    images = [text_font.render(lin, True, (0, 0, 0)).convert_alpha() for lin in lines]
     return lines, images
 
 
@@ -337,8 +339,8 @@ def get_users_images():
             size = image_text1.get_size()
             if size[0] <= 410:
                 break
-        user_images_active.append(image_text1)
-        user_images_passive.append(image_text2)
+        user_images_active.append(image_text1.convert_alpha())
+        user_images_passive.append(image_text2.convert_alpha())
     return user_images_active, user_images_passive
 
 
@@ -440,7 +442,7 @@ def write_HUD_parts_value(screen, number_parts):
 
 def write_HUD_time_value(screen, time_value):
     if time_value == "i":
-        screen.blit(pygame.image.load("images/HUD/infinite.png"), (529, 665))
+        screen.blit(pygame.image.load("images/HUD/infinite.png").convert_alpha(), (529, 665))
     else:
         text = str(time_value)
         adjust = len(text)*4
@@ -457,7 +459,7 @@ def display_HUD_speed_meter(screen, speed):
         image_number = 0
     adjust = len(text)*7
     text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
-    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png"), (20, 420))
+    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png").convert_alpha(), (20, 420))
     screen.blit(text_image, (148-adjust, 596))
 
 
@@ -470,7 +472,7 @@ def display_HUD_precision_meter(screen, precision):
         image_number = 0
     adjust = len(text)*7
     text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
-    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png"), (811, 420))
+    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png").convert_alpha(), (811, 420))
     screen.blit(text_image, (940-adjust, 596))
 
 
@@ -480,7 +482,7 @@ def display_HUD_energy_bar(screen, energy_level):
         image_number = 30
     elif image_number < 0:
         image_number = 0
-    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png"), (296, 640))
+    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png").convert_alpha(), (296, 640))
 
 
 def display_HUD_resistance_bar(screen, resistance_level):
@@ -489,13 +491,13 @@ def display_HUD_resistance_bar(screen, resistance_level):
         image_number = 30
     elif image_number < 0:
         image_number = 0
-    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png"), (605, 640))
+    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png").convert_alpha(), (605, 640))
 
 
 # turns a typed line into an image
 def get_text_images(line):
     text_font = pygame.font.SysFont('Arial', 22)
-    return text_font.render(" ".join(line).strip(), True, (0, 0, 0))
+    return text_font.render(" ".join(line).strip(), True, (0, 0, 0)).convert_alpha()
 
 
 # creates a new text's image. those that will be chosen and displayed during a match

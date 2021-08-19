@@ -544,3 +544,89 @@ class Mission_PARTS:
         pre = sum(self.precision_list) // len(self.precision_list)
         speed = sum(self.speed_list) // len(self.speed_list)
         return pre, speed, self.parts_collected, self.total_time
+
+
+# Creates a world where the AI can be trained
+class Training_World:
+    def __init__(self, screen):
+        self.screen = screen
+        # Game objects
+        self.car = ce.Car()
+        self.road = ce.Road()
+        self.obstacles_list = ce.Obstacles()
+        self.parts_list = ce.parts()
+        self.parts_collected = 0
+        self.individual = None
+        self.hud_image = pygame.image.load("images/HUD/HUD_background.png")
+        # loop stuff
+        self.clock = pygame.time.Clock()
+        self.run = True
+        self.time_passed = 0
+        self.total_time = 0.0
+        self.choice = 0
+        self.resistance = True
+
+    def refresh_game(self):
+        entities = [self.road, self.parts_list, self.obstacles_list, self.car]
+        self.screen.blit(self.hud_image, (0, 308))
+        for entity in entities:
+            entity.draw(self.screen)
+        pygame.display.update()
+
+    def update_individual(self):
+        self.individual.parts = self.parts_collected
+        self.individual.time_alive = self.time_passed
+        self.individual.fitness_level()
+
+    def make_movement_choice(self):
+        self.choice = f.make_a_choice(self.car.seen_values, self.individual.weights, self.individual.bias)
+
+    def car_movement_y(self):
+        if not self.car.keep_moving and self.car.y in self.car.y_values:
+            self.car.vision(self.screen)
+            self.make_movement_choice()
+        if self.choice == 1:
+            self.car.movement("DWN")
+            self.car.direction = "DWN"
+        elif self.choice == -1:
+            self.car.movement("UP")
+            self.car.direction = "UP"
+        self.car.continue_mov()
+
+    def manage_buttons(self, buttons):
+        pass
+
+    def continue_game(self):
+        return self.resistance
+
+    def individual_is_perfect(self, individual):
+        self.individual = individual
+        while self.run:
+            self.time_passed += self.clock.tick(100) / 990
+    # terminate execution
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.run = False
+                if event.type == pygame.KEYDOWN:
+                    self.manage_buttons(pygame.key.get_pressed())
+    # parts effects
+            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.create_parts()
+    # car movement
+            self.car_movement_y()
+    # collision & damage
+            if self.car.obstacle_collision(self.obstacles_list.internal_list):
+                self.resistance = False
+            self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
+            self.parts_collected += value
+    # obstacles effects
+            self.obstacles_list.remove_obstacles()
+            self.obstacles_list.create_obstacles()
+    # Refresh screen
+            if self.run:
+                self.run = self.continue_game()
+            self.refresh_game()
+        self.update_individual()
+        f.stop_all_sounds()
+        f.play(game_over_sound)
+        return False  # if it gets here, it means it not good enough

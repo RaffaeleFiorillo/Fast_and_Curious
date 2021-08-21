@@ -97,16 +97,14 @@ class Mission_AI:
         pygame.display.update()
 
     def car_movement_y(self):
-        if not self.car.keep_moving and self.car.y in self.car.y_values:
-            self.car.vision(self.screen)
-            self.choice = f.make_a_choice(self.car.seen_values)
+        self.car.vision(self.screen)
+        self.choice = f.make_a_choice(self.car.seen_values)
         if self.choice == 1:
             self.car.movement("DWN")
             self.car.direction = "DWN"
         elif self.choice == -1:
             self.car.movement("UP")
             self.car.direction = "UP"
-        self.car.continue_mov()
 
     def car_movement_x(self):
         self.car.damage_period += 0.05
@@ -560,6 +558,7 @@ class Training_World:
         self.hud_image = pygame.image.load("images/HUD/HUD_background.png")
         # loop stuff
         self.clock = pygame.time.Clock()
+        self.frame_rate = 11  # must not be multiple of 10
         self.run = True
         self.time_passed = 0
         self.total_time = 0.0
@@ -579,22 +578,27 @@ class Training_World:
         self.individual.fitness_level()
 
     def make_movement_choice(self):
-        self.choice = f.make_a_choice(self.car.seen_values, self.individual.weights, self.individual.bias)
+        if self.car.y in self.car.y_values:  # car only makes choice if in the middle of one of the tracks
+            self.choice = self.individual.make_prediction(self.car.seen_values)
+        else:
+            self.choice = None
 
     def car_movement_y(self):
-        if not self.car.keep_moving and self.car.y in self.car.y_values:
-            self.car.vision(self.screen)
-            self.make_movement_choice()
-        if self.choice == 1:
-            self.car.movement("DWN")
-            self.car.direction = "DWN"
-        elif self.choice == -1:
-            self.car.movement("UP")
-            self.car.direction = "UP"
-        self.car.continue_mov()
+        self.car.vision(self.screen)
+        self.make_movement_choice()
+        self.car.movement(self.choice)
 
-    def manage_buttons(self, buttons):
-        pass
+    def manage_buttons(self, button):
+        if button == pygame.K_UP:
+            self.car.movement("UP")
+        elif button == pygame.K_DOWN:
+            self.car.movement("DWN")
+        elif button == pygame.K_PLUS:
+            if self.frame_rate < 90:
+                self.frame_rate += 10
+        elif button == pygame.K_MINUS:
+            if self.frame_rate > 10:
+                self.frame_rate -= 10
 
     def continue_game(self):
         return self.resistance
@@ -602,13 +606,12 @@ class Training_World:
     def individual_is_perfect(self, individual):
         self.individual = individual
         while self.run:
-            self.time_passed += self.clock.tick(100) / 990
     # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
                 if event.type == pygame.KEYDOWN:
-                    self.manage_buttons(pygame.key.get_pressed())
+                    self.manage_buttons(event.key)
     # parts effects
             self.parts_list.remover_parts(self.obstacles_list.internal_list)
             self.parts_list.create_parts()
@@ -626,6 +629,7 @@ class Training_World:
             if self.run:
                 self.run = self.continue_game()
             self.refresh_game()
+            self.time_passed += self.clock.tick(self.frame_rate) / 990
         self.update_individual()
         f.stop_all_sounds()
         f.play(game_over_sound)

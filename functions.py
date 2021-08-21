@@ -26,7 +26,7 @@ BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116
 
 # ------------------------------------- REIMPLEMENTED FUNCTIONS --------------------------------------------------------
 # These functions are just a reimplementation of existing python packages. They are useful because other modules of this
-# game don't need to import the module random or time (etc.), just this module functions.
+# game don't need to import the module random or time (etc.), just this module (functions).
 
 def choice(list_r):
     return random_choice(list_r)
@@ -92,11 +92,10 @@ def see(screen, coo):
         return 0
     elif y > 308:
         return 0
-    cor = list(screen.get_at((x, y)))
-    cor2 = cor[:-1]
-    if cor2 in cores_estrada:
+    cor = list(screen.get_at((x, y)))[:-1]
+    if cor in cores_estrada:
         current_code = 1
-    elif cor2 in cores_part:
+    elif cor in cores_part:
         current_code = 2
     else:
         current_code = 0

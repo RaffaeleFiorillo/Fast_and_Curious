@@ -17,21 +17,23 @@ class Individual:
         self.mutation_chance = mc
         self.fitness = 0
         self.time_alive = 0
+        self.moves_number = 0
         self.parts = 0
 
     def fitness_level(self):
         parts_contribute = normalize(3500, 0, self.parts) * 0.3  # contribute of parts collected between 0 and 1
         time_contribute = normalize(180, 0, self.time_alive) * 0.5  # contribute of time survived between 0 and 1
-        """print(f"parts: {self.parts} | contribute: {parts_contribute}")
-        print(f"time: {self.time_alive} | contribute: {time_contribute}")"""
-        self.fitness = parts_contribute + time_contribute
+        # moves_contribute = ((1.5 - self.moves_number/self.time_alive)**2)**(1/2) * 0.2  # contribute of moves  " " "
+        """print(f"parts: {self.parts} | contribute: {parts_contribute}"
+              f"|| time: {self.time_alive} | contribute: {time_contribute}")"""
+        self.fitness = parts_contribute + time_contribute # + moves_contribute
 
     def __str__(self):
         return f"Name: {self.name} | Fitness: {self.fitness}"
 
     def save_existence(self):
         file = open("parameters/Current_generation.txt", "a")
-        file.write(f"F:{self.fitness};W:{self.weights};B:{self.bias}\n")
+        file.write(f"\n\nF:{self.fitness};\nW:{self.weights};\nB:{self.bias}\n\n")
         file.close()
 
     def get_wb(self, w, b):
@@ -39,8 +41,15 @@ class Individual:
         self.bias = b
 
     def create_individual(self):
-        self.weights = [random.random() * random.choice([1, -1]) for _ in range(self.inputs)]
-        self.bias = [random.random() * random.choice([1, -1]) for _ in range(self.inputs)]
+        hidden_1 = [[random.random() * random.choice([1, -1]) for _ in range(self.inputs)] for _ in range(self.inputs)]
+        hidden_2 = [[random.random() * random.choice([1, -1]) for _ in range(self.inputs)] for _ in range(7)]
+        output = [[random.random() * random.choice([1, -1]) for _ in range(7)] for _ in range(3)]
+        self.weights = [hidden_1, hidden_2, output]
+
+        hidden_1 = [random.random() * random.choice([1, -1]) for _ in range(self.inputs)]
+        hidden_2 = [random.random() * random.choice([1, -1]) for _ in range(7)]
+        output = [random.random() * random.choice([1, -1]) for _ in range(3)]
+        self.bias = [hidden_1, hidden_2, output]
 
     def cross_over(self, individual2):
         chromosomes = [i for i in range(self.inputs)]
@@ -56,19 +65,31 @@ class Individual:
                               [individual2.bias[y] for y in chromosomes_individual_2]
         return [weights_new_individual, bias_new_individual]
 
-    def activation_function(self, variables):
-        soma = 0
-        for i in range(len(variables) - 1):
-            soma += self.weights[i] * variables[i] + self.bias[i]
-        refined_value = math.tanh(soma)
-        if refined_value >= 0.70:
-            return 1
-        elif refined_value <= -0.70:
-            return -1
-        else:
-            return 0
+    @staticmethod
+    def activation_function(value):
+        return 1/(1+math.e**(-value))
 
-    def mutation(self):
+    def get_layer_output(self, values, layer):
+        indexation = {"layer1": 0, "layer2": 1, "output": 2}[layer]
+        layer_values = []
+        ind, result_value = 0, None
+        for neuron in self.weights[indexation]:
+            for weight, value in zip(neuron, values):
+                result_value = weight*value
+            result_value = self.activation_function(result_value+self.bias[indexation][ind])
+            layer_values.append(result_value)
+        return layer_values
+
+    def make_prediction(self, inputs):
+        decisions = {1: None, 0: "DWN", 2: "UP"}
+        hidden_layer1 = self.get_layer_output(inputs, "layer1")
+        hidden_layer2 = self.get_layer_output(hidden_layer1, "layer2")
+        output_layer = self.get_layer_output(hidden_layer2, "output")
+        output = decisions[output_layer.index(max(output_layer))]
+        # print(f"output: {output}")
+        return output  # returns the  index of the greatest value in the outputs (decision)
+
+    def mutate(self):
         new_w = []
         new_b = []
         for w, b in zip(self.weights, self.bias):
@@ -86,7 +107,7 @@ class Individual:
     def breed(self, individual_2, i_name):
         new_individual = Individual(self.inputs, i_name, self.mutation_chance)
         new_individual.weights, new_individual.bias = self.cross_over(individual_2)
-        new_individual.mutation()
+        new_individual.mutate()
         return new_individual
 
 
@@ -167,7 +188,7 @@ pygame.display.set_caption("Fast and Curious-AI Training")
 
 # simulation stuff
 keepGoing = True
-pop = Population(5, 10, 0.2)
+pop = Population(14, 10, 0.2)
 world = game_classes.Training_World(screen)
 
 """w = functions.WEIGHTS

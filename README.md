@@ -70,7 +70,7 @@
 ## Ideas for the future:
   -> More Levels:
   
-      - Extend the number of levels so that the game could take the user furhter in the learning journey;
+      - Extend the number of levels so that the game could take the user further in his learning journey;
       - More car evolutions;
   
   -> Multiplayer Option: 

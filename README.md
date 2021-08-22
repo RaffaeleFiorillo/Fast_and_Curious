@@ -20,7 +20,7 @@
  ### Login
     The game allows multiple accounts to be created. You can Login and Logout, allowing multiple people to play, learn and practice without loosing your own progress!
     
-    ![Choose account](https://user-images.githubusercontent.com/75253335/130338212-147a6a09-389b-4122-80a5-63f247af7a05.png)
+   ![Choose account](https://user-images.githubusercontent.com/75253335/130338212-147a6a09-389b-4122-80a5-63f247af7a05.png)
 
 
 ### Game Menu

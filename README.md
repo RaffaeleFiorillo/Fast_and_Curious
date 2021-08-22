@@ -1,5 +1,5 @@
 # Fast_and_Curious
-  A game to learn/improve keyboard typing skills.
+  A game to learn/improve keyboard typing skills. The main idea is to improve your typing skills and at the same time learn fun facts (some even from your own authory!).
 
 ## How to set up and play the game:
  1st -> Download these files from the repository: 
@@ -14,6 +14,39 @@
  4th -> Run "game.exe";
  
  5th -> Enjoy!!!
+ 
+ ## Screenshots of the game
+ 
+ ### Login
+    The game allows multiple accounts to be created. You can Login and Logout, allowing multiple people to play, learn and practice without loosing your own progress!
+    
+    ![Choose account](https://user-images.githubusercontent.com/75253335/130338212-147a6a09-389b-4122-80a5-63f247af7a05.png)
+
+
+### Game Menu
+   When you are logged into your account you are presented with multiple possible actions, such as:
+   - Learn about the game's story;
+   - test your skills and level up;
+   - practice your typing with endless mode;
+   - Read the game's tutorials (get a better understanding about the enemies, goals, menu options,...);
+   - Manage your account (music and effect volume, change password, add customized texts to practice, ...);
+   - Logout
+   
+   ![Game Menu](https://user-images.githubusercontent.com/75253335/130338318-b22dd7f3-cc32-4694-95cd-d372034916d7.png)
+
+
+### Management
+   Makes you able to customize your game experience.
+   
+   ![Management](https://user-images.githubusercontent.com/75253335/130338334-3c8079df-af4e-40a6-8168-432fb458ac47.png)
+
+
+### Add your own practicing texts
+  You are able to insert new texts in the game, so that you can practice with them.
+  
+  ![New Text](https://user-images.githubusercontent.com/75253335/130338376-0903996d-c3e0-4be0-b2a3-3455800518b2.png)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
  
 ## More about the game in this documentation:
   - Portuguese:

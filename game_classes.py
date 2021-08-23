@@ -153,15 +153,15 @@ class Mission_AI:
             self.car.speed -= 2
         return False
 
-    def manage_buttons(self, keys, event):
-        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+    def manage_buttons(self, event):
+        if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             if self.line < 7:  # prevents from adding too much lines
                 self.written_text.append([""])
                 self.line += 1
                 self.current_word_index = 0
             else:  # prepare another text to write
                 pass
-        elif keys[pygame.K_SPACE]:
+        elif event.key == pygame.K_SPACE:
             # go to next line in case written words are numerically equal to words to write
             if len(self.written_text[self.line]) == len(self.text_to_write[self.line]):
                 self.written_text.append([""])
@@ -170,7 +170,7 @@ class Mission_AI:
             if self.written_text[-1][-1] != "":  # prevents adding new words in case current word is empty
                 self.written_text[self.line].append("")
                 self.current_word_index += 1
-        elif keys[pygame.K_BACKSPACE]:
+        elif event.key == pygame.K_BACKSPACE:
             if self.written_text[-1] == [""] and len(self.written_text) != 1:  # if line is empty go to previous
                 self.written_text.pop()
                 self.line -= 1
@@ -261,7 +261,7 @@ class Mission_AI:
                     self.run = False
     # controls
                 if event.type == pygame.KEYDOWN:
-                    self.manage_buttons(pygame.key.get_pressed(), event)
+                    self.manage_buttons(event)
     # parts effects
             self.parts_list.remover_parts(self.obstacles_list.internal_list)
             self.parts_list.create_parts()
@@ -435,15 +435,15 @@ class Mission_PARTS:
             self.car.speed -= 2
         return False
 
-    def manage_buttons(self, keys, event):
-        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+    def manage_buttons(self, event):
+        if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             if self.line < 7:  # prevents from adding too much lines
                 self.written_text.append([""])
                 self.line += 1
                 self.current_word_index = 0
             else:  # prepare another text to write
                 pass
-        elif keys[pygame.K_SPACE]:
+        elif event.key == pygame.K_SPACE:
             # go to next line in case written words are numerically equal to words to write
             if len(self.written_text[self.line]) == len(self.text_to_write[self.line]):
                 self.written_text.append([""])
@@ -452,7 +452,7 @@ class Mission_PARTS:
             if self.written_text[-1][-1] != "":  # prevents adding new words in case current word is empty
                 self.written_text[self.line].append("")
                 self.current_word_index += 1
-        elif keys[pygame.K_BACKSPACE]:
+        elif event.key == pygame.K_BACKSPACE:
             if self.written_text[-1] == [""] and len(self.written_text) != 1:  # if line is empty go to previous
                 self.written_text.pop()
                 self.line -= 1
@@ -538,7 +538,7 @@ class Mission_PARTS:
                 if event.type == pygame.QUIT:
                     self.run = False
                 if event.type == pygame.KEYDOWN:
-                    self.manage_buttons(pygame.key.get_pressed(), event)
+                    self.manage_buttons(event)
     # parts effects
             self.parts_list.remover_parts(self.obstacles_list.internal_list)
             self.parts_list.create_parts()

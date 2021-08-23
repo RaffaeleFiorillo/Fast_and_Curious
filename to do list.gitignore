@@ -1,4 +1,4 @@
-This table shows stuff to be done in the future to expand the game, their level of difficulty, and time level of completition.
+This table shows stuff to be done in the future (to expand the game or to fix bugs), their level of difficulty and time level of completition.
 
 ---------------------------------------------------------------------------------------------------------
 Activity                                                                 |  State  |  Difficulty  | Time|
@@ -6,4 +6,10 @@ Activity                                                                 |  Stat
 Correct the size of the game cursor.                                     |  Done   |      1       |  1  |
 ---------------------------------------------------------------------------------------------------------
 Correct the music&volume bug (value exceeds max value)                   |  Done   |      2       |  2  |
+---------------------------------------------------------------------------------------------------------
+Correct the add text bug (letters reach out of the box)                  | Pending |      2       |  2  |
+---------------------------------------------------------------------------------------------------------
+Correct the reverse count bug (numbers and letters blinc)                | Pending |      2       |  4  |
+---------------------------------------------------------------------------------------------------------
+Show avg and max speed in Mission: Parts                                 | Pending |      4       |  6  |
 ---------------------------------------------------------------------------------------------------------

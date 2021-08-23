@@ -21,6 +21,8 @@ success_sound = Af.load_sound("menu/success.WAV")                # sound for eve
 
 
 # ------------------------------------------------ SUPPORT CLASSES -----------------------------------------------------
+# These classes are used by the classes that manage the Menus interfaces
+
 class Button:
     def __init__(self, x, y, directory, effect, code):
         self.x = x
@@ -68,6 +70,7 @@ class Button2(Button):
         [screen.blit(self.value_image, (self.x+145+20*i, self.y+15)) for i in range(self.value)]
 
 
+# Manages the user's information in the Game Menu
 class User:
     def __init__(self, name=""):
         self.name = name
@@ -126,6 +129,7 @@ class User:
         file.close()
 
 
+# simulates a single firework
 class Firework:
     def __init__(self, y):
         self.type = Af.choice(["circle", "star"])
@@ -176,6 +180,7 @@ class Firework:
             self.draw_explosion(screen)
 
 
+# simulates a group of fireworks by managing single fireworks (Firework class)
 class Fireworks:
     y_values = list(range(720, 2000, 40))[:15]
 
@@ -207,23 +212,23 @@ class Menu_image_sequence:
         self.current_page = 0
         self.origin_link = func_link
 
-    def manage_buttons(self, keys):
-        if keys[pygame.K_RIGHT]:
+    def manage_buttons(self, key):
+        if key == pygame.K_RIGHT:
             if self.current_page+1 == self.num_pages:
                 Af.play(error_sound)
             else:
                 Af.play(button_y_sound)
             self.current_page += 1
-        elif keys[pygame.K_LEFT]:
+        elif key == pygame.K_LEFT:
             if self.current_page == 0:
                 Af.play(error_sound)
             else:
                 Af.play(button_y_sound)
             self.current_page -= 1
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             if self.current_page == self.num_pages:
                 return self.origin_link
-        elif keys[pygame.K_ESCAPE]:
+        elif key == pygame.K_ESCAPE:
             return self.origin_link
         if self.current_page > self.num_pages-1:
             self.current_page = self.num_pages-1
@@ -259,7 +264,7 @@ class Menu_image_sequence:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    effect = self.manage_buttons(event.key)
                     if effect is not None:
                         return effect
             self.refresh()
@@ -310,7 +315,7 @@ class Menu:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    effect = self.manage_buttons(event.key)
                     if effect is not None:
                         if effect == "m_ai":
                             if Af.get_user_level() < 13:
@@ -321,15 +326,15 @@ class Menu:
                             return effect
             self.refresh(background)
 
-    def manage_buttons(self, keys):
+    def manage_buttons(self, key):
         valor = 0
-        if keys[pygame.K_UP]:
+        if key == pygame.K_UP:
             Af.play(button_y_sound)
             valor = -1
-        elif keys[pygame.K_DOWN]:
+        elif key == pygame.K_DOWN:
             Af.play(button_y_sound)
             valor = 1
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             return self.internal_list[self.active_code].effect
         self.active_code += valor
         if self.active_code > len(self.internal_list)-1:
@@ -385,20 +390,20 @@ class Exit:
                 if event.type == pygame.QUIT:
                     Af.terminate_execution()
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    effect = self.manage_buttons(event.key)
                     if effect is not None:
                         return effect
             self.refresh()
 
-    def manage_buttons(self, keys):
+    def manage_buttons(self, key):
         valor = 0
-        if keys[pygame.K_RIGHT]:
+        if key == pygame.K_RIGHT:
             Af.play(button_x_sound)
             valor = 1
-        elif keys[pygame.K_LEFT]:
+        elif key == pygame.K_LEFT:
             Af.play(button_x_sound)
             valor = -1
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             return self.effects[self.active_code]
         self.active_code += valor
         if self.active_code > len(self.effects)-1:
@@ -456,7 +461,7 @@ class Create_Account:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed(), event)
+                    effect = self.manage_buttons(event)
                     if effect is not None:
                         return effect
             self.refresh()
@@ -496,20 +501,20 @@ class Create_Account:
                 return False
         return True
 
-    def manage_buttons(self, keys, event):
-        if keys[pygame.K_RIGHT]:
+    def manage_buttons(self, event):
+        if event.key == pygame.K_RIGHT:
             Af.play(button_x_sound)
             self.active_code_x = 1
-        elif keys[pygame.K_LEFT]:
+        elif event.key == pygame.K_LEFT:
             Af.play(button_x_sound)
             self.active_code_x = 0
-        elif keys[pygame.K_DOWN]:
+        elif event.key == pygame.K_DOWN:
             Af.play(button_y_sound)
             self.active_code_y = 1
-        elif keys[pygame.K_UP]:
+        elif event.key == pygame.K_UP:
             Af.play(button_y_sound)
             self.active_code_y = 0
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             if self.effects[self.active_code_x]:
                 if self.validate_user_information():
                     if self.change:
@@ -530,7 +535,7 @@ class Create_Account:
                         return "change_password"
                     return "new"
             return False
-        elif keys[pygame.K_TAB]:
+        elif event.key == pygame.K_TAB:
             self.hide = not self.hide
         elif event.key == pygame.K_BACKSPACE:
             Af.play(erase_letter_sound)
@@ -592,24 +597,24 @@ class Choose_Account:
                     return False
                 if event.type == pygame.KEYDOWN:
                     self.create_buttons()
-                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    effect = self.manage_buttons(event.key)
                     if effect is not None:
                         return effect
             self.refresh()
 
-    def manage_buttons(self, keys):
-        if keys[pygame.K_RIGHT]:
+    def manage_buttons(self, key):
+        if key == pygame.K_RIGHT:
             Af.play(button_x_sound)
             self.active_code_x = 1
-        elif keys[pygame.K_LEFT]:
+        elif key == pygame.K_LEFT:
             Af.play(button_x_sound)
             self.active_code_x = 0
-        elif keys[pygame.K_DOWN]:
+        elif key == pygame.K_DOWN:
             if len(self.buttons) > 1:
                 Af.play(button_y_sound)
                 self.active_code_y += 1
                 self.previous_button = self.active_code_y-1
-        elif keys[pygame.K_UP]:
+        elif key == pygame.K_UP:
             if len(self.buttons) > 1:
                 Af.play(button_y_sound)
                 self.active_code_y -= 1
@@ -622,7 +627,7 @@ class Choose_Account:
             self.active_code_y = len(self.users)-1
             self.previous_button = 0
         self.set_active_button()
-        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        if key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             if self.active_code_x:
                 self.user.name = self.users[self.active_code_y]
                 self.user.get_info()
@@ -717,22 +722,22 @@ class Enter_Password:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed(), event)
+                    effect = self.manage_buttons(event)
                     if effect is not None:
                         return effect
             self.refresh()
 
-    def manage_buttons(self, keys, event):
+    def manage_buttons(self, event):
         if event.key == pygame.K_BACKSPACE:
             Af.play(erase_letter_sound)
             self.password_list = self.password_list[:-1]
-        elif keys[pygame.K_ESCAPE]:
+        elif event.key == pygame.K_ESCAPE:
             if self.change:
                 return "manage"
             return "choose"
-        elif keys[pygame.K_TAB]:
+        elif event.key == pygame.K_TAB:
             self.hide = not self.hide
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             # self.password = "".join(self.password_list)
             if self.verify_password():
                 self.show_success_message()
@@ -788,7 +793,7 @@ class Management:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    effect = self.manage_buttons(event.key)
                     if effect is not None:
                         return effect
             self.refresh()
@@ -799,26 +804,26 @@ class Management:
         self.user.save_info()
         self.user.turn_active()
 
-    def manage_buttons(self, keys):
-        if keys[pygame.K_UP]:
+    def manage_buttons(self, key):
+        if key == pygame.K_UP:
             Af.play(button_y_sound)
             self.active_code -= 1
-        elif keys[pygame.K_DOWN]:
+        elif key == pygame.K_DOWN:
             Af.play(button_y_sound)
             self.active_code += 1
         elif self.active_code == 0 or self.active_code == 1:
-            if keys[pygame.K_LEFT]:
+            if key == pygame.K_LEFT:
                 play_sound = self.list[self.active_code].change_value(-1)  # change_value returns True if max is reached
                 if play_sound:  # if volume is max or min, then the sound is played
                     Af.play(volume_change_sound)
-            elif keys[pygame.K_RIGHT]:
+            elif key == pygame.K_RIGHT:
                 play_sound = self.list[self.active_code].change_value(1)  # change_value returns True if max is reached
                 if play_sound is True:  # if volume is max or min, then the sound is not played
                     Af.play(volume_change_sound)
                 else:
                     Af.play(error_sound)
             self.update_user()
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             return self.list[self.active_code].effect
         if self.active_code > len(self.list)-1:
             self.active_code = 0
@@ -887,8 +892,8 @@ class Results_AI:
         pygame.display.update()
 
     @staticmethod
-    def manage_buttons(keys):
-        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+    def manage_buttons(key):
+        if key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             return True
         return False
 
@@ -912,7 +917,7 @@ class Results_AI:
                 if event.type == pygame.QUIT:
                     return self.requirements_satisfied, self.parts
                 if event.type == pygame.KEYDOWN:
-                    if self.manage_buttons(pygame.key.get_pressed()):
+                    if self.manage_buttons(event.key):
                         self.display_level_info_message()
                         return self.requirements_satisfied, self.parts
             self.refresh()
@@ -947,8 +952,8 @@ class Results_Parts:
         pygame.display.update()
 
     @staticmethod
-    def manage_buttons(keys):
-        if keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+    def manage_buttons(key):
+        if key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             return True
         return False
 
@@ -961,7 +966,7 @@ class Results_Parts:
                 if event.type == pygame.QUIT:
                     return self.parts
                 if event.type == pygame.KEYDOWN:
-                    if self.manage_buttons(pygame.key.get_pressed()):
+                    if self.manage_buttons(event.key):
                         return self.parts
             self.refresh()
 
@@ -1021,15 +1026,15 @@ class Unlock_Level:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed())
+                    effect = self.manage_buttons(event.key)
                     if effect is not None:
                         return effect
             self.refresh()
 
-    def manage_buttons(self, keys):
-        if keys[pygame.K_ESCAPE]:
+    def manage_buttons(self, key):
+        if key == pygame.K_ESCAPE:
             return True
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif key == pygame.K_KP_ENTER or key == pygame.K_RETURN:
             if self.verify_parts_number():
                 self.show_success_message()
                 self.save_state()
@@ -1123,7 +1128,7 @@ class Add_Text:
                 if event.type == pygame.QUIT:
                     return False
                 if event.type == pygame.KEYDOWN:
-                    effect = self.manage_buttons(pygame.key.get_pressed(), event)
+                    effect = self.manage_buttons(event)
                     if effect is not None:
                         if effect:
                             if self.validate_text_information():
@@ -1169,14 +1174,14 @@ class Add_Text:
                 return False
         return True
 
-    def manage_buttons(self, keys, event):
-        if keys[pygame.K_RIGHT]:
+    def manage_buttons(self, event):
+        if event.key == pygame.K_RIGHT:
             Af.play(button_x_sound)
             self.active_code_x = 1
-        elif keys[pygame.K_LEFT]:
+        elif event.key == pygame.K_LEFT:
             Af.play(button_x_sound)
             self.active_code_x = 0
-        elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
+        elif event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             if self.active_code_x:
                 return True
             else:

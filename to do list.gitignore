@@ -3,7 +3,7 @@ This table shows stuff to be done in the future to expand the game, their level 
 ---------------------------------------------------------------------------------------------------------
 Activity                                                                 |  State  |  Difficulty  | Time|
 ---------------------------------------------------------------------------------------------------------
-Correct the size of the game cursor.                                     | Pendent |      1       |  1  |
+Correct the size of the game cursor.                                     |  Done   |      1       |  1  |
 ---------------------------------------------------------------------------------------------------------
-Correct the music&volume bug (value exceeds max value)                   | Pendent |      2       |  2  |
+Correct the music&volume bug (value exceeds max value)                   |  Done   |      2       |  2  |
 ---------------------------------------------------------------------------------------------------------

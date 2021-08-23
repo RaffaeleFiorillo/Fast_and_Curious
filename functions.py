@@ -391,12 +391,14 @@ def save_performance_parts(parts, speed, time):
         int_val[0] = int(speed)
     if int_val[1] < time:
         int_val[1] = int(time)
-    line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
+    # name best-speed best-time level parts password music-volume sound-volume
+    line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[5]} {int_val[6]}"
     file = open("saves/active_user.txt", "w")
     file.write(line)
     file.close()
     file = open(f"saves/{str_val[0]}/data.txt", "w")
-    line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
+    # best-speed best-time level parts password music-volume sound-volume
+    line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[5]} {int_val[6]}"
     file.write(line)
     file.close()
 

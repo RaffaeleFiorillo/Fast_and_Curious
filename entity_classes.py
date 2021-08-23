@@ -33,7 +33,7 @@ class Car:
         self.x = 290
         self.y = self.y_values[1]
         self.damage_period = 0.0
-        self.hit_box = pygame.mask.from_surface(self.image.convert_alpha())
+        self.hit_box = pygame.mask.from_surface(self.image)
         self.rect = (self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
         self.vision_coo = None
         self.seen_values = []
@@ -59,9 +59,9 @@ class Car:
             self.fire_image_time += 1
         if fire_type:
             Af.play(fire_sound)
-            self.fire_image = pygame.image.load("images/cars/car effects/nitro/blue.png").convert_alpha()
+            self.fire_image = Af.load_image("cars/car effects/nitro/blue.png")
         else:
-            self.fire_image = pygame.image.load("images/cars/car effects/nitro/red.png").convert_alpha()
+            self.fire_image = Af.load_image("cars/car effects/nitro/red.png")
 
     @staticmethod
     def get_car_image():
@@ -71,7 +71,7 @@ class Car:
             file.close()
         except IndexError:
             level = 21
-        return pygame.image.load(f"images/cars/{level}.png").convert_alpha()
+        return Af.load_image(f"cars/{level}.png")
 
     def obstacle_collision(self, l_obstacles):
         for obst in l_obstacles:
@@ -134,14 +134,11 @@ class Car:
 # ----------------------------------------------- SPACE-TIME ENTITY ----------------------------------------------------
 class Space_Time_Entity:
     def __init__(self):
-        self.images = [pygame.image.load(f"images/Characters/Space-Time Entity/{i + 1}.png").convert_alpha()
-                       for i in range(6)]
+        self.images = [Af.load_image(f"Characters/Space-Time Entity/{i + 1}.png") for i in range(6)]
         self.index = 0
 
     def draw(self, screen):
-        self.index += 0.5
-        if self.index >= 6:
-            self.index = 0
+        self.index = (self.index + 0.5) % 5
         screen.blit(self.images[int(self.index)], (0, 0))
 
 
@@ -149,15 +146,12 @@ class Space_Time_Entity:
 class Road:
     def __init__(self):
         self.current_frame = 0
-        self.images_road = [pygame.image.load("images/estrada/frame" + str(num + 1) + ".png").convert_alpha()
-                            for num in range(19)]
+        self.images_road = [Af.load_image(f"estrada/frame{frame + 1}.png") for frame in range(19)]
         self.frames = len(self.images_road)
 
     def draw(self, screen):
         screen.blit(self.images_road[self.current_frame], self.images_road[self.current_frame].get_rect())
-        self.current_frame += 1
-        if self.current_frame == self.frames:
-            self.current_frame = 0
+        self.current_frame = (self.current_frame + 1) % self.frames
 
 
 # ------------------------------------------------ SINGLE OBSTACLE -----------------------------------------------------
@@ -176,9 +170,9 @@ class _obstacle:
     def choose_image(self):
         self.folder = str(Af.randint(1, 4))
         if self.folder == "4":
-            self.image = pygame.image.load(f"images/obstacles/4/{Af.randint(1, 11)}.png").convert_alpha()
+            self.image = Af.load_image(f"obstacles/4/{Af.randint(1, 11)}.png")
         else:
-            self.image = pygame.image.load("images/obstacles/" + self.folder + "/1.png").convert_alpha()
+            self.image = Af.load_image(f"obstacles/{self.folder}/1.png")
         self.hit_box = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
 
@@ -193,16 +187,16 @@ class _obstacle:
 
     def mover(self):
         init_m, nxt = 650, 20
-        change = {init_m: f"images/obstacles/{self.folder}/2.png",
-                  init_m - nxt: f"images/obstacles/{self.folder}/3.png",
-                  init_m - nxt * 2: f"images/obstacles/{self.folder}/4.png",
-                  init_m - nxt * 3: f"images/obstacles/{self.folder}/5.png",
-                  init_m - nxt * 4: f"images/obstacles/{self.folder}/6.png",
-                  init_m - nxt * 5: f"images/obstacles/{self.folder}/7.png"
+        change = {init_m: f"/obstacles/{self.folder}/2.png",
+                  init_m - nxt: f"/obstacles/{self.folder}/3.png",
+                  init_m - nxt * 2: f"/obstacles/{self.folder}/4.png",
+                  init_m - nxt * 3: f"/obstacles/{self.folder}/5.png",
+                  init_m - nxt * 4: f"/obstacles/{self.folder}/6.png",
+                  init_m - nxt * 5: f"/obstacles/{self.folder}/7.png"
                   }
         self.x -= 10
         if self.x in change and self.folder != "4":
-            self.image = pygame.image.load(change[self.x])
+            self.image = Af.load_image(change[self.x])
 
 
 # ---------------------------------------------- OBSTACLE COLLECTION ---------------------------------------------------
@@ -252,8 +246,8 @@ class _part:
         self.y = self.y_middle + cardinality
         self.x = x
         self.value = self.type_p ** 2
-        self.image = pygame.image.load("images/parts/part" + str(self.type_p) + ".png").convert_alpha()
-        self.hit_box = pygame.mask.from_surface(self.image.convert_alpha())
+        self.image = Af.load_image(f"parts/part{self.type_p}.png")
+        self.hit_box = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.length = 32
         self.movement_module = 10
@@ -339,9 +333,9 @@ class parts:
 class HUD:
     def __init__(self, screen, mode=False):
         self.screen = screen
-        self.speed_meter_image = pygame.image.load("images/HUD/meter/7.png").convert_alpha()
-        self.precision_meter_image = pygame.image.load("images/HUD/meter/7.png").convert_alpha()
-        self.background = pygame.image.load("images/HUD/HUD_background.png").convert_alpha()
+        self.speed_meter_image = Af.load_image("HUD/meter/7.png")
+        self.precision_meter_image = Af.load_image("HUD/meter/7.png")
+        self.background = Af.load_image("HUD/HUD_background.png")
         self.speed = 0
         self.precision = 0
         self.energy = 0

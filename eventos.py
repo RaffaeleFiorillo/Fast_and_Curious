@@ -101,7 +101,7 @@ def test_Manual_approach(cycles=10000):
     return sum(times)/cycles
 
 
-AI_time = test_AI_approach(cycles=1000000)
-Manual_time = test_Manual_approach(cycles=1000000)
+AI_time = test_AI_approach()
+Manual_time = test_Manual_approach()
 
 print(f"AI-Time: {AI_time}    |    Manual-Time: {Manual_time}")

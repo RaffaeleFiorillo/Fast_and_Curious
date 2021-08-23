@@ -36,7 +36,7 @@ class Mission_AI:
         self.speed = 0
         self.precision = 100
         # text stuff
-        self.cursor = pygame.image.load("images/texts/cursor.png")
+        self.cursor = Af.load_image("texts/cursor.png")
         self.written_text = [[""]]
         self.text_name = None
         self.text_to_write_image = None
@@ -64,7 +64,7 @@ class Mission_AI:
             self.terminate = True
             return None
         self.text_name = Af.choice(Af.get_text_names())[:-4]
-        self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
+        self.text_to_write_image = Af.load_image(f"texts/{self.text_name}.png")
         lines = open(f"texts/{self.text_name}.txt", "r").readlines()
         self.text_to_write = [line.split(" ") for line in lines[1:]]
         self.screen.blit(self.text_to_write_image, (280, 320))
@@ -85,7 +85,7 @@ class Mission_AI:
 
     def refresh_game(self):
         entities = [self.road, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]
-        self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
+        self.screen.blit(Af.load_image("HUD/HUD_background.png"), (0, 308))
         for entity in entities:
             entity.draw(self.screen)
         time = 60-int(self.time_passed)
@@ -242,7 +242,7 @@ class Mission_AI:
             if self.time_passed <= 4:
                 current = int(self.time_passed) % 4
             self.refresh_game()
-            self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png").convert_alpha(), (420, 150))
+            self.screen.blit(Af.load_image(f"HUD/count_down/{current}.png").convert_alpha(), (420, 150))
             pygame.display.update()
             if current == next_image:
                 if next_image< 3:
@@ -317,7 +317,7 @@ class Mission_PARTS:
         self.speed_list = []
         self.precision_list = []
         # text stuff
-        self.cursor = pygame.image.load("images/texts/cursor.png")
+        self.cursor = Af.load_image("texts/cursor.png")
         self.written_text = [[""]]
         self.text_name = None
         self.text_to_write_image = None
@@ -339,7 +339,7 @@ class Mission_PARTS:
 
     def set_up_texts(self, first=False):
         self.text_name = Af.choice(Af.get_text_names())[:-4]
-        self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
+        self.text_to_write_image = Af.load_image(f"texts/{self.text_name}.png")
         lines = open(f"texts/{self.text_name}.txt", "r").readlines()
         self.text_to_write = [line.split(" ") for line in lines[1:]]
         self.screen.blit(self.text_to_write_image, (280, 320))
@@ -368,7 +368,7 @@ class Mission_PARTS:
 
     def refresh_game(self):
         entities = [self.road, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]
-        self.screen.blit(pygame.image.load("images/HUD/HUD_background.png"), (0, 308))
+        self.screen.blit(Af.load_image("HUD/HUD_background.png"), (0, 308))
         for entity in entities:
             entity.draw(self.screen)
         self.hud.draw(self.parts_collected, "i", self.speed, self.precision, self.energy, self.resistance)
@@ -520,7 +520,7 @@ class Mission_PARTS:
             if self.time_passed <= 4:
                 current = int(self.time_passed) % 4
             self.refresh_game()
-            self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png"), (420, 150))
+            self.screen.blit(Af.load_image(f"HUD/count_down/{current}.png"), (420, 150))
             pygame.display.update()
             if current == next_image:
                 if next_image< 3:
@@ -585,7 +585,7 @@ class Training_World:
         self.parts_list = ce.parts()
         self.parts_collected = 0
         self.individual = None
-        self.hud_image = pygame.image.load("images/HUD/HUD_background.png")
+        self.hud_image = Af.load_image("HUD/HUD_background.png")
         # loop stuff
         self.clock = pygame.time.Clock()
         self.frame_rate = Af.FRAME_RATE  # must not be multiple of 10
@@ -680,7 +680,7 @@ class Data_World:
         self.obstacles_list = ce.Obstacles()
         self.parts_list = ce.parts()
         self.parts_collected = 0
-        self.hud_image = pygame.image.load("images/HUD/HUD_background.png")
+        self.hud_image = Af.load_image("HUD/HUD_background.png")
         # loop stuff
         self.clock = pygame.time.Clock()
         self.frame_rate = 5  # must not be multiple of 10

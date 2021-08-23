@@ -18,15 +18,16 @@ cores_obst = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 1
 cores_part = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [237, 28, 36], [255, 0, 255],
               [120, 0, 120], [0, 255, 255], [0, 0, 255]]
 cores_estrada = [[0, 0, 0], [108, 108, 108]]
-code_meaning = {3: "unknown", 1: "road", 2: "parts", 0: "lava"}
+code_meaning = {3: "unknown", 0: "road", 1: "parts", -1: "lava"}
 # AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
 WEIGHTS = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
+FRAME_RATE = 99
 
 
 # ------------------------------------- REIMPLEMENTED FUNCTIONS --------------------------------------------------------
 # These functions are just a reimplementation of existing python packages. They are useful because other modules of this
-# game don't need to import the module random or time (etc.), just this module functions.
+# game don't need to import the module random or time (etc.), just this module (functions).
 
 def choice(list_r):
     return random_choice(list_r)
@@ -92,15 +93,14 @@ def see(screen, coo):
         return 0
     elif y > 308:
         return 0
-    cor = list(screen.get_at((x, y)))
-    cor2 = cor[:-1]
-    if cor2 in cores_estrada:
-        current_code = 1
-    elif cor2 in cores_part:
-        current_code = 2
-    else:
+    cor = list(screen.get_at((x, y)))[:-1]
+    if cor in cores_estrada:
         current_code = 0
-    # sign = code_meaning[current_code] -> turns rgb values into words
+    elif cor in cores_part:
+        current_code = 1
+    else:
+        current_code = -1
+    # sign = code_meaning[current_code]  # -> turns rgb values into words
     # print(sign)
     return current_code
 
@@ -117,16 +117,6 @@ def make_a_choice(info, weights=None, bias=None):
         return -1
     else:
         return 0
-
-
-def prep_cores():
-    file = open("parameters/colors.txt", "r")
-    lines = file.readlines()
-    lines = sorted(lines)
-    f = open("parameters/cores.txt", "a")
-    [f.write(f"{line}") for line in lines]
-    file.close()
-    f.close()
 
 
 # -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------

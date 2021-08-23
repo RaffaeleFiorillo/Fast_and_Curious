@@ -22,24 +22,34 @@ space_between_obstacles = [o for o in range(300, 1290, obstacles_distance)]
 # ----------------------------------------------------- CAR ------------------------------------------------------------
 class Car:
     def __init__(self):
-        self.y_values = [20, 130, 240]
+        self.y_values = [20, 121, 240]
+        self.middle = (self.y_values[1]-1, self.y_values[1], self.y_values[1]-1)  # +-1 error when checking if centered
         self.image = self.get_car_image()
         self.fire_image = None
         self.fire_image_time = 0
         self.last_fire = False
-        self.speed = 7
+        self.speed = 10
+        self.direction = "STOP"
         self.x = 290
-        self.y = 130
+        self.y = self.y_values[1]
         self.damage_period = 0.0
         self.hit_box = pygame.mask.from_surface(self.image.convert_alpha())
-        self.keep_moving = False
-        self.destination = 1
-        self.direction = None
         self.rect = (self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
-        self.vision_coo = [[self.x + 150, self.y - 90], [self.x + 150, self.y + 27], [self.x + 150, self.y + 130],
-                           [self.x + 70, self.y - 90], [self.x + 70, self.y + 130]]
+        self.vision_coo = None
         self.seen_values = []
-        self.po = 0
+        self.update_vision_coordinates()
+
+    def update_vision_coordinates(self):
+        begin, step = 20, 10
+        up = tuple((self.x+begin+step*i, self.y-80) for i in range(22))
+        # up_left, up_center_left, up_center_right, up_right, up_right_front, up_front = up
+
+        center = ((self.x+150, self.y+27), (self.x+155+step, self.y+27))
+
+        dwn = tuple((self.x+begin+step*i, self.y+140) for i in range(22))
+        # dwn_left, dwn_center_left, dwn_center_right, dwn_right, dwn_right_front, dwn_front= dwn
+
+        self.vision_coo = up+center+dwn
 
     def activate_fire(self, fire_type):
         if self.last_fire != fire_type:
@@ -96,41 +106,29 @@ class Car:
             screen.blit(self.fire_image, (self.x - 40, self.y + 15))
             self.fire_image_time = 0
         # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
-        for i in self.vision_coo:
-            pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)
+        """for i in self.vision_coo:
+            pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)"""
 
     def movement(self, event):
-        movements = {"UP": -self.speed, "DWN": self.speed}
-        self.y += movements[event]
-        if self.destination == 1:
-            if self.direction == "UP":
-                self.destination = 2
-            elif self.direction == "DWN":
-                self.destination = 0
-        elif self.destination == 2:
-            if self.direction == "UP":
-                self.destination = 2
-            elif self.direction == "DWN":
-                self.destination = 1
-        elif self.destination == 0:
-            if self.direction == "UP":
-                self.destination = 1
-            elif self.direction == "DWN":
-                self.destination = 0
-        self.keep_moving = True
-        if self.y > self.y_values[2]:
-            self.y = self.y_values[2]
-        elif self.y_values[0] > self.y:
-            self.y = self.y_values[0]
-        self.vision_coo = [[self.x + 150, self.y - 90], [self.x + 150, self.y + 27], [self.x + 150, self.y + 130],
-                           [self.x + 70, self.y - 90], [self.x + 70, self.y + 130]]
-        self.rect = (self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
+        directions = {None: self.direction, "UP": "UP", "DWN": "DWN"}
+        self.direction = directions[event]
+        if self.direction == "UP":
+            self.y -= self.speed
+        elif self.direction == "DWN":
+            self.y += self.speed
 
-    def continue_mov(self):
-        if self.keep_moving:
-            self.movement(self.direction)
-        if self.y in self.y_values:
-            self.keep_moving = False
+        if self.y >= self.y_values[2]:
+            self.direction = "STOP"
+            self.y = self.y_values[2]
+        elif self.y <= self.y_values[0]:
+            self.direction = "STOP"
+            self.y = self.y_values[0]
+        elif self.y in self.middle:
+            self.direction = "STOP"
+            self.y = self.y_values[1]
+
+        self.update_vision_coordinates()  # update the position of the vision coordinates preventing them staying fix
+        self.rect = (self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
 
 
 # ----------------------------------------------- SPACE-TIME ENTITY ----------------------------------------------------
@@ -166,7 +164,7 @@ class Road:
 class _obstacle:
     def __init__(self, location, ultimo_y):
         self.x = location
-        self.adjust = -23
+        self.adjust = -10
         self.y = self.calculate_position_y(ultimo_y)
         self.folder = None
         self.image = None
@@ -280,7 +278,7 @@ class parts:
     def __init__(self):
         self.internal_list = []
         self.first_parts = True
-        self.choices = [20, 130, 240]
+        self.choices = [20, 121, 240]
         self.y = f.choice(self.choices)
         self.dist_between_parts = 5 + 44
         self.min_dist_between_blocs = 100

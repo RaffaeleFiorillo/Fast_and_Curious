@@ -1,162 +1,216 @@
-import random
-import pygame
 import math
+import pygame
+import random
+import functions as f
 import game_classes
+
+M_C = 0.8  # mutation chance
 
 
 def normalize(max_value, min_value, value):
     return (value-min_value) / (max_value-min_value)
 
 
+def activation_function(value):
+    return 1/(1+math.e**(-value))
+
+
+def mutate_value(value, mutation_chance=M_C):
+    if f.random() > mutation_chance:  # invert value's signal
+        value *= f.random_choice([-1, 1])
+    if f.random() > mutation_chance:  # increase or decrease value
+        value += f.random_choice([-1, 1]) * (f.random() / f.random_choice([1000, 100, 10]))
+    if f.random() > M_C:
+        return f.random_choice([-1, 1]) * (f.random() / f.random_choice([100, 10]))
+    return value
+
+
 class Individual:
-    def __init__(self, input_number, name, mc):
+    def __init__(self, input_number, name):
         self.name = name
         self.inputs = input_number
         self.weights = []
         self.bias = []
-        self.mutation_chance = mc
         self.fitness = 0
         self.time_alive = 0
+        self.moves_number = 0
         self.parts = 0
 
     def fitness_level(self):
         parts_contribute = normalize(3500, 0, self.parts) * 0.3  # contribute of parts collected between 0 and 1
-        time_contribute = normalize(180, 0, self.time_alive) * 0.5  # contribute of time survived between 0 and 1
-        """print(f"parts: {self.parts} | contribute: {parts_contribute}")
-        print(f"time: {self.time_alive} | contribute: {time_contribute}")"""
-        self.fitness = parts_contribute + time_contribute
+        time_contribute = normalize(100, 0, self.time_alive)  # contribute of time survived between 0 and 1
+        # moves_contribute = ((1.5 - self.moves_number/self.time_alive)**2)**(1/2) * 0.2  # contribute of moves  " " "
+        """print(f"parts: {self.parts} | contribute: {parts_contribute}"
+              f"|| time: {self.time_alive} | contribute: {time_contribute}")"""
+        self.fitness = parts_contribute + time_contribute # + moves_contribute
 
     def __str__(self):
-        return f"Name: {self.name} | Fitness: {self.fitness}"
+        return f"Name: {self.name} | Fitness: {self.fitness} \n W: {self.weights}\n B: {self.bias}\n\n"
+
+    def __copy__(self):
+        new_individual = Individual(self.inputs, self.name)
+        new_individual.get_wb(self.weights, self.bias)
+        return new_individual
 
     def save_existence(self):
         file = open("parameters/Current_generation.txt", "a")
-        file.write(f"F:{self.fitness};W:{self.weights};B:{self.bias}\n")
+        file.write(f"\n\nF:{self.fitness};\nW:{self.weights};\nB:{self.bias}\n\n")
         file.close()
 
-    def get_wb(self, w, b):
-        self.weights = w
-        self.bias = b
+    def get_wb(self, we, bi):
+        self.weights = we
+        self.bias = bi
 
     def create_individual(self):
-        self.weights = [random.random() * random.choice([1, -1]) for _ in range(self.inputs)]
-        self.bias = [random.random() * random.choice([1, -1]) for _ in range(self.inputs)]
+        hidden_1 = [[random.random() * random.choice([1, -1]) for _ in range(self.inputs)] for _ in range(self.inputs)]
+        hidden_2 = [[random.random() * random.choice([1, -1]) for _ in range(self.inputs)] for _ in range(7)]
+        output = [[random.random() * random.choice([1, -1]) for _ in range(7)] for _ in range(3)]
+        self.weights = [hidden_1, hidden_2, output]
+
+        hidden_1 = [random.random() * random.choice([1, -1]) for _ in range(self.inputs)]
+        hidden_2 = [random.random() * random.choice([1, -1]) for _ in range(7)]
+        output = [random.random() * random.choice([1, -1]) for _ in range(3)]
+        self.bias = [hidden_1, hidden_2, output]
+
+    @staticmethod
+    def cross_over_layers(layers1, layers2):
+        new_values = []
+        for layer1, layer2 in zip(layers1, layers2):
+            new_layer = []
+            for values1, values2 in zip(layer1, layer2):
+                if f.random() >= 0.5:
+                    new_layer.append(values1)
+                else:
+                    new_layer.append(values2)
+            new_values.append(new_layer)
+        return new_values
 
     def cross_over(self, individual2):
-        chromosomes = [i for i in range(self.inputs)]
-        chromosomes_individual_1 = []
-        for i in range(random.randint(1, len(chromosomes) // 2)):
-            chromosomes_individual_1.append(random.choice(chromosomes))
-            chromosomes.remove(chromosomes_individual_1[-1])
-        chromosomes_individual_2 = chromosomes
-        weights_new_individual = [self.weights[i] for i in chromosomes_individual_1] + \
-                                 [individual2.weights[y] for y in chromosomes_individual_2]
+        new_weights = self.cross_over_layers(self.weights, individual2.weights)
+        new_bias = self.cross_over_layers(self.bias, individual2.bias)
+        return new_weights, new_bias
 
-        bias_new_individual = [self.bias[i] for i in chromosomes_individual_1] + \
-                              [individual2.bias[y] for y in chromosomes_individual_2]
-        return [weights_new_individual, bias_new_individual]
+    def get_layer_output(self, values, layer):
+        indexation = {"layer1": 0, "layer2": 1, "output": 2}[layer]
+        layer_values = []
+        for ind, neuron in enumerate(self.weights[indexation]):
+            result_value = 0
+            for weight, value in zip(neuron, values):
+                result_value += weight*value
+            result_value = activation_function(result_value+self.bias[indexation][ind])
+            layer_values.append(result_value)
+        return layer_values
 
-    def activation_function(self, variables):
-        soma = 0
-        for i in range(len(variables) - 1):
-            soma += self.weights[i] * variables[i] + self.bias[i]
-        refined_value = math.tanh(soma)
-        if refined_value >= 0.70:
-            return 1
-        elif refined_value <= -0.70:
-            return -1
-        else:
-            return 0
+    def make_prediction(self, inputs):
+        decisions = {1: None, 0: "DWN", 2: "UP"}
+        hidden_layer1 = self.get_layer_output(inputs, "layer1")
+        hidden_layer2 = self.get_layer_output(hidden_layer1, "layer2")
+        output_layer = self.get_layer_output(hidden_layer2, "output")
+        output = decisions[output_layer.index(max(output_layer))]
+        # print(f"output: {output_layer}  inputs: {inputs}")
+        return output  # returns the  index of the greatest value in the outputs (decision)
 
-    def mutation(self):
-        new_w = []
-        new_b = []
-        for w, b in zip(self.weights, self.bias):
-            if random.random() <= self.mutation_chance:
-                new_w.append(w + (random.random() / 10) * random.choice([1, -1]))
-            else:
-                new_w.append(w)
-            if random.random() <= self.mutation_chance:
-                new_b.append(b + (random.random() / 10) * random.choice([1, -1]))
-            else:
-                new_b.append(b)
-        self.weights = new_w
-        self.bias = new_b
+    def mutate_bias(self):
+        group = []
+        for layer in self.bias:
+            new_layer = []
+            for bias in layer:
+                new_bias = mutate_value(bias)
+                new_layer.append(new_bias)
+            group.append(new_layer)
+        self.bias = group
+
+    def mutate_weights(self):
+        group = []
+        for layer in self.weights:
+            new_layer = []
+            for weights in layer:
+                new_weights = list(map(mutate_value, weights))
+                new_layer.append(new_weights)
+            group.append(new_layer)
+        self.weights = group
+
+    def mutate(self):
+        self.mutate_weights()
+        self.mutate_bias()
 
     def breed(self, individual_2, i_name):
-        new_individual = Individual(self.inputs, i_name, self.mutation_chance)
+        new_individual = Individual(self.inputs, i_name)
         new_individual.weights, new_individual.bias = self.cross_over(individual_2)
-        new_individual.mutation()
+        new_individual.mutate()
         return new_individual
 
 
 class Population:
-    def __init__(self, inputs, maxi, mc):
+    def __init__(self, inputs, maxi):
         self.internal_list = []
         self.generation = 1
         self.best_individual = None
         self.second_best = None
+        self.third_best = None
         self.input_number = inputs
         self.max_individuals = maxi
-        self.mutation_chance = mc
         self.create_individuals_news()
 
     def create_individuals_news(self):
         for i in range(self.max_individuals):
-            self.internal_list.append(Individual(self.input_number, i, self.mutation_chance))
+            self.internal_list.append(Individual(self.input_number, i))
             self.internal_list[-1].create_individual()
             """print(f"name: {self.internal_list[ -1].name}, weights:{self.internal_list[ -1].weights},"
                   f" bias: {self.internal_list[ -1].bias}")"""
 
     def show_individual_attributes(self):
         for ind in self.internal_list:
-            print(f"name: {ind.name},weights:{ind.weights}, bias: {ind.bias}")
+            print(ind)
 
-    def save_individual_attributes(self):
+    def save_best_individuals(self):
         file = open("parameters/best_individuals.txt", "a")
         file.write(f"Generation: {self.generation}\n")
-        file.write(f"F:{self.best_individual.fitness};W:{self.best_individual.weights};B{self.best_individual.bias}\n")
-        file.write(f"F:{self.second_best.fitness};W:{self.second_best.weights};B{self.second_best.bias}\n\n")
-        file.close()
-
-    def ler_attributes_individuals(self):
-        file = open("parameters/current_generation.txt", "r")
-        lines = file.readlines()
-        index = 0
-        for line in lines[1:]:
-            list_line = line.split(";")
-            fit = float(list_line[0][2:])
-            wei = list_line[1][3:-1].split(",")
-            bia = list_line[2][3:-1].split(",")
-            self.internal_list[index].weights = [float(w) for w in wei]
-            self.internal_list[index].bias = [float(b) for b in bia[:-1]]
-            self.internal_list[index].bias.append(float(bia[-1][:-1]))
-            self.internal_list[index].fitness = fit
-            index += 1
-
-        file.close()
-        file = open("parameters/Current_generation.txt", "w")
-        file.write(f"Generation: {self.generation + 1}\n")
+        file.write(self.best_individual.__str__())
+        file.write(self.second_best.__str__())
+        file.write(self.third_best.__str__())
         file.close()
 
     def select_best(self):
-        fit = -1
-        for individual in self.internal_list:
-            if individual.fitness >= fit:
-                self.second_best = self.best_individual
-                self.best_individual = individual
-                fit = self.best_individual.fitness
+        self.internal_list.sort(key=lambda individual: individual.fitness)
+        self.best_individual, self.second_best, self.third_best, *rest = self.internal_list
 
     def create_family(self):
         self.generation += 1
         self.best_individual.nome = 0
         self.second_best.nome = 1
+        self.third_best.nome = 2
         self.internal_list = []
+
+        if self.best_individual.fitness >= 0.08:
+            self.best_individual.save_existence()
+
+        self.internal_list.append(self.best_individual)
         self.internal_list.append(self.best_individual)
         self.internal_list.append(self.second_best)
-        for i in range((self.max_individuals - 2) // 2):
-            self.internal_list.append(self.best_individual.breed(self.second_best, i + 2))
-            self.internal_list.append(self.second_best.breed(self.best_individual, i + 3))
+        self.internal_list.append(self.second_best)
+        self.internal_list.append(self.third_best)
+
+        for i in range(3):
+            new1 = self.best_individual.__copy__()
+            new1.mutate()
+            self.internal_list.append(new1)
+
+        new2 = self.second_best.__copy__()
+        new2.mutate()
+        self.internal_list.append(new2)
+        new3 = self.third_best.__copy__()
+        new3.mutate()
+        self.internal_list.append(new3)
+
+        self.internal_list.append(self.best_individual.breed(self.second_best, 3))
+        self.internal_list.append(self.second_best.breed(self.best_individual, 5))
+        self.internal_list.append(self.best_individual.breed(self.third_best, 7))
+
+        for i in range(self.max_individuals - len(self.internal_list)):
+            new_individual = Individual(self.input_number, i+13)
+            new_individual.create_individual()
+            self.internal_list.append(new_individual)
 
 
 pygame.init()
@@ -167,27 +221,36 @@ pygame.display.set_caption("Fast and Curious-AI Training")
 
 # simulation stuff
 keepGoing = True
-pop = Population(5, 10, 0.2)
+pop = Population(14, 20)
 world = game_classes.Training_World(screen)
 
-"""w = functions.WEIGHTS
-b = functions.BIAS
-perfect_being = Individual(5, 0, 0.2)
-perfect_being.get_wb(w, b)
-
-world.individual_is_perfect(perfect_being)
-print(perfect_being)"""
+"""w = f.WEIGHTS
+b = f.BIAS
+perfect_being = Individual(14, 0)
+perfect_being.create_individual()
 
 
+perfect_being2 = Individual(14, 0)
+perfect_being2.create_individual()
+
+perfect_being.cross_over(perfect_being2)
+
+# world.individual_is_perfect(perfect_being)
+# print(perfect_being)"""
+
+"""
 while True:
     print(f"Generation: {pop.generation}")
     for p in pop.internal_list:
         if world.individual_is_perfect(p):  # returns True when AI gets good enough
             p.save_existence()
             exit("The individual has been trained successfully")
-        print(p)
+        print(f"Name: {p.name} | Fitness: {p.fitness}")
         world.__init__(screen)  # Prevents from making current AI continue where previous left
-    pop.ler_attributes_individuals()
     pop.select_best()
-    pop.save_individual_attributes()
     pop.create_family()
+    if not pop.generation % 10:
+        pop.save_best_individuals()"""
+
+w = game_classes.Data_World(screen)
+w.get_data()

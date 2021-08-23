@@ -5,16 +5,16 @@
 # ----------------------------------------------- IMPORTS --------------------------------------------------------------
 import entity_classes as ce
 import pygame
-import functions as f
+import Auxiliary_Functionalities as Af
 
 # ----------------------------------------------- SOUNDS ---------------------------------------------------------------
-go_sound = f.load_sound("game/car_ignition.WAV")                # sound of after the final count down alert (GO)
-count_down_sound = f.load_sound("game/count_down.WAV")          # sound of the usual count down (3, 2, 1)
-space_time_hit_sound = f.load_sound("game/space_time_hit.WAV")  # sound of the space-time entity hitting
-tic_toc_sound = f.load_sound("game/tic_toc.WAV")                # sound of the final clock ticking
-game_over_sound = f.load_sound("game/game_over.WAV")            # sound of the match ending
-start_sound = f.load_sound("game/go.WAV")                       # sound of the GO image
-wrong_letter_sound = f.load_sound("game/letter_wrong.WAV")      # sound of the user typing a character wrong
+go_sound = Af.load_sound("game/car_ignition.WAV")                # sound of after the final count down alert (GO)
+count_down_sound = Af.load_sound("game/count_down.WAV")          # sound of the usual count down (3, 2, 1)
+space_time_hit_sound = Af.load_sound("game/space_time_hit.WAV")  # sound of the space-time entity hitting
+tic_toc_sound = Af.load_sound("game/tic_toc.WAV")                # sound of the final clock ticking
+game_over_sound = Af.load_sound("game/game_over.WAV")            # sound of the match ending
+start_sound = Af.load_sound("game/go.WAV")                       # sound of the GO image
+wrong_letter_sound = Af.load_sound("game/letter_wrong.WAV")      # sound of the user typing a character wrong
 
 
 # ----------------------------------------------- CLASSES --------------------------------------------------------------
@@ -40,7 +40,7 @@ class Mission_AI:
         self.written_text = [[""]]
         self.text_name = None
         self.text_to_write_image = None
-        image = f.get_text_images("")
+        image = Af.get_text_images("")
         self.written_text_images = [image, image, image, image, image, image, image, image]
         self.line = 0
         self.max_lines = 8
@@ -63,12 +63,12 @@ class Mission_AI:
         if not first:
             self.terminate = True
             return None
-        self.text_name = f.choice(f.get_text_names())[:-4]
+        self.text_name = Af.choice(Af.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
         lines = open(f"texts/{self.text_name}.txt", "r").readlines()
         self.text_to_write = [line.split(" ") for line in lines[1:]]
         self.screen.blit(self.text_to_write_image, (280, 320))
-        image = f.get_text_images("")
+        image = Af.get_text_images("")
         self.written_text_images = [image, image, image, image, image, image, image, image]
         self.written_text = [[""]]
         self.line = 0
@@ -77,7 +77,7 @@ class Mission_AI:
 
     def control_resistance_energy(self):
         if self.car.x <= 290 and int(self.time_passed) % 2:
-            f.play(space_time_hit_sound)
+            Af.play(space_time_hit_sound)
             self.resistance -= 0.08*((300-self.car.x) // 8)
             self.energy -= 0.2 * ((300 - self.car.x) // 8)
         if self.energy > 0:
@@ -195,11 +195,11 @@ class Mission_AI:
             if self.last_letter_correct():
                 self.correct_letters += 1
             else:
-                f.play(wrong_letter_sound)
+                Af.play(wrong_letter_sound)
 
     def display_text(self):
         coordinates = [(290, 454), (290, 469), (290, 484), (290, 499), (290, 514), (290, 529), (290, 544), (290, 559)]
-        self.written_text_images[self.line] = f.get_text_images(self.written_text[-1])
+        self.written_text_images[self.line] = Af.get_text_images(self.written_text[-1])
         for image, coo in zip(self.written_text_images, coordinates):
             self.screen.blit(image, coo)
         if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodically
@@ -236,9 +236,9 @@ class Mission_AI:
         damage_count = 4
         next_image = 1
         current = 0
-        f.play(count_down_sound)
+        Af.play(count_down_sound)
         while self.time_passed < 4.5:
-            self.time_passed += self.clock.tick(30) / 990
+            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 990
             if self.time_passed <= 4:
                 current = int(self.time_passed) % 4
             self.refresh_game()
@@ -246,15 +246,15 @@ class Mission_AI:
             pygame.display.update()
             if current == next_image:
                 if next_image< 3:
-                    f.play(count_down_sound)
+                    Af.play(count_down_sound)
                 else:
-                    f.play(start_sound)
+                    Af.play(start_sound)
                 next_image += 1
-        f.play(go_sound)
-        f.play_music()
+        Af.play(go_sound)
+        Af.play_music()
         self.time_passed = 0
         while self.run:
-            self.time_passed += self.clock.tick(30) / 990
+            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 990
     # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -289,11 +289,11 @@ class Mission_AI:
             if self.run:
                 self.run = self.continue_game()
             if int(self.time_passed) == 51 and self.play_tic_toc:
-                f.play(tic_toc_sound)
+                Af.play(tic_toc_sound)
                 self.play_tic_toc = False
             self.refresh_game()
-        f.stop_all_sounds()
-        f.play(game_over_sound)
+        Af.stop_all_sounds()
+        Af.play(game_over_sound)
         return self.precision, self.speed, self.parts_collected, self.resistance, self.time_passed, self.terminate
 
 
@@ -321,7 +321,7 @@ class Mission_PARTS:
         self.written_text = [[""]]
         self.text_name = None
         self.text_to_write_image = None
-        image = f.get_text_images("")
+        image = Af.get_text_images("")
         self.written_text_images = [image, image, image, image, image, image, image, image]
         self.line = 0
         self.max_lines = 8
@@ -338,12 +338,12 @@ class Mission_PARTS:
         self.choice = None
 
     def set_up_texts(self, first=False):
-        self.text_name = f.choice(f.get_text_names())[:-4]
+        self.text_name = Af.choice(Af.get_text_names())[:-4]
         self.text_to_write_image = pygame.image.load(f"images/texts/{self.text_name}.png")
         lines = open(f"texts/{self.text_name}.txt", "r").readlines()
         self.text_to_write = [line.split(" ") for line in lines[1:]]
         self.screen.blit(self.text_to_write_image, (280, 320))
-        image = f.get_text_images("")
+        image = Af.get_text_images("")
         self.written_text_images = [image, image, image, image, image, image, image, image]
         self.written_text = [[""]]
         self.line = 0
@@ -360,7 +360,7 @@ class Mission_PARTS:
 
     def control_resistance_energy(self):
         if self.car.x <= 290 and int(self.time_passed) % 2:
-            f.play(space_time_hit_sound)
+            Af.play(space_time_hit_sound)
             self.resistance -= 0.08*((300-self.car.x) // 8)
             self.energy -= 0.2 * ((300 - self.car.x) // 8)
         if self.energy > 0:
@@ -477,11 +477,11 @@ class Mission_PARTS:
             if self.last_letter_correct():
                 self.correct_letters += 1
             else:
-                f.play(wrong_letter_sound)
+                Af.play(wrong_letter_sound)
 
     def display_text(self):
         coordinates = [(290, 454), (290, 469), (290, 484), (290, 499), (290, 514), (290, 529), (290, 544), (290, 559)]
-        self.written_text_images[self.line] = f.get_text_images(self.written_text[-1])
+        self.written_text_images[self.line] = Af.get_text_images(self.written_text[-1])
         for image, coo in zip(self.written_text_images, coordinates):
             self.screen.blit(image, coo)
         if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodically
@@ -514,9 +514,9 @@ class Mission_PARTS:
         damage_count = 4
         next_image = 1
         current = 0
-        f.play(count_down_sound)
+        Af.play(count_down_sound)
         while self.time_passed < 4.5:
-            self.time_passed += self.clock.tick(30) / 990
+            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 990
             if self.time_passed <= 4:
                 current = int(self.time_passed) % 4
             self.refresh_game()
@@ -524,15 +524,15 @@ class Mission_PARTS:
             pygame.display.update()
             if current == next_image:
                 if next_image< 3:
-                    f.play(count_down_sound)
+                    Af.play(count_down_sound)
                 else:
-                    f.play(start_sound)
+                    Af.play(start_sound)
                 next_image += 1
-        f.play_music()
-        f.play(go_sound)
+        Af.play_music()
+        Af.play(go_sound)
         self.time_passed = 0
         while self.run:
-            self.time_passed += self.clock.tick(30) / 990
+            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 990
     # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -566,8 +566,8 @@ class Mission_PARTS:
             if self.run:
                 self.run = self.continue_game()
             self.refresh_game()
-        f.stop_all_sounds()
-        f.play(game_over_sound)
+        Af.stop_all_sounds()
+        Af.play(game_over_sound)
         self.set_up_texts()
         pre = sum(self.precision_list) // len(self.precision_list)
         speed = sum(self.speed_list) // len(self.speed_list)
@@ -588,7 +588,7 @@ class Training_World:
         self.hud_image = pygame.image.load("images/HUD/HUD_background.png")
         # loop stuff
         self.clock = pygame.time.Clock()
-        self.frame_rate = f.FRAME_RATE  # must not be multiple of 10
+        self.frame_rate = Af.FRAME_RATE  # must not be multiple of 10
         self.run = True
         self.time_passed = 0
         self.total_time = 0.0
@@ -665,8 +665,8 @@ class Training_World:
             self.refresh_game()
             self.time_passed += self.clock.tick(self.frame_rate) / 990
         self.update_individual()
-        f.stop_all_sounds()
-        f.play(game_over_sound)
+        Af.stop_all_sounds()
+        Af.play(game_over_sound)
         return False  # if it gets here, it means it not good enough
 
 
@@ -778,6 +778,6 @@ class Data_World:
             self.refresh_game()
             self.time_passed += self.clock.tick(self.frame_rate) / 990
         self.save_data()
-        f.stop_all_sounds()
-        f.play(game_over_sound)
+        Af.stop_all_sounds()
+        Af.play(game_over_sound)
         return False  # if it gets here, it means it not good enough

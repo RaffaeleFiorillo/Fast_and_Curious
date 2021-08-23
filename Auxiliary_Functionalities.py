@@ -10,7 +10,7 @@ from math import tanh
 
 
 # ---------------------------------------- GLOBAL VARIABLES ------------------------------------------------------------
-pygame.mixer.init()
+
 
 root_directory = "saves/"
 cores_obst = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 130, 18], [255, 17, 11], [255, 18, 11],
@@ -22,7 +22,46 @@ code_meaning = {3: "unknown", 0: "road", 1: "parts", -1: "lava"}
 # AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
 WEIGHTS = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
-FRAME_RATE = 99
+FRAME_RATE = 30
+SCREEN_LENGTH, SCREEN_WIDTH = 1080, 700
+
+
+# --------------------------------------------- MODULES INITIALIZATION -------------------------------------------------
+pygame.mixer.init()
+pygame.init()
+SCREEN = pygame.display.set_mode((SCREEN_LENGTH, SCREEN_WIDTH))
+
+
+# ---------------------------------------     GAME CLASS      ----------------------------------------------------------
+# Generic game class that takes some parameters and creates a screen and a dictionary of string keys and
+# function values. The keys are a returned value that depends on the link_function in use (see more in the module:
+# link_functions). Basically this class just creates the connection between the different menus, functionalities, (...).
+class Game:
+    link_function_dict: dict
+
+    def __init__(self, screen_lable, link_functions):
+        self.screen = None
+        self.link_function_dict = link_functions
+        self.previous_link = None
+        self.create_screen(screen_lable)
+
+    def create_screen(self, lable):
+        global SCREEN
+        pygame.display.set_caption(lable)
+        self.screen = SCREEN  # module must be initialized or the "convert_alpha" method wont work
+
+    def start(self, link, state=True):
+        while True:
+            if state:
+                keys_list = list(self.link_function_dict.keys())
+                self.previous_link = keys_list[keys_list.index(link)]  # saving current link in case the state is False
+                state = self.link_function_dict[link](self.screen)
+                if state:
+                    link = state
+                    state = True
+            else:  # In case the user wants to exit the game by clicking on the red crux the state is set to False
+                state = self.link_function_dict["exit1"](self.screen)
+                link = self.previous_link
 
 
 # ------------------------------------- REIMPLEMENTED FUNCTIONS --------------------------------------------------------
@@ -52,6 +91,11 @@ def terminate_execution():
 # uses the pygame module to load a sound to memory and returns it
 def load_sound(location):
     return pygame.mixer.Sound(f"sounds/{location}")
+
+
+# returns an image ready to be displayed on the screen. "convert_alpha" makes it much faster to display
+def load_image(directory):
+    return pygame.image.load(f"images/{directory}").convert_alpha()
 
 
 # plays a sound passed as argument
@@ -143,7 +187,7 @@ def get_music_volume():
 # displays on the screen an error message specified by his code
 def show_error_message(screen, code):
     play(error_sound)
-    screen.blit(pygame.image.load(f"images/menu/messages/error{code}.png").convert_alpha(), (230, 200))
+    screen.blit(load_image(f"menu/messages/error{code}.png"), (230, 200))
     pygame.display.update()
     wait(3)
 
@@ -151,7 +195,7 @@ def show_error_message(screen, code):
 # displays on the screen a success message specified by his code
 def show_success_message(screen, code) -> None:
     play(success_sound)
-    screen.blit(pygame.image.load(f"images/menu/messages/success{code}.png").convert_alpha(), (230, 200))
+    screen.blit(load_image(f"menu/messages/success{code}.png"), (230, 200))
     pygame.display.update()
     wait(3)
 
@@ -190,7 +234,7 @@ def create_sized_text(max_size_image, max_size_letter, text, color, min_size_let
 def write_name_password(screen, name, password, active, hide):
     coordinates1 = [(330, 205), (330, 351)]
     pygame.draw.rect(screen, (0, 0, 255), (coordinates1[active], (422, 57)), 8)
-    screen.blit(pygame.image.load("images/menu/interfaces/navigation/pointer.png").convert_alpha(),
+    screen.blit(load_image("menu/interfaces/navigation/pointer.png"),
                 (coordinates1[active][0]+450, coordinates1[active][1]))
     coordinates2 = [(385, 217), (385, 363)]
     if hide:
@@ -434,7 +478,7 @@ def write_HUD_parts_value(screen, number_parts):
 
 def write_HUD_time_value(screen, time_value):
     if time_value == "i":
-        screen.blit(pygame.image.load("images/HUD/infinite.png").convert_alpha(), (529, 665))
+        screen.blit(load_image("HUD/infinite.png"), (529, 665))
     else:
         text = str(time_value)
         adjust = len(text)*4
@@ -451,7 +495,7 @@ def display_HUD_speed_meter(screen, speed):
         image_number = 0
     adjust = len(text)*7
     text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
-    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png").convert_alpha(), (20, 420))
+    screen.blit(load_image(f"HUD/meter/{image_number}.png"), (20, 420))
     screen.blit(text_image, (148-adjust, 596))
 
 
@@ -464,7 +508,7 @@ def display_HUD_precision_meter(screen, precision):
         image_number = 0
     adjust = len(text)*7
     text_image = create_sized_text(100, 20, text, (0, 0, 0), 7)
-    screen.blit(pygame.image.load(f"images/HUD/meter/{image_number}.png").convert_alpha(), (811, 420))
+    screen.blit(load_image(f"HUD/meter/{image_number}.png"), (811, 420))
     screen.blit(text_image, (940-adjust, 596))
 
 
@@ -474,7 +518,7 @@ def display_HUD_energy_bar(screen, energy_level):
         image_number = 30
     elif image_number < 0:
         image_number = 0
-    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png").convert_alpha(), (296, 640))
+    screen.blit(load_image(f"HUD/barr/{image_number}.png"), (296, 640))
 
 
 def display_HUD_resistance_bar(screen, resistance_level):
@@ -483,7 +527,7 @@ def display_HUD_resistance_bar(screen, resistance_level):
         image_number = 30
     elif image_number < 0:
         image_number = 0
-    screen.blit(pygame.image.load(f"images/HUD/barr/{image_number}.png").convert_alpha(), (605, 640))
+    screen.blit(load_image(f"HUD/barr/{image_number}.png"), (605, 640))
 
 
 # turns a typed line into an image
@@ -495,7 +539,7 @@ def get_text_images(line):
 # creates a new text's image. those that will be chosen and displayed during a match
 def save_text_image(name):
     screen2 = pygame.display.set_mode((519, 135))
-    background = pygame.image.load("images/texts/text_background.png")
+    background = load_image("texts/text_background.png")
     file = open(f"texts/{name}.txt", "r")
     lines = file.readlines()
     file.close()

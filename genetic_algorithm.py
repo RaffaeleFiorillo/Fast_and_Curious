@@ -1,7 +1,7 @@
 import math
 import pygame
 import random
-import functions as f
+import Auxiliary_Functionalities as Af
 import game_classes
 
 M_C = 0.8  # mutation chance
@@ -16,12 +16,12 @@ def activation_function(value):
 
 
 def mutate_value(value, mutation_chance=M_C):
-    if f.random() > mutation_chance:  # invert value's signal
-        value *= f.random_choice([-1, 1])
-    if f.random() > mutation_chance:  # increase or decrease value
-        value += f.random_choice([-1, 1]) * (f.random() / f.random_choice([1000, 100, 10]))
-    if f.random() > M_C:
-        return f.random_choice([-1, 1]) * (f.random() / f.random_choice([100, 10]))
+    if Af.random() > mutation_chance:  # invert value's signal
+        value *= Af.random_choice([-1, 1])
+    if Af.random() > mutation_chance:  # increase or decrease value
+        value += Af.random_choice([-1, 1]) * (Af.random() / Af.random_choice([1000, 100, 10]))
+    if Af.random() > M_C:
+        return Af.random_choice([-1, 1]) * (Af.random() / Af.random_choice([100, 10]))
     return value
 
 
@@ -42,7 +42,7 @@ class Individual:
         # moves_contribute = ((1.5 - self.moves_number/self.time_alive)**2)**(1/2) * 0.2  # contribute of moves  " " "
         """print(f"parts: {self.parts} | contribute: {parts_contribute}"
               f"|| time: {self.time_alive} | contribute: {time_contribute}")"""
-        self.fitness = parts_contribute + time_contribute # + moves_contribute
+        self.fitness = parts_contribute + time_contribute  # + moves_contribute
 
     def __str__(self):
         return f"Name: {self.name} | Fitness: {self.fitness} \n W: {self.weights}\n B: {self.bias}\n\n"
@@ -78,7 +78,7 @@ class Individual:
         for layer1, layer2 in zip(layers1, layers2):
             new_layer = []
             for values1, values2 in zip(layer1, layer2):
-                if f.random() >= 0.5:
+                if Af.random() >= 0.5:
                     new_layer.append(values1)
                 else:
                     new_layer.append(values2)

@@ -6,12 +6,12 @@
 
 # ---------------------------------------------------- IMPORTS ---------------------------------------------------------
 import pygame
-import functions as f
+import Auxiliary_Functionalities as Af
 
 # ---------------------------------------------------- SOUNDS ----------------------------------------------------------
-fire_sound = f.load_sound("game/level failed.WAV")
-part_sound = f.load_sound("game/part_collection.WAV")
-hit_sound = f.load_sound("game/impact.WAV")
+fire_sound = Af.load_sound("game/level failed.WAV")
+part_sound = Af.load_sound("game/part_collection.WAV")
+hit_sound = Af.load_sound("game/impact.WAV")
 
 # ----------------------------------------------- GLOBAL VARIABLES -----------------------------------------------------
 obstacles_distance = 290
@@ -58,7 +58,7 @@ class Car:
         if self.fire_image_time < 1:
             self.fire_image_time += 1
         if fire_type:
-            f.play(fire_sound)
+            Af.play(fire_sound)
             self.fire_image = pygame.image.load("images/cars/car effects/nitro/blue.png").convert_alpha()
         else:
             self.fire_image = pygame.image.load("images/cars/car effects/nitro/red.png").convert_alpha()
@@ -76,14 +76,14 @@ class Car:
     def obstacle_collision(self, l_obstacles):
         for obst in l_obstacles:
             if self.hit_box.overlap(obst.hit_box, (self.x - obst.x + obst.adjust, self.y - obst.y + obst.adjust)):
-                f.play(hit_sound)
+                Af.play(hit_sound)
                 return True
         return False
 
     def vision(self, screen):
         self.seen_values = []
         for i in self.vision_coo:
-            self.seen_values.append(f.see(screen, i))
+            self.seen_values.append(Af.see(screen, i))
 
     def parts_collision(self, l_parts):
         value = 0
@@ -92,7 +92,7 @@ class Car:
             if part.x + 44 >= self.rect[0] and part.x <= self.rect[0] + self.rect[2]:
                 if part.y + 24 >= self.rect[1] and part.y <= self.rect[1] + self.rect[3]:
                     value += part.value
-                    f.play(part_sound)
+                    Af.play(part_sound)
                     continue
                 else:
                     new_parts.append(part)
@@ -174,9 +174,9 @@ class _obstacle:
         self.length = 100
 
     def choose_image(self):
-        self.folder = str(f.randint(1, 4))
+        self.folder = str(Af.randint(1, 4))
         if self.folder == "4":
-            self.image = pygame.image.load(f"images/obstacles/4/{f.randint(1, 11)}.png").convert_alpha()
+            self.image = pygame.image.load(f"images/obstacles/4/{Af.randint(1, 11)}.png").convert_alpha()
         else:
             self.image = pygame.image.load("images/obstacles/" + self.folder + "/1.png").convert_alpha()
         self.hit_box = pygame.mask.from_surface(self.image)
@@ -184,9 +184,9 @@ class _obstacle:
 
     def calculate_position_y(self, ultimo_y):
         if ultimo_y == 0:
-            return f.choice([20, 130, 240]) + self.adjust
+            return Af.choice([20, 130, 240]) + self.adjust
         possibilities = {20: [130, 240], 130: [20, 240], 240: [130, 20]}
-        return f.choice(possibilities[ultimo_y - self.adjust]) + self.adjust
+        return Af.choice(possibilities[ultimo_y - self.adjust]) + self.adjust
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
@@ -279,7 +279,7 @@ class parts:
         self.internal_list = []
         self.first_parts = True
         self.choices = [20, 121, 240]
-        self.y = f.choice(self.choices)
+        self.y = Af.choice(self.choices)
         self.dist_between_parts = 5 + 44
         self.min_dist_between_blocs = 100
         self.max_dist_between_blocs = 200
@@ -293,26 +293,26 @@ class parts:
             return False
 
     def create_parts(self):
-        dist_between_blocs = f.randint(self.min_dist_between_blocs, self.max_dist_between_blocs)
+        dist_between_blocs = Af.randint(self.min_dist_between_blocs, self.max_dist_between_blocs)
         type_p = self.calculate_type_part()
         if self.first_parts:
-            for i in range(f.randint(self.min_parts, self.max_parts)):
+            for i in range(Af.randint(self.min_parts, self.max_parts)):
                 self.internal_list.append(
                     _part(space_between_obstacles[-1] + dist_between_blocs + i * self.dist_between_parts, type_p,
                           self.y, i % 10))
             self.first_parts = False
             return 0
         if self.control_last():
-            for i in range(f.randint(self.min_parts, self.max_parts)):
+            for i in range(Af.randint(self.min_parts, self.max_parts)):
                 self.internal_list.append(
                     _part(space_between_obstacles[-1] + dist_between_blocs + i * self.dist_between_parts,
                           type_p, self.y, i % 10))
-            self.y = f.choice(self.choices)
+            self.y = Af.choice(self.choices)
             return 0
 
     @staticmethod
     def calculate_type_part():
-        probability = f.random()
+        probability = Af.random()
         if probability <= 0.3:
             return 1
         elif 0.3 < probability <= 0.55:
@@ -359,9 +359,9 @@ class HUD:
         pygame.display.update()
 
     def draw(self, number_parts, time, speed, precision, energy, resistance):
-        f.write_HUD_parts_value(self.screen, number_parts)
-        f.write_HUD_time_value(self.screen, time)
-        f.display_HUD_speed_meter(self.screen, speed)
-        f.display_HUD_precision_meter(self.screen, precision)
-        f.display_HUD_energy_bar(self.screen, energy)
-        f.display_HUD_resistance_bar(self.screen, resistance)
+        Af.write_HUD_parts_value(self.screen, number_parts)
+        Af.write_HUD_time_value(self.screen, time)
+        Af.display_HUD_speed_meter(self.screen, speed)
+        Af.display_HUD_precision_meter(self.screen, precision)
+        Af.display_HUD_energy_bar(self.screen, energy)
+        Af.display_HUD_resistance_bar(self.screen, resistance)

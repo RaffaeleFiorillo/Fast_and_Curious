@@ -8,16 +8,16 @@
 
 # -------------------------------------------------- IMPORTS -----------------------------------------------------------
 import pygame
-import functions as f
+import Auxiliary_Functionalities as Af
 
 
 # --------------------------------------------------- SOUNDS ----------------------------------------------------------
-button_y_sound = f.load_sound("menu/button_activation.WAV")     # sound for changing button on y axis
-button_x_sound = f.load_sound("menu/button_lateral.WAV")        # sound for changing button on x axis
-volume_change_sound = f.load_sound("menu/volume_change.WAV")    # sound for changing volume
-erase_letter_sound = f.load_sound("menu/typing.WAV")            # sound for every time a letter is erased
-error_sound = f.load_sound("menu/error_message2.WAV")           # sound for every time an error occurs
-success_sound = f.load_sound("menu/success.WAV")                # sound for every time a success occurs
+button_y_sound = Af.load_sound("menu/button_activation.WAV")     # sound for changing button on y axis
+button_x_sound = Af.load_sound("menu/button_lateral.WAV")        # sound for changing button on x axis
+volume_change_sound = Af.load_sound("menu/volume_change.WAV")    # sound for changing volume
+erase_letter_sound = Af.load_sound("menu/typing.WAV")            # sound for every time a letter is erased
+error_sound = Af.load_sound("menu/error_message2.WAV")           # sound for every time an error occurs
+success_sound = Af.load_sound("menu/success.WAV")                # sound for every time a success occurs
 
 
 # ------------------------------------------------ SUPPORT CLASSES -----------------------------------------------------
@@ -25,7 +25,7 @@ class Button:
     def __init__(self, x, y, directory, effect, code):
         self.x = x
         self.y = y
-        self.image = pygame.image.load(directory)
+        self.image = Af.load_image(directory)
         self.effect = effect
         self.code = code
 
@@ -33,7 +33,7 @@ class Button:
         screen.blit(self.image, (self.x, self.y))
 
     def change_image(self, directory):
-        self.image = pygame.image.load(directory)
+        self.image = Af.load_image(directory)
 
 
 class Button2(Button):
@@ -42,7 +42,7 @@ class Button2(Button):
         self.value = 0
         self.effect = "manage"
         self.id = id_c
-        self.value_image = pygame.image.load("images/menu/buttons/8/7.png")
+        self.value_image = Af.load_image(f"menu/buttons/8/7.png")
         self.get_value()
 
     def get_value(self):
@@ -76,7 +76,7 @@ class User:
         self.best_time = 0
         self.level = 1
         self.parts = 0
-        self.image = pygame.image.load("images/menu/interfaces/User/user_info/level1.png")
+        self.image = Af.load_image(f"menu/interfaces/User/user_info/level1.png")
         self.parts_text, self.coo_p_t = None, (0, 0)
         self.best_speed_text, self.coo_bs_t = None, (0, 0)
         self.best_time_text, self.coo_bt_t = None, (0, 0)
@@ -89,14 +89,14 @@ class User:
         data = file.readline().split(" ")
         self.best_speed, self.best_time, self.level, self.parts, self.password, self.music_volume, self.sound_volume = \
             int(data[0]), int(data[1]), int(data[2]), int(data[3]), data[4], int(data[5]), int(data[6])
-        self.image = pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.level}.png")
+        self.image = Af.load_image(f"menu/interfaces/User/user_info/level{self.level}.png")
         file.close()
 
     def get_texts(self) -> None:
-        self.best_time_text, self.coo_bt_t = f.writable_best_time(self.best_time)
-        self.best_speed_text, self.coo_bs_t = f.writable_best_speed(self.best_speed)
-        self.parts_text, self.coo_p_t = f.writable_parts_number(self.parts)
-        self.name_text, self.coo_n_t = f.writable_user_name(self.name)
+        self.best_time_text, self.coo_bt_t = Af.writable_best_time(self.best_time)
+        self.best_speed_text, self.coo_bs_t = Af.writable_best_speed(self.best_speed)
+        self.parts_text, self.coo_p_t = Af.writable_parts_number(self.parts)
+        self.name_text, self.coo_n_t = Af.writable_user_name(self.name)
 
     def draw_text(self, screen) -> None:
         screen.blit(self.best_time_text, self.coo_bt_t)
@@ -109,7 +109,7 @@ class User:
         data = file.readline().split(" ")
         self.name, self.best_speed, self.best_time, self.level, self.parts, self.password = \
             data[0], int(data[1]), int(data[2]), int(data[3]), int(data[4]), data[5]
-        self.image = pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.level}.png")
+        self.image = Af.load_image(f"menu/interfaces/User/user_info/level{self.level}.png")
         file.close()
 
     def turn_active(self) -> None:
@@ -128,35 +128,35 @@ class User:
 
 class Firework:
     def __init__(self, y):
-        self.type = f.choice(["circle", "star"])
-        self.x = f.randint(520, 560)
-        self.y = y+f.randint(0, 50)*f.choice([-1, 1])
-        self.max_height = f.randint(130, 320)
-        self.colors = f.create_firework_colors(f.randint(3, 6))
-        self.x_speed = f.randint(0, 8)*f.choice([-1, 1])
-        self.y_speed = -f.randint(10, 15)
+        self.type = Af.choice(["circle", "star"])
+        self.x = Af.randint(520, 560)
+        self.y = y + Af.randint(0, 50) * Af.choice([-1, 1])
+        self.max_height = Af.randint(130, 320)
+        self.colors = Af.create_firework_colors(Af.randint(3, 6))
+        self.x_speed = Af.randint(0, 8) * Af.choice([-1, 1])
+        self.y_speed = -Af.randint(10, 15)
         self.alive = True
-        self.time_alive = f.randint(100, 200)
+        self.time_alive = Af.randint(100, 200)
         self.radius = 10
 
     def draw_ascending(self, screen):
-        for i in range(f.randint(7, 10)):
-            r_x, r_y = self.x + f.randint(2, 5) * f.choice([-1, 1]), self.y + f.randint(2, 5) * f.choice([-1, 1])
-            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
-        pygame.draw.circle(screen, f.choice(self.colors), (self.x, self.y), 3, 1)
+        for i in range(Af.randint(7, 10)):
+            r_x, r_y = self.x + Af.randint(2, 5) * Af.choice([-1, 1]), self.y + Af.randint(2, 5) * Af.choice([-1, 1])
+            pygame.draw.circle(screen, Af.choice(self.colors), (r_x, r_y), 1, 1)
+        pygame.draw.circle(screen, Af.choice(self.colors), (self.x, self.y), 3, 1)
         self.x += self.x_speed
         self.y += self.y_speed
 
     def draw_star(self, screen, min_sparkle_number, max_sparkle_number):
-        for i in range(f.randint(min_sparkle_number, max_sparkle_number)):
-            calculate_rs = f.choice([f.calculate_rs_rhomb, f.calculate_rs_square])  # chooses randomly to create a star
+        for i in range(Af.randint(min_sparkle_number, max_sparkle_number)):
+            calculate_rs = Af.choice([Af.calculate_rs_rhomb, Af.calculate_rs_square])  # randomly chooses shape
             r_x, r_y = calculate_rs(self.x, self.y, self.radius)
-            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+            pygame.draw.circle(screen, Af.choice(self.colors), (r_x, r_y), 1, 1)
 
     def draw_circle(self, screen, min_sparkle_number, max_sparkle_number):
-        for i in range(f.randint(min_sparkle_number, max_sparkle_number)):
-            r_x, r_y = f.calculate_rs_circle(self.x, self.y, self.radius)
-            pygame.draw.circle(screen, f.choice(self.colors), (r_x, r_y), 1, 1)
+        for i in range(Af.randint(min_sparkle_number, max_sparkle_number)):
+            r_x, r_y = Af.calculate_rs_circle(self.x, self.y, self.radius)
+            pygame.draw.circle(screen, Af.choice(self.colors), (r_x, r_y), 1, 1)
 
     def draw_explosion(self, screen):
         min_sparkle_number = (200-self.time_alive)*200//100 - 30
@@ -200,9 +200,9 @@ class Menu_image_sequence:
     def __init__(self, screen, pasta, num_pages, func_link, name):
         self.screen = screen
         self.name = name
-        self.background_image = pygame.image.load("images/menu/interfaces/Main/sequence.png")
-        self.images_list = [pygame.image.load(f"images/slides/{pasta}/{i+1}.png") for i in range(num_pages)]
-        self.slide_name = pygame.image.load(f"images/slides/{pasta}/name.png")
+        self.background_image = Af.load_image(f"menu/interfaces/Main/sequence.png")
+        self.images_list = [Af.load_image(f"slides/{pasta}/{i + 1}.png") for i in range(num_pages)]
+        self.slide_name = Af.load_image(f"slides/{pasta}/name.png")
         self.num_pages = num_pages
         self.current_page = 0
         self.origin_link = func_link
@@ -210,15 +210,15 @@ class Menu_image_sequence:
     def manage_buttons(self, keys):
         if keys[pygame.K_RIGHT]:
             if self.current_page+1 == self.num_pages:
-                f.play(error_sound)
+                Af.play(error_sound)
             else:
-                f.play(button_y_sound)
+                Af.play(button_y_sound)
             self.current_page += 1
         elif keys[pygame.K_LEFT]:
             if self.current_page == 0:
-                f.play(error_sound)
+                Af.play(error_sound)
             else:
-                f.play(button_y_sound)
+                Af.play(button_y_sound)
             self.current_page -= 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.current_page == self.num_pages:
@@ -239,7 +239,7 @@ class Menu_image_sequence:
             return 200, 640, 1, 1
 
     def write_page_number(self):
-        page_image = f.create_sized_text(20, 50, str(self.current_page+1), (255, 255, 255))
+        page_image = Af.create_sized_text(20, 50, str(self.current_page + 1), (255, 255, 255))
         self.screen.blit(page_image, (515, 640))
 
     def refresh(self):
@@ -271,11 +271,11 @@ class Menu:
         self.internal_list = buttons
         self.directory = directory
         self.name = self.directory.split("/")[-1][:-4]
-        self.image_nome = pygame.image.load(directory)
+        self.image_nome = Af.load_image(directory)
         if self.name == "game menu":
-            self.effect = [pygame.image.load(f"images/menu/effects/3/{i+1}.png") for i in range(4)]
+            self.effect = [Af.load_image(f"menu/effects/3/{i + 1}.png") for i in range(4)]
         else:
-            self.effect = [pygame.image.load(f"images/menu/effects/1/{i+1}.png") for i in range(4)]
+            self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
         self.active_code = 0
         self.screen = screen
         self.current_frame = 0
@@ -290,7 +290,7 @@ class Menu:
         co_cho = ch[self.name]
         coo = co_cho[self.active_code]
         self.screen.blit(self.effect[int(self.current_frame)], self.coord_effect)
-        self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.active_code+1}.png"),
+        self.screen.blit(Af.load_image(f"menu/info/info_{self.name}/{self.active_code + 1}.png"),
                          (coo[0], coo[1]))
         for but in self.internal_list:
             but.draw(self.screen)
@@ -313,10 +313,10 @@ class Menu:
                     effect = self.manage_buttons(pygame.key.get_pressed())
                     if effect is not None:
                         if effect == "m_ai":
-                            if f.get_user_level() < 13:
+                            if Af.get_user_level() < 13:
                                 return effect
                             else:
-                                f.show_error_message(self.screen, 12)
+                                Af.show_error_message(self.screen, 12)
                         else:
                             return effect
             self.refresh(background)
@@ -324,10 +324,10 @@ class Menu:
     def manage_buttons(self, keys):
         valor = 0
         if keys[pygame.K_UP]:
-            f.play(button_y_sound)
+            Af.play(button_y_sound)
             valor = -1
         elif keys[pygame.K_DOWN]:
-            f.play(button_y_sound)
+            Af.play(button_y_sound)
             valor = 1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.internal_list[self.active_code].effect
@@ -341,14 +341,14 @@ class Menu:
     def refresh(self, background):
         self.screen.blit(background, (0, 0))
         self.screen.blit(self.image_nome, ((1080-470)//2, 0))
-        self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation.png"), (355, 620))
+        self.screen.blit(Af.load_image(f"menu/interfaces/navigation/navigation.png"), (355, 620))
         if self.user is not None:
             coo = (20, 490)
-            self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.user.level}.png"),
+            self.screen.blit(Af.load_image(f"menu/interfaces/User/user_info/level{self.user.level}.png"),
                              (0, 0))
-            self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/records.png"), (coo[0], coo[1]-210))
-            self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
-            self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0] - 18, coo[1]))
+            self.screen.blit(Af.load_image(f"menu/interfaces/User/records.png"), (coo[0], coo[1] - 210))
+            self.screen.blit(Af.load_image(f"menu/interfaces/User/parts.png"), (0, coo[1] - 310))
+            self.screen.blit(Af.load_image(f"cars/display/{self.user.level}.png"), (coo[0] - 18, coo[1]))
             self.user.draw_text(self.screen)
         self.draw_buttons()
         pygame.display.update()
@@ -357,9 +357,9 @@ class Menu:
 # Used whenever the user wants to leave the game
 class Exit:
     def __init__(self, directory, screen):
-        self.image_nome = pygame.image.load(directory)
+        self.image_nome = Af.load_image(directory)
         self.effects = (True, False)
-        self.effect = [pygame.image.load(f"images/menu/effects/1/{i+1}.png") for i in range(4)]
+        self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
         self.active_code = 0
         self.screen = screen
         self.current_frame = 0
@@ -368,7 +368,7 @@ class Exit:
         coordinates = {0: (240, 410), 1: (570, 410)}
         coo = coordinates[self.active_code]
         self.screen.blit(self.effect[int(self.current_frame)], coo)
-        self.screen.blit(pygame.image.load(f"images/menu/buttons/3/{self.active_code+1}.png"), (coo[0]+13, coo[1]+10))
+        self.screen.blit(Af.load_image(f"menu/buttons/3/{self.active_code + 1}.png"), (coo[0] + 13, coo[1] + 10))
         self.current_frame += 0.25
         if self.current_frame > 3:
             self.current_frame = 0
@@ -383,7 +383,7 @@ class Exit:
             clock.tick(30)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    f.terminate_execution()
+                    Af.terminate_execution()
                 if event.type == pygame.KEYDOWN:
                     effect = self.manage_buttons(pygame.key.get_pressed())
                     if effect is not None:
@@ -393,10 +393,10 @@ class Exit:
     def manage_buttons(self, keys):
         valor = 0
         if keys[pygame.K_RIGHT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             valor = 1
         elif keys[pygame.K_LEFT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             valor = -1
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.effects[self.active_code]
@@ -409,16 +409,16 @@ class Exit:
     def refresh(self):
         self.screen.blit(self.image_nome, (0, 0))
         self.draw_buttons()
-        self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation2.png"), (350, 600))
+        self.screen.blit(Af.load_image(f"menu/interfaces/navigation/navigation2.png"), (350, 600))
         pygame.display.update()
 
 
 # Used when the "New Game" option in the Main Menu is selected
 class Create_Account:
     def __init__(self, directory, screen, change=False):
-        self.image_nome = pygame.image.load(directory)
+        self.image_nome = Af.load_image(directory)
         self.effects = (False, True)
-        self.effect = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
+        self.effect = [Af.load_image(f"menu/effects/2/{i + 1}.png") for i in range(4)]
         self.active_code_x = 0
         self.active_code_y = 0
         self.hide = False
@@ -435,10 +435,10 @@ class Create_Account:
         coo = coordinates[self.active_code_x]
         self.screen.blit(self.effect[int(self.current_frame)], (coo[0]-5, coo[1]-10))
         if self.change:
-            self.screen.blit(pygame.image.load(f"images/menu/buttons/9/{self.active_code_x + 1}.png"),
+            self.screen.blit(Af.load_image(f"menu/buttons/9/{self.active_code_x + 1}.png"),
                              (coo[0] + 13, coo[1] + 10))
         else:
-            self.screen.blit(pygame.image.load(f"images/menu/buttons/5/{self.active_code_x+1}.png"),
+            self.screen.blit(Af.load_image(f"menu/buttons/5/{self.active_code_x + 1}.png"),
                              (coo[0]+13, coo[1]+10))
         self.current_frame += 0.2
         if self.current_frame > 3:
@@ -463,7 +463,7 @@ class Create_Account:
 
     def create_account(self) -> None:
         name = "".join(self.inputs[0])
-        f.create_folder(name)  # create the user's folder
+        Af.create_folder(name)  # create the user's folder
         file = open(f"saves/{name}/next_level.txt", "w")  # create a file in the user's folder named next_level
         file.write("1 \n")  # this value means that the MISSION AI is available
         file.write("0")  # this value means that the user has not yet won the game
@@ -473,41 +473,41 @@ class Create_Account:
         first, second = "".join(self.inputs[0]), "".join(self.inputs[1])
         if self.change:
             if first != self.user.password:
-                f.show_error_message(self.screen, 7)
+                Af.show_error_message(self.screen, 7)
                 return False
             elif len(self.inputs[1]) == 0:
-                f.show_error_message(self.screen, 3)
+                Af.show_error_message(self.screen, 3)
                 return False
             elif " " in self.inputs[1]:
-                f.show_error_message(self.screen, 4)
+                Af.show_error_message(self.screen, 4)
                 return False
         else:
-            if first in f.list_users():
-                f.show_error_message(self.screen, 1)
+            if first in Af.list_users():
+                Af.show_error_message(self.screen, 1)
                 return False
             elif len(self.inputs[0]) == 0:
-                f.show_error_message(self.screen, 2)
+                Af.show_error_message(self.screen, 2)
                 return False
             elif len(self.inputs[1]) == 0:
-                f.show_error_message(self.screen, 3)
+                Af.show_error_message(self.screen, 3)
                 return False
             elif " " in self.inputs[0] or " " in self.inputs[1]:
-                f.show_error_message(self.screen, 4)
+                Af.show_error_message(self.screen, 4)
                 return False
         return True
 
     def manage_buttons(self, keys, event):
         if keys[pygame.K_RIGHT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
-            f.play(button_y_sound)
+            Af.play(button_y_sound)
             self.active_code_y = 1
         elif keys[pygame.K_UP]:
-            f.play(button_y_sound)
+            Af.play(button_y_sound)
             self.active_code_y = 0
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.effects[self.active_code_x]:
@@ -516,14 +516,14 @@ class Create_Account:
                         self.user.password = "".join(self.inputs[1])
                         self.user.save_info()
                         self.user.turn_active()
-                        f.show_success_message(self.screen, 4)
+                        Af.show_success_message(self.screen, 4)
                     else:
                         self.user.name = "".join(self.inputs[0])
                         self.user.password = "".join(self.inputs[1])
                         self.create_account()
                         self.user.save_info()
                         self.user.turn_active()
-                        f.show_success_message(self.screen, 1)
+                        Af.show_success_message(self.screen, 1)
                     return True
                 else:
                     if self.change:
@@ -533,7 +533,7 @@ class Create_Account:
         elif keys[pygame.K_TAB]:
             self.hide = not self.hide
         elif event.key == pygame.K_BACKSPACE:
-            f.play(erase_letter_sound)
+            Af.play(erase_letter_sound)
             self.inputs[self.active_code_y] = self.inputs[self.active_code_y][:-1]
         elif len(self.inputs[self.active_code_y]) <= 25 and self.active_code_y == 1:
             self.inputs[self.active_code_y].append(event.unicode)
@@ -543,8 +543,8 @@ class Create_Account:
     def refresh(self) -> None:
         self.screen.blit(self.image_nome, (0, 0))
         self.draw_buttons()
-        self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation3.png"), (355, 620))
-        f.write_name_password(self.screen, self.inputs[0], self.inputs[1], self.active_code_y, self.hide)
+        self.screen.blit(Af.load_image(f"menu/interfaces/navigation/navigation3.png"), (355, 620))
+        Af.write_name_password(self.screen, self.inputs[0], self.inputs[1], self.active_code_y, self.hide)
         pygame.display.update()
 
 
@@ -552,10 +552,10 @@ class Create_Account:
 class Choose_Account:
     def __init__(self, screen):
         self.screen = screen
-        self.image = pygame.image.load("images/menu/interfaces/Main/choose account.png")
-        self.effect = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
-        self.passive_button_image = pygame.image.load("images/menu/buttons/6/2.png")
-        self.active_button_image = pygame.image.load("images/menu/buttons/6/1.png")
+        self.image = Af.load_image(f"menu/interfaces/Main/choose account.png")
+        self.effect = [Af.load_image(f"menu/effects/2/{i + 1}.png") for i in range(4)]
+        self.passive_button_image = Af.load_image(f"menu/buttons/6/2.png")
+        self.active_button_image = Af.load_image(f"menu/buttons/6/1.png")
         self.button_coordinates = [(322, 120), (322, 175), (322, 230), (322, 285), (322, 340), (322, 395), (322, 450)]
         self.account_name = None
         self.current_frame = 0
@@ -563,8 +563,8 @@ class Choose_Account:
         self.active_code_y = 0
         self.buttons = []
         self.previous_button = 0
-        self.users = f.list_users()
-        self.user_names_images_active, self.user_names_images_passive = f.get_users_images()
+        self.users = Af.list_users()
+        self.user_names_images_active, self.user_names_images_passive = Af.get_users_images()
         self.user_names_images = None
         self.adjust_user_name_images()
         self.user = User()
@@ -599,19 +599,19 @@ class Choose_Account:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_RIGHT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             self.active_code_x = 0
         elif keys[pygame.K_DOWN]:
             if len(self.buttons) > 1:
-                f.play(button_y_sound)
+                Af.play(button_y_sound)
                 self.active_code_y += 1
                 self.previous_button = self.active_code_y-1
         elif keys[pygame.K_UP]:
             if len(self.buttons) > 1:
-                f.play(button_y_sound)
+                Af.play(button_y_sound)
                 self.active_code_y -= 1
                 self.previous_button = self.active_code_y+1
         self.control_previous_button()
@@ -642,7 +642,7 @@ class Choose_Account:
         for user in self.users:
             self.buttons.append(Button(self.button_coordinates[self.users.index(user)][0],
                                        self.button_coordinates[self.users.index(user)][1],
-                                       "images/menu/buttons/6/2.png", None, self.users.index(user)))
+                                       "menu/buttons/6/2.png", None, self.users.index(user)))
         self.set_active_button()
 
     def set_active_button(self):
@@ -658,11 +658,11 @@ class Choose_Account:
         coo = coordinates[self.active_code_x]
         self.screen.blit(self.image, (0, 0))
         self.screen.blit(self.effect[int(int(self.current_frame))], (coo[0]-5, coo[1]-20))
-        self.screen.blit(pygame.image.load(f"images/menu/buttons/7/{self.active_code_x+1}.png"), (coo[0]+13, coo[1]))
+        self.screen.blit(Af.load_image(f"menu/buttons/7/{self.active_code_x + 1}.png"), (coo[0] + 13, coo[1]))
         [self.buttons[i].draw(self.screen) for i in range(len(self.users))]
         [self.screen.blit(self.user_names_images[i], (self.button_coordinates[i][0]+10, self.button_coordinates[i][1]))
          for i in range(len(self.users))]
-        self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation3.png"), (355, 620))
+        self.screen.blit(Af.load_image(f"menu/interfaces/navigation/navigation3.png"), (355, 620))
         pygame.display.update()
 
 
@@ -670,7 +670,7 @@ class Choose_Account:
 class Enter_Password:
     def __init__(self, screen, change=False):
         self.screen = screen
-        self.image = pygame.image.load("images/menu/interfaces/Main/insert_password.png")
+        self.image = Af.load_image(f"menu/interfaces/Main/insert_password.png")
         self.user = None
         self.password_list = []
         self.create_user()
@@ -683,24 +683,24 @@ class Enter_Password:
         self.user.get_info()
 
     def show_error_message(self) -> None:
-        f.play(error_sound)
+        Af.play(error_sound)
         pygame.image.save(self.screen, "images/menu/interfaces/prov_image/prov_image.png")
-        self.screen.blit(pygame.image.load(f"images/menu/messages/error5.png"), (230, 200))
+        self.screen.blit(Af.load_image(f"menu/messages/error5.png"), (230, 200))
         pygame.display.update()
-        f.wait(3)
-        self.screen.blit(pygame.image.load("images/menu/interfaces/prov_image/prov_image.png"), (0, 0))
+        Af.wait(3)
+        self.screen.blit(Af.load_image(f"menu/interfaces/prov_image/prov_image.png"), (0, 0))
 
     def show_success_message(self) -> None:
-        f.play(success_sound)
+        Af.play(success_sound)
         if self.change:
-            self.screen.blit(pygame.image.load("images/menu/messages/success3.png"), (230, 200))
+            self.screen.blit(Af.load_image(f"menu/messages/success3.png"), (230, 200))
             time = 3
         else:
-            self.screen.blit(pygame.image.load("images/menu/messages/success2.png"), (230, 200))
-            f.write_name(self.screen, self.user.name)
+            self.screen.blit(Af.load_image(f"menu/messages/success2.png"), (230, 200))
+            Af.write_name(self.screen, self.user.name)
             time = 1
         pygame.display.update()
-        f.wait(time)
+        Af.wait(time)
 
     def verify_password(self):
         return "".join(self.password_list) == self.user.password
@@ -724,7 +724,7 @@ class Enter_Password:
 
     def manage_buttons(self, keys, event):
         if event.key == pygame.K_BACKSPACE:
-            f.play(erase_letter_sound)
+            Af.play(erase_letter_sound)
             self.password_list = self.password_list[:-1]
         elif keys[pygame.K_ESCAPE]:
             if self.change:
@@ -748,8 +748,8 @@ class Enter_Password:
     def refresh(self):
         self.screen.blit(self.image, (210, 250))
         if not self.change:  # verifies if this class was called for login purposes. In this case it deletes extra stuff
-            self.screen.blit(pygame.image.load("images/menu/interfaces/prov_image/button.png"), (550, 500))
-        f.write_password(self.screen, self.password_list, self.hide)
+            self.screen.blit(Af.load_image(f"menu/interfaces/prov_image/button.png"), (550, 500))
+        Af.write_password(self.screen, self.password_list, self.hide)
         pygame.display.update()
 
 
@@ -758,9 +758,9 @@ class Management:
     def __init__(self, buttons, directory, screen, user=None):
         self.list = buttons
         self.directory = directory
-        self.image_nome = pygame.image.load(directory)
-        self.effect1 = [pygame.image.load(f"images/menu/effects/5/{i+1}.png") for i in range(4)]
-        self.effect2 = [pygame.image.load(f"images/menu/effects/4/{i+1}.png") for i in range(4)]
+        self.image_nome = Af.load_image(directory)
+        self.effect1 = [Af.load_image(f"menu/effects/5/{i + 1}.png") for i in range(4)]
+        self.effect2 = [Af.load_image(f"menu/effects/4/{i + 1}.png") for i in range(4)]
         self.active_code = 0
         self.screen = screen
         self.current_frame = 0
@@ -801,22 +801,22 @@ class Management:
 
     def manage_buttons(self, keys):
         if keys[pygame.K_UP]:
-            f.play(button_y_sound)
+            Af.play(button_y_sound)
             self.active_code -= 1
         elif keys[pygame.K_DOWN]:
-            f.play(button_y_sound)
+            Af.play(button_y_sound)
             self.active_code += 1
         elif self.active_code == 0 or self.active_code == 1:
             if keys[pygame.K_LEFT]:
                 play_sound = self.list[self.active_code].change_value(-1)  # change_value returns True if max is reached
                 if play_sound:  # if volume is max or min, then the sound is played
-                    f.play(volume_change_sound)
+                    Af.play(volume_change_sound)
             elif keys[pygame.K_RIGHT]:
                 play_sound = self.list[self.active_code].change_value(1)  # change_value returns True if max is reached
                 if play_sound is True:  # if volume is max or min, then the sound is not played
-                    f.play(volume_change_sound)
+                    Af.play(volume_change_sound)
                 else:
-                    f.play(error_sound)
+                    Af.play(error_sound)
             self.update_user()
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             return self.list[self.active_code].effect
@@ -827,18 +827,18 @@ class Management:
         self.coord_effect = (self.list[self.active_code].x-12, self.list[self.active_code].y-12)
 
     def refresh(self):
-        f.clean_background(self.screen)
+        Af.clean_background(self.screen)
         self.screen.blit(self.image_nome, ((1080-470)//2, 0))
-        self.screen.blit(pygame.image.load("images/menu/interfaces/navigation/navigation.png"), (355, 620))
+        self.screen.blit(Af.load_image(f"menu/interfaces/navigation/navigation.png"), (355, 620))
         coo = (20, 490)
-        self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/user_info/level{self.user.level}.png"), (0, 0))
-        self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/records.png"), (coo[0], coo[1]-210))
-        self.screen.blit(pygame.image.load(f"images/menu/interfaces/User/parts.png"), (0, coo[1] - 310))
-        self.screen.blit(pygame.image.load(f"images/cars/display/{self.user.level}.png"), (coo[0]-18, coo[1]))
+        self.screen.blit(Af.load_image(f"menu/interfaces/User/user_info/level{self.user.level}.png"), (0, 0))
+        self.screen.blit(Af.load_image(f"menu/interfaces/User/records.png"), (coo[0], coo[1] - 210))
+        self.screen.blit(Af.load_image(f"menu/interfaces/User/parts.png"), (0, coo[1] - 310))
+        self.screen.blit(Af.load_image(f"cars/display/{self.user.level}.png"), (coo[0] - 18, coo[1]))
         self.user.draw_text(self.screen)
         coordinates = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178), 5: (685, 178)}
         coo = coordinates[self.active_code]
-        self.screen.blit(pygame.image.load(f"images/menu/info/info_{self.name}/{self.active_code+1}.png"),
+        self.screen.blit(Af.load_image(f"menu/info/info_{self.name}/{self.active_code + 1}.png"),
                          (coo[0], coo[1]))
         self.draw_buttons()
         pygame.display.update()
@@ -848,7 +848,7 @@ class Management:
 class Results_AI:
     def __init__(self, screen, precision, speed, parts_collected, resistance, time, finished):
         self.screen = screen
-        self.image = pygame.image.load("images/menu/interfaces/Main/Results_AI.png")
+        self.image = Af.load_image(f"menu/interfaces/Main/Results_AI.png")
         self.requirements_satisfied = False
         self.parts = 0
         self.values_images = self.initiate_results(precision, speed, parts_collected, resistance, time, finished)
@@ -861,11 +861,11 @@ class Results_AI:
         font1.set_bold(True)
         values.append(font1.render(str(int(precision)), True, (255, 255, 255)))
         values.append(font1.render(str(int(speed)), True, (255, 255, 255)))
-        speed2, precision2 = f.get_requirements()
+        speed2, precision2 = Af.get_requirements()
         values.append(font1.render(str(precision2), True, (255, 255, 255)))
         values.append(font1.render(str(speed2), True, (255, 255, 255)))
-        values.append(pygame.image.load(f"images/menu/interfaces/navigation/{c_w[speed>=speed2]}.png"))
-        values.append(pygame.image.load(f"images/menu/interfaces/navigation/{c_w[precision>=precision2]}.png"))
+        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[speed >= speed2]}.png"))
+        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[precision >= precision2]}.png"))
         # results about parts
         font1 = pygame.font.SysFont('Times New Roman', 16)
         font1.set_bold(True)
@@ -898,10 +898,10 @@ class Results_AI:
         sound_dict = {True: success_sound, False: error_sound}
         message = message_dict[self.requirements_satisfied]
         time = time_dict[self.requirements_satisfied]
-        f.play(sound_dict[self.requirements_satisfied])
-        self.screen.blit(pygame.image.load(f"images/menu/messages/{message}.png"), (230, 200))
+        Af.play(sound_dict[self.requirements_satisfied])
+        self.screen.blit(Af.load_image(f"menu/messages/{message}.png"), (230, 200))
         pygame.display.update()
-        f.wait(time)
+        Af.wait(time)
 
     def display(self):
         clock = pygame.time.Clock()
@@ -922,7 +922,7 @@ class Results_AI:
 class Results_Parts:
     def __init__(self, screen, precision, speed, parts_collected, time):
         self.screen = screen
-        self.image = pygame.image.load("images/menu/interfaces/Main/Results_Parts.png")
+        self.image = Af.load_image(f"menu/interfaces/Main/Results_Parts.png")
         self.parts = 0
         self.time = int(time)
         self.values_images = self.initiate_results(precision, speed, parts_collected)
@@ -970,7 +970,7 @@ class Results_Parts:
 class Unlock_Level:
     def __init__(self, screen):
         self.screen = screen
-        self.image = pygame.image.load("images/menu/interfaces/Main/unlock level.png")
+        self.image = Af.load_image(f"menu/interfaces/Main/unlock level.png")
         self.user = None
         self.parts_needed = None
         self.create_user()
@@ -984,16 +984,16 @@ class Unlock_Level:
         file.close()
 
     def show_error_message(self) -> None:
-        f.play(error_sound)
-        self.screen.blit(pygame.image.load(f"images/menu/messages/error9.png"), (230, 200))
+        Af.play(error_sound)
+        self.screen.blit(Af.load_image(f"menu/messages/error9.png"), (230, 200))
         pygame.display.update()
-        f.wait(3)
+        Af.wait(3)
 
     def show_success_message(self) -> None:
-        f.play(success_sound)
-        self.screen.blit(pygame.image.load("images/menu/messages/success6.png"), (230, 200))
+        Af.play(success_sound)
+        self.screen.blit(Af.load_image(f"menu/messages/success6.png"), (230, 200))
         pygame.display.update()
-        f.wait(3)
+        Af.wait(3)
 
     def verify_parts_number(self):
         return self.parts_needed <= self.user.parts
@@ -1007,7 +1007,7 @@ class Unlock_Level:
         self.user.turn_active()
 
     def parts_image(self):
-        return f.create_sized_text(190, 50, str(self.parts_needed), (255, 180, 0))
+        return Af.create_sized_text(190, 50, str(self.parts_needed), (255, 180, 0))
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -1048,7 +1048,7 @@ class Unlock_Level:
 class Start:
     def __init__(self, screen):
         self.screen = screen
-        self.image = pygame.image.load("images/general/Fast and Curious Logo.png")
+        self.image = Af.load_image(f"general/Fast and Curious Logo.png")
         text_font = pygame.font.SysFont('Times New Roman', 20)
         text_font.set_bold(True)
         self.directives_image = text_font.render("Press any key to continue", True, (255, 255, 255))
@@ -1079,9 +1079,9 @@ class Start:
 # Used when the "New Game" option in the Main Menu is selected
 class Add_Text:
     def __init__(self, screen):
-        self.image = pygame.image.load("images/menu/interfaces/Main/add text.png")
+        self.image = Af.load_image(f"menu/interfaces/Main/add text.png")
         self.effects = (False, True)
-        self.effect = [pygame.image.load(f"images/menu/effects/2/{i+1}.png") for i in range(4)]
+        self.effect = [Af.load_image(f"menu/effects/2/{i + 1}.png") for i in range(4)]
         self.active_code_x = 0
         self.text_lines_images = None
         self.screen = screen
@@ -1100,16 +1100,16 @@ class Add_Text:
             self.current_frame = 0
 
     def show_error_message(self) -> None:
-        f.play(error_sound)
-        self.screen.blit(pygame.image.load(f"images/menu/messages/error{self.error_code}.png"), (230, 200))
+        Af.play(error_sound)
+        self.screen.blit(Af.load_image(f"menu/messages/error{self.error_code}.png"), (230, 200))
         pygame.display.update()
-        f.wait(3)
+        Af.wait(3)
 
     def show_success_message(self) -> None:
-        f.play(success_sound)
-        self.screen.blit(pygame.image.load("images/menu/messages/success7.png"), (230, 200))
+        Af.play(success_sound)
+        self.screen.blit(Af.load_image(f"menu/messages/success7.png"), (230, 200))
         pygame.display.update()
-        f.wait(3)
+        Af.wait(3)
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())
@@ -1139,13 +1139,13 @@ class Add_Text:
 
     def create_text(self) -> None:
         # creating the image
-        self.text_lines, self.text_lines_images = f.convert_text_to_images(self.written_text, True)
+        self.text_lines, self.text_lines_images = Af.convert_text_to_images(self.written_text, True)
         coordinates = [(15, 5), (15, 25), (15, 45), (15, 65), (15, 85), (15, 105)]
         text_background = pygame.Surface((519, 132))
-        text_background.blit(pygame.image.load("images/texts/background.png"), (0, 0))
+        text_background.blit(Af.load_image(f"texts/background.png"), (0, 0))
         for img, coo in zip(self.text_lines_images, coordinates):
             text_background.blit(img, coo)
-        last_number_text = f.get_last_text_number()
+        last_number_text = Af.get_last_text_number()
         pygame.image.save(text_background, f"images/texts/{last_number_text+1}.png")
         # creating the txt file
         with open(f"texts/{last_number_text+1}.txt", "w") as file:
@@ -1171,10 +1171,10 @@ class Add_Text:
 
     def manage_buttons(self, keys, event):
         if keys[pygame.K_RIGHT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             self.active_code_x = 1
         elif keys[pygame.K_LEFT]:
-            f.play(button_x_sound)
+            Af.play(button_x_sound)
             self.active_code_x = 0
         elif keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]:
             if self.active_code_x:
@@ -1182,7 +1182,7 @@ class Add_Text:
             else:
                 return False
         elif event.key == pygame.K_BACKSPACE:
-            f.play(erase_letter_sound)
+            Af.play(erase_letter_sound)
             self.written_text = self.written_text[:-1]
             self.character_number-=1
             if self.character_number < 0:
@@ -1195,7 +1195,7 @@ class Add_Text:
 
     def write_potential_text(self):
         coordinates = [(327, 175), (327, 200), (327, 225), (327, 250), (327, 275), (327, 300)]
-        self.text_lines, images = f.convert_text_to_images(self.written_text)
+        self.text_lines, images = Af.convert_text_to_images(self.written_text)
         for img, coo in zip(images, coordinates):
             self.screen.blit(img, coo)
         self.text_lines_images = images
@@ -1210,7 +1210,7 @@ class Add_Text:
 # Winner_Winner_Chicken_Dinner!!! This Class is used when the user finishes the game (passes at level 13)
 class Winner_Menu:
     time = 0
-    image = pygame.image.load("images/menu/interfaces/Main/winner.png")
+    image = Af.load_image(f"menu/interfaces/Main/winner.png")
     fireworks = Fireworks()
 
     def __init__(self, screen):

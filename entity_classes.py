@@ -40,18 +40,16 @@ class Car:
         self.update_vision_coordinates()
 
     def update_vision_coordinates(self):
-        begin, step = 45, 35
-        up = ((self.x+begin+step*i, self.y-80) for i in range(6))
-        up_left, up_center_left, up_center_right, up_right, up_right_front, up_front = up
+        begin, step = 20, 10
+        up = tuple((self.x+begin+step*i, self.y-80) for i in range(22))
+        # up_left, up_center_left, up_center_right, up_right, up_right_front, up_front = up
 
-        center, center_front = [self.x+150, self.y+27], [self.x+150+step, self.y+27]
+        center = ((self.x+150, self.y+27), (self.x+155+step, self.y+27))
 
-        dwn = ((self.x+begin+step*i, self.y+130) for i in range(6))
-        dwn_left, dwn_center_left, dwn_center_right, dwn_right, dwn_right_front, dwn_front= dwn
+        dwn = tuple((self.x+begin+step*i, self.y+140) for i in range(22))
+        # dwn_left, dwn_center_left, dwn_center_right, dwn_right, dwn_right_front, dwn_front= dwn
 
-        self.vision_coo = (up_left, up_center_left, up_center_right, up_right, up_right_front, up_front,
-                           center, center_front,
-                           dwn_left, dwn_center_left, dwn_center_right, dwn_right, dwn_right_front, dwn_front)
+        self.vision_coo = up+center+dwn
 
     def activate_fire(self, fire_type):
         if self.last_fire != fire_type:
@@ -108,8 +106,8 @@ class Car:
             screen.blit(self.fire_image, (self.x - 40, self.y + 15))
             self.fire_image_time = 0
         # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
-        for i in self.vision_coo:
-            pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)
+        """for i in self.vision_coo:
+            pygame.draw.circle(screen, (255, 242, 0), i, 2, 1)"""
 
     def movement(self, event):
         directions = {None: self.direction, "UP": "UP", "DWN": "DWN"}
@@ -166,7 +164,7 @@ class Road:
 class _obstacle:
     def __init__(self, location, ultimo_y):
         self.x = location
-        self.adjust = -23
+        self.adjust = -10
         self.y = self.calculate_position_y(ultimo_y)
         self.folder = None
         self.image = None

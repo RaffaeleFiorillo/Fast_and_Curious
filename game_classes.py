@@ -57,7 +57,7 @@ class Mission_AI:
         self.clock = pygame.time.Clock()
         self.run = True
         self.time_passed = 0
-        self.choice = 0
+        self.choice = None
 
     def set_up_texts(self, first=False):
         if not first:
@@ -96,15 +96,31 @@ class Mission_AI:
             self.set_up_texts()
         pygame.display.update()
 
+    def make_a_choice(self):
+        if self.car.y in self.car.y_values:
+            up = self.car.seen_values[:22]
+            front = [self.car.seen_values[22], self.car.seen_values[23]]
+            down = self.car.seen_values[24:]
+            if 1 in up and -1 not in up:
+                return "UP"
+            elif -1 in front:
+                if self.car.y == self.car.y_values[0]:
+                    return "DWN"
+                elif self.car.y == self.car.y_values[2]:
+                    return "UP"
+                elif -1 not in up:
+                    return "UP"
+                elif -1 not in down:
+                    return "DWN"
+            elif 1 in down and -1 not in down:
+                return "DWN"
+            else:
+                return None
+
     def car_movement_y(self):
         self.car.vision(self.screen)
-        self.choice = f.make_a_choice(self.car.seen_values)
-        if self.choice == 1:
-            self.car.movement("DWN")
-            self.car.direction = "DWN"
-        elif self.choice == -1:
-            self.car.movement("UP")
-            self.car.direction = "UP"
+        self.choice = self.make_a_choice()
+        self.car.movement(self.choice)
 
     def car_movement_x(self):
         self.car.damage_period += 0.05
@@ -118,12 +134,12 @@ class Mission_AI:
         last_letter_index = len(self.written_text[-1][-1])-1
         # every last written letter is wrong if the written word is longer than original
         if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
-            if self.car.speed > 3:
-                self.car.speed -= 1
+            if self.car.speed > 4:
+                self.car.speed -= 2
             return False
         elif self.written_text[-1][-1][-1] == self.text_to_write[self.line][self.current_word_index][last_letter_index]:
-            if self.car.speed < 7:
-                self.car.speed += 1
+            if self.car.speed < 8:
+                self.car.speed += 2
             self.car.x += 1
             self.car.activate_fire(False)
             self.energy += 8
@@ -133,8 +149,8 @@ class Mission_AI:
                     self.car.x += 10
                 self.energy = 78
             return True
-        if self.car.speed > 3:
-            self.car.speed -= 1
+        if self.car.speed > 4:
+            self.car.speed -= 2
         return False
 
     def manage_buttons(self, keys, event):
@@ -226,7 +242,7 @@ class Mission_AI:
             if self.time_passed <= 4:
                 current = int(self.time_passed) % 4
             self.refresh_game()
-            self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png"), (420, 150))
+            self.screen.blit(pygame.image.load(f"images/HUD/count_down/{current}.png").convert_alpha(), (420, 150))
             pygame.display.update()
             if current == next_image:
                 if next_image< 3:
@@ -319,7 +335,7 @@ class Mission_PARTS:
         self.run = True
         self.time_passed = 0
         self.total_time = 0.0
-        self.choice = 0
+        self.choice = None
 
     def set_up_texts(self, first=False):
         self.text_name = f.choice(f.get_text_names())[:-4]
@@ -362,17 +378,31 @@ class Mission_PARTS:
             self.set_up_texts()
         pygame.display.update()
 
+    def make_a_choice(self):
+        if self.car.y in self.car.y_values:
+            up = self.car.seen_values[:22]
+            front = [self.car.seen_values[22], self.car.seen_values[23]]
+            down = self.car.seen_values[24:]
+            if 1 in up and -1 not in up:
+                return "UP"
+            elif -1 in front:
+                if self.car.y == self.car.y_values[0]:
+                    return "DWN"
+                elif self.car.y == self.car.y_values[2]:
+                    return "UP"
+                elif -1 not in up:
+                    return "UP"
+                elif -1 not in down:
+                    return "DWN"
+            elif 1 in down and -1 not in down:
+                return "DWN"
+            else:
+                return None
+
     def car_movement_y(self):
-        if not self.car.keep_moving and self.car.y in self.car.y_values:
-            self.car.vision(self.screen)
-            self.choice = f.make_a_choice(self.car.seen_values)
-        if self.choice == 1:
-            self.car.movement("DWN")
-            self.car.direction = "DWN"
-        elif self.choice == -1:
-            self.car.movement("UP")
-            self.car.direction = "UP"
-        self.car.continue_mov()
+        self.car.vision(self.screen)
+        self.choice = self.make_a_choice()
+        self.car.movement(self.choice)
 
     def car_movement_x(self):
         self.car.damage_period += 0.05
@@ -386,12 +416,12 @@ class Mission_PARTS:
         last_letter_index = len(self.written_text[-1][-1])-1
         # every last written letter is wrong if the written word is longer than original
         if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
-            if self.car.speed > 3:
-                self.car.speed -= 1
+            if self.car.speed > 4:
+                self.car.speed -= 2
             return False
         elif self.written_text[-1][-1][-1] == self.text_to_write[self.line][self.current_word_index][last_letter_index]:
-            if self.car.speed < 7:
-                self.car.speed += 1
+            if self.car.speed < 8:
+                self.car.speed += 2
             self.car.x += 1
             self.car.activate_fire(False)
             self.energy += 8
@@ -401,8 +431,8 @@ class Mission_PARTS:
                     self.car.x += 10
                 self.energy = 78
             return True
-        if self.car.speed > 3:
-            self.car.speed -= 1
+        if self.car.speed > 4:
+            self.car.speed -= 2
         return False
 
     def manage_buttons(self, keys, event):
@@ -558,11 +588,12 @@ class Training_World:
         self.hud_image = pygame.image.load("images/HUD/HUD_background.png")
         # loop stuff
         self.clock = pygame.time.Clock()
-        self.frame_rate = 11  # must not be multiple of 10
+        self.frame_rate = f.FRAME_RATE  # must not be multiple of 10
         self.run = True
         self.time_passed = 0
         self.total_time = 0.0
-        self.choice = 0
+        self.choice_delay = 0
+        self.choice = None
         self.resistance = True
 
     def refresh_game(self):
@@ -579,7 +610,10 @@ class Training_World:
 
     def make_movement_choice(self):
         if self.car.y in self.car.y_values:  # car only makes choice if in the middle of one of the tracks
-            self.choice = self.individual.make_prediction(self.car.seen_values)
+            if self.choice_delay >= 20:
+                self.choice = self.individual.make_prediction(self.car.seen_values)
+                self.choice_delay = 0
+            self.choice_delay += 1
         else:
             self.choice = None
 
@@ -606,7 +640,7 @@ class Training_World:
     def individual_is_perfect(self, individual):
         self.individual = individual
         while self.run:
-    # terminate execution
+            # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
@@ -631,6 +665,119 @@ class Training_World:
             self.refresh_game()
             self.time_passed += self.clock.tick(self.frame_rate) / 990
         self.update_individual()
+        f.stop_all_sounds()
+        f.play(game_over_sound)
+        return False  # if it gets here, it means it not good enough
+
+
+# Creates a world where the AI can be trained
+class Data_World:
+    def __init__(self, screen):
+        self.screen = screen
+        # Game objects
+        self.car = ce.Car()
+        self.road = ce.Road()
+        self.obstacles_list = ce.Obstacles()
+        self.parts_list = ce.parts()
+        self.parts_collected = 0
+        self.hud_image = pygame.image.load("images/HUD/HUD_background.png")
+        # loop stuff
+        self.clock = pygame.time.Clock()
+        self.frame_rate = 5  # must not be multiple of 10
+        self.run = True
+        self.choice = None
+        self.time_passed = 0
+        self.total_time = 0.0
+        self.resistance = True
+        self.seen_values = []
+        self.choices_made = []
+
+    def refresh_game(self):
+        entities = [self.road, self.parts_list, self.obstacles_list, self.car]
+        self.screen.blit(self.hud_image, (0, 308))
+        for entity in entities:
+            entity.draw(self.screen)
+        pygame.display.update()
+
+    def make_a_choice(self):
+        if self.car.y in self.car.y_values:
+            up = self.car.seen_values[:22]
+            front = [self.car.seen_values[22], self.car.seen_values[23]]
+            down = self.car.seen_values[24:]
+            if 1 in up and -1 not in up:
+                return "UP"
+            elif -1 in front:
+                if self.car.y == self.car.y_values[0]:
+                    return "DWN"
+                elif self.car.y == self.car.y_values[2]:
+                    return "UP"
+                elif -1 not in up:
+                    return "UP"
+                elif -1 not in down:
+                    return "DWN"
+            elif 1 in down and -1 not in down:
+                return "DWN"
+            else:
+                return None
+
+    def car_movement_y(self):
+        self.car.vision(self.screen)
+        self.choice = self.make_a_choice()
+        self.car.movement(self.choice)
+
+    def manage_buttons(self, button):
+        self.car.vision(self.screen)
+        self.seen_values.append(self.car.seen_values)
+        if button == pygame.K_UP:
+            self.choices_made.append("UP")
+            self.car.movement("UP")
+        elif button == pygame.K_DOWN:
+            self.choices_made.append("DWN")
+            self.car.movement("DWN")
+        elif button == pygame.K_PLUS:
+            if self.frame_rate < 90:
+                self.frame_rate += 10
+        elif button == pygame.K_MINUS:
+            if self.frame_rate > 10:
+                self.frame_rate -= 10
+
+    def save_data(self):
+        file = open("training data.txt", "a")
+        for line in self.seen_values:
+            file.write(str(line))
+            file.write("\n")
+        file.write(str(self.choices_made))
+
+    def continue_game(self):
+        return self.resistance
+
+    def get_data(self):
+        while self.run:
+            # terminate execution
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.run = False
+                if event.type == pygame.KEYDOWN:
+                    self.manage_buttons(event.key)
+    # parts effects
+            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.create_parts()
+    # car movement
+            self.car_movement_y()
+    # collision & damage
+            if self.car.obstacle_collision(self.obstacles_list.internal_list):
+                self.resistance = False
+            self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
+            self.parts_collected += value
+    # obstacles effects
+            self.obstacles_list.remove_obstacles()
+            self.obstacles_list.create_obstacles()
+    # Refresh screen
+            if self.run:
+                self.run = self.continue_game()
+            self.refresh_game()
+            self.time_passed += self.clock.tick(self.frame_rate) / 990
+        self.save_data()
         f.stop_all_sounds()
         f.play(game_over_sound)
         return False  # if it gets here, it means it not good enough

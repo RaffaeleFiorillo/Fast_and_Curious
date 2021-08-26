@@ -7,9 +7,11 @@ Correct the size of the game cursor.                                     |  Done
 ---------------------------------------------------------------------------------------------------------
 Correct the music&volume bug (value exceeds max value)                   |  Done   |      2       |  2  |
 ---------------------------------------------------------------------------------------------------------
-Correct the add text bug (letters reach out of the box)                  | Pending |      2       |  2  |
+Correct the add text bug (letters reach out of the box)                  | Pendent |      2       |  2  |
 ---------------------------------------------------------------------------------------------------------
-Correct the reverse count bug (numbers and letters blinc)                | Pending |      2       |  4  |
+Correct the reverse count bug (numbers and letters blinc)                | Pendent |      2       |  4  |
 ---------------------------------------------------------------------------------------------------------
-Show avg and max speed in Mission: Parts                                 | Pending |      4       |  6  |
+Show avg and max speed in Mission: Parts                                 | Pendent |      4       |  6  |
+---------------------------------------------------------------------------------------------------------
+Refactoring: Game Classes (make a parent World class)                    |  Done   |      2       |  6  |
 ---------------------------------------------------------------------------------------------------------

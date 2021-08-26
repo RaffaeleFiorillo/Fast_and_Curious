@@ -1,10 +1,10 @@
 import math
 import pygame
-import random
+import entity_classes as ce
 import Auxiliary_Functionalities as Af
-import game_classes
 
 M_C = 0.8  # mutation chance
+game_over_sound = Af.load_sound("game/game_over.WAV")            # sound of the match ending
 
 
 def normalize(max_value, min_value, value):
@@ -23,6 +23,215 @@ def mutate_value(value, mutation_chance=M_C):
     if Af.random() > M_C:
         return Af.random_choice([-1, 1]) * (Af.random() / Af.random_choice([100, 10]))
     return value
+
+
+# Creates a world where the AI can be trained
+class Training_World:
+    def __init__(self, screen_i):
+        self.screen = screen_i
+        # Game objects
+        self.car = ce.Car()
+        self.road = ce.Road()
+        self.obstacles_list = ce.Obstacles()
+        self.parts_list = ce.parts()
+        self.parts_collected = 0
+        self.individual = None
+        self.hud_image = Af.load_image("HUD/HUD_background.png")
+        # loop stuff
+        self.clock = pygame.time.Clock()
+        self.frame_rate = Af.FRAME_RATE  # must not be multiple of 10
+        self.run = True
+        self.time_passed = 0
+        self.total_time = 0.0
+        self.choice_delay = 0
+        self.choice = None
+        self.resistance = True
+
+    def refresh_game(self):
+        entities = [self.road, self.parts_list, self.obstacles_list, self.car]
+        self.screen.blit(self.hud_image, (0, 308))
+        for entity in entities:
+            entity.draw(self.screen)
+        pygame.display.update()
+
+    def update_individual(self):
+        self.individual.parts = self.parts_collected
+        self.individual.time_alive = self.time_passed
+        self.individual.fitness_level()
+
+    def make_movement_choice(self):
+        if self.car.y in self.car.y_values:  # car only makes choice if in the middle of one of the tracks
+            if self.choice_delay >= 20:
+                self.choice = self.individual.make_prediction(self.car.seen_values)
+                self.choice_delay = 0
+            self.choice_delay += 1
+        else:
+            self.choice = None
+
+    def car_movement_y(self):
+        self.car.vision(self.screen)
+        self.make_movement_choice()
+        self.car.movement(self.choice)
+
+    def manage_buttons(self, button):
+        if button == pygame.K_UP:
+            self.car.movement("UP")
+        elif button == pygame.K_DOWN:
+            self.car.movement("DWN")
+        elif button == pygame.K_PLUS:
+            if self.frame_rate < 90:
+                self.frame_rate += 10
+        elif button == pygame.K_MINUS:
+            if self.frame_rate > 10:
+                self.frame_rate -= 10
+
+    def continue_game(self):
+        return self.resistance
+
+    def individual_is_perfect(self, individual):
+        self.individual = individual
+        while self.run:
+            # terminate execution
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.run = False
+                if event.type == pygame.KEYDOWN:
+                    self.manage_buttons(event.key)
+    # parts effects
+            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.create_parts()
+    # car movement
+            self.car_movement_y()
+    # collision & damage
+            if self.car.obstacle_collision(self.obstacles_list.internal_list):
+                self.resistance = False
+            self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
+            self.parts_collected += value
+    # obstacles effects
+            self.obstacles_list.remove_obstacles()
+            self.obstacles_list.create_obstacles()
+    # Refresh screen
+            if self.run:
+                self.run = self.continue_game()
+            self.refresh_game()
+            self.time_passed += self.clock.tick(self.frame_rate) / 990
+        self.update_individual()
+        Af.stop_all_sounds()
+        Af.play(game_over_sound)
+        return False  # if it gets here, it means it not good enough
+
+
+# Creates a world where Car-movement-data can be extracted
+class Data_World:
+    def __init__(self, screen_i):
+        self.screen = screen_i
+        # Game objects
+        self.car = ce.Car()
+        self.road = ce.Road()
+        self.obstacles_list = ce.Obstacles()
+        self.parts_list = ce.parts()
+        self.parts_collected = 0
+        self.hud_image = Af.load_image("HUD/HUD_background.png")
+        # loop stuff
+        self.clock = pygame.time.Clock()
+        self.frame_rate = 5  # must not be multiple of 10
+        self.run = True
+        self.choice = None
+        self.time_passed = 0
+        self.total_time = 0.0
+        self.resistance = True
+        self.seen_values = []
+        self.choices_made = []
+
+    def refresh_game(self):
+        entities = [self.road, self.parts_list, self.obstacles_list, self.car]
+        self.screen.blit(self.hud_image, (0, 308))
+        for entity in entities:
+            entity.draw(self.screen)
+        pygame.display.update()
+
+    def make_a_choice(self):
+        if self.car.y in self.car.y_values:
+            up = self.car.seen_values[:22]
+            front = [self.car.seen_values[22], self.car.seen_values[23]]
+            down = self.car.seen_values[24:]
+            if 1 in up and -1 not in up:
+                return "UP"
+            elif -1 in front:
+                if self.car.y == self.car.y_values[0]:
+                    return "DWN"
+                elif self.car.y == self.car.y_values[2]:
+                    return "UP"
+                elif -1 not in up:
+                    return "UP"
+                elif -1 not in down:
+                    return "DWN"
+            elif 1 in down and -1 not in down:
+                return "DWN"
+            else:
+                return None
+
+    def car_movement_y(self):
+        self.car.vision(self.screen)
+        self.choice = self.make_a_choice()
+        self.car.movement(self.choice)
+
+    def manage_buttons(self, button):
+        self.car.vision(self.screen)
+        self.seen_values.append(self.car.seen_values)
+        if button == pygame.K_UP:
+            self.choices_made.append("UP")
+            self.car.movement("UP")
+        elif button == pygame.K_DOWN:
+            self.choices_made.append("DWN")
+            self.car.movement("DWN")
+        elif button == pygame.K_PLUS:
+            if self.frame_rate < 90:
+                self.frame_rate += 10
+        elif button == pygame.K_MINUS:
+            if self.frame_rate > 10:
+                self.frame_rate -= 10
+
+    def save_data(self):
+        file = open("training data.txt", "a")
+        for line in self.seen_values:
+            file.write(str(line))
+            file.write("\n")
+        file.write(str(self.choices_made))
+
+    def continue_game(self):
+        return self.resistance
+
+    def get_data(self):
+        while self.run:
+            # terminate execution
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.run = False
+                if event.type == pygame.KEYDOWN:
+                    self.manage_buttons(event.key)
+    # parts effects
+            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.create_parts()
+    # car movement
+            self.car_movement_y()
+    # collision & damage
+            if self.car.obstacle_collision(self.obstacles_list.internal_list):
+                self.resistance = False
+            self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
+            self.parts_collected += value
+    # obstacles effects
+            self.obstacles_list.remove_obstacles()
+            self.obstacles_list.create_obstacles()
+    # Refresh screen
+            if self.run:
+                self.run = self.continue_game()
+            self.refresh_game()
+            self.time_passed += self.clock.tick(self.frame_rate) / 990
+        self.save_data()
+        Af.stop_all_sounds()
+        Af.play(game_over_sound)
+        return False  # if it gets here, it means it not good enough
 
 
 class Individual:
@@ -62,14 +271,14 @@ class Individual:
         self.bias = bi
 
     def create_individual(self):
-        hidden_1 = [[random.random() * random.choice([1, -1]) for _ in range(self.inputs)] for _ in range(self.inputs)]
-        hidden_2 = [[random.random() * random.choice([1, -1]) for _ in range(self.inputs)] for _ in range(7)]
-        output = [[random.random() * random.choice([1, -1]) for _ in range(7)] for _ in range(3)]
+        hidden_1 = [[Af.random() * Af.choice([1, -1]) for _ in range(self.inputs)] for _ in range(self.inputs)]
+        hidden_2 = [[Af.random() * Af.choice([1, -1]) for _ in range(self.inputs)] for _ in range(7)]
+        output = [[Af.random() * Af.choice([1, -1]) for _ in range(7)] for _ in range(3)]
         self.weights = [hidden_1, hidden_2, output]
 
-        hidden_1 = [random.random() * random.choice([1, -1]) for _ in range(self.inputs)]
-        hidden_2 = [random.random() * random.choice([1, -1]) for _ in range(7)]
-        output = [random.random() * random.choice([1, -1]) for _ in range(3)]
+        hidden_1 = [Af.random() * Af.choice([1, -1]) for _ in range(self.inputs)]
+        hidden_2 = [Af.random() * Af.choice([1, -1]) for _ in range(7)]
+        output = [Af.random() * Af.choice([1, -1]) for _ in range(3)]
         self.bias = [hidden_1, hidden_2, output]
 
     @staticmethod
@@ -222,7 +431,7 @@ pygame.display.set_caption("Fast and Curious-AI Training")
 # simulation stuff
 keepGoing = True
 pop = Population(14, 20)
-world = game_classes.Training_World(screen)
+world = Training_World(screen)
 
 """w = f.WEIGHTS
 b = f.BIAS
@@ -252,5 +461,5 @@ while True:
     if not pop.generation % 10:
         pop.save_best_individuals()"""
 
-w = game_classes.Data_World(screen)
+w = Data_World(screen)
 w.get_data()

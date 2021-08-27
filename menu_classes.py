@@ -638,6 +638,7 @@ class Choose_Account:
                 self.previous_button = 1
 
     def create_buttons(self):
+        self.buttons = []  # empties button list to prevent used memory from getting larger every time
         for user in self.users:
             self.buttons.append(Button(self.button_coordinates[self.users.index(user)][0],
                                        self.button_coordinates[self.users.index(user)][1],
@@ -1076,6 +1077,7 @@ class Add_Text:
         self.active_code_x = 0
         self.text_lines_images = None
         self.screen = screen
+        pygame.draw.rect(self.screen, (0, 0, 0), (0, 0, Af.SCREEN_LENGTH, Af.SCREEN_WIDTH))  # hide previous interface
         self.character_number = 0
         self.written_text = ""
         self.error_code = 0

@@ -1162,6 +1162,12 @@ class Add_Text:
                 return False
         return True
 
+    def last_word_is_proper(self):
+        if self.written_text != "":
+            last_word_length = len(self.written_text.split()[-1])
+            return last_word_length < 48
+        return True
+
     def manage_buttons(self, event):
         if event.key == pygame.K_RIGHT:
             Af.play(button_x_sound)
@@ -1180,7 +1186,7 @@ class Add_Text:
             self.character_number-=1
             if self.character_number < 0:
                 self.character_number = 0
-        elif self.character_number < 288:
+        elif self.character_number < 288 and self.last_word_is_proper():
             special = [" ", ",", ".", "'"]
             if event.unicode.isalpha() or event.unicode in special:
                 self.written_text+=event.unicode

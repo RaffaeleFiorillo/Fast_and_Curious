@@ -313,14 +313,14 @@ def writable_parts_number(number):
 def convert_text_to_images(text, real_application=False):
     text = text.strip().split(" ")
     lines, line, length = [], "", 0
-    for word in text:
+    for word in text:  # create lines with the text requirements
         if length + len(word) < 49:
-            length+=len(word)+1
+            length += len(word)+1
             line += " "+word
         else:
             lines.append(line)
             line = ""+word
-            length = 0+len(word)  # create lines with the text requirements
+            length = 0+len(word)
     if line != "":
         lines.append(line)
     lines[0] = lines[0][1:]  # to remove the additional space (" ") at the beginning

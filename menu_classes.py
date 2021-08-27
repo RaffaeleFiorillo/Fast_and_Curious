@@ -48,12 +48,11 @@ class Button2(Button):
         self.get_value()
 
     def get_value(self):
-        file = open("saves/active_user.txt", "r")
-        line = file.readline()
+        with open("saves/active_user.txt", "r") as file:
+            line = file.readline()
         values = line.split(" ")
         values = values[-2:]
         self.value = int(values[self.id])
-        file.close()
 
     def change_value(self, add):
         self.value += add
@@ -88,12 +87,11 @@ class User:
         self.sound_volume = 8
 
     def get_info(self) -> None:
-        file = open(f"saves/{self.name}/data.txt", "r")
-        data = file.readline().split(" ")
+        with open(f"saves/{self.name}/data.txt", "r") as file:
+            data = file.readline().split(" ")
         self.best_speed, self.best_time, self.level, self.parts, self.password, self.music_volume, self.sound_volume = \
             int(data[0]), int(data[1]), int(data[2]), int(data[3]), data[4], int(data[5]), int(data[6])
         self.image = Af.load_image(f"menu/interfaces/User/user_info/level{self.level}.png")
-        file.close()
 
     def get_texts(self) -> None:
         self.best_time_text, self.coo_bt_t = Af.writable_best_time(self.best_time)
@@ -108,25 +106,22 @@ class User:
         screen.blit(self.name_text, self.coo_n_t)
 
     def get_active_user(self) -> None:
-        file = open(f"saves/active_user.txt", "r")
-        data = file.readline().split(" ")
+        with open(f"saves/active_user.txt", "r") as file:
+            data = file.readline().split(" ")
         self.name, self.best_speed, self.best_time, self.level, self.parts, self.password = \
             data[0], int(data[1]), int(data[2]), int(data[3]), int(data[4]), data[5]
         self.image = Af.load_image(f"menu/interfaces/User/user_info/level{self.level}.png")
-        file.close()
 
     def turn_active(self) -> None:
-        file = open(f"saves/active_user.txt", "w")
-        file.write(f"{self.name} {self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} "+
-                   f"{self.music_volume} {self.sound_volume}")
-        file.close()
+        with open(f"saves/active_user.txt", "w") as file:
+            file.write(f"{self.name} {self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} "+
+                       f"{self.music_volume} {self.sound_volume}")
 
     def save_info(self) -> None:
-        file = open(f"saves/{self.name}/data.txt", "w")
-        data = f"{self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} {self.music_volume}" \
-               f" {self.sound_volume}"
-        file.write(data)
-        file.close()
+        with open(f"saves/{self.name}/data.txt", "w") as file:
+            data = f"{self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} {self.music_volume}" \
+                   f" {self.sound_volume}"
+            file.write(data)
 
 
 # simulates a single firework
@@ -469,10 +464,9 @@ class Create_Account:
     def create_account(self) -> None:
         name = "".join(self.inputs[0])
         Af.create_folder(name)  # create the user's folder
-        file = open(f"saves/{name}/next_level.txt", "w")  # create a file in the user's folder named next_level
-        file.write("1 \n")  # this value means that the MISSION AI is available
-        file.write("0")  # this value means that the user has not yet won the game
-        file.close()
+        with open(f"saves/{name}/next_level.txt", "w") as file:  # create a file in the user's folder named next_level
+            file.write("1 \n")  # this value means that the MISSION AI is available
+            file.write("0")  # this value means that the user has not yet won the game
 
     def validate_user_information(self) -> bool:
         first, second = "".join(self.inputs[0]), "".join(self.inputs[1])
@@ -984,9 +978,8 @@ class Unlock_Level:
         self.user = User()
         self.user.get_active_user()
         self.user.get_info()
-        file = open(f"parameters/levels info/{self.user.level}.txt", "r")
-        self.parts_needed = int(file.readline().split(" ")[2])
-        file.close()
+        with open(f"parameters/levels info/{self.user.level}.txt", "r") as file:
+            self.parts_needed = int(file.readline().split(" ")[2])
 
     def show_error_message(self) -> None:
         Af.show_error_message(self.screen, 9)
@@ -998,9 +991,8 @@ class Unlock_Level:
         return self.parts_needed <= self.user.parts
 
     def save_state(self):
-        file = open(f"saves/{self.user.name}/next_level.txt", "w")
-        file.write("1")
-        file.close()
+        with open(f"saves/{self.user.name}/next_level.txt", "w") as file:
+            file.write("1")
         self.user.parts = self.user.parts - self.parts_needed
         self.user.save_info()
         self.user.turn_active()

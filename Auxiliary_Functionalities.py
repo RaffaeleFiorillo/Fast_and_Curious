@@ -165,9 +165,8 @@ def make_a_choice(info, weights=None, bias=None):
 
 # -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------
 def get_sound_volume():
-    file = open("saves/active_user.txt", "r")
-    line = file.readline().split(" ")
-    file.close()
+    with open("saves/active_user.txt", "r") as file:
+        line = file.readline().split(" ")
     if len(line) != 1:
         return float(line[7])/10
     else:
@@ -175,9 +174,8 @@ def get_sound_volume():
 
 
 def get_music_volume():
-    file = open("saves/active_user.txt", "r")
-    line = file.readline().split(" ")
-    file.close()
+    with open("saves/active_user.txt", "r") as file:
+        line = file.readline().split(" ")
     if len(line) != 1:
         return float(line[6])/20.0
     else:
@@ -382,8 +380,11 @@ def get_users_images():
 
 # gets the requirement values in order to verify if user has leveled up from the parameters file and returns them
 def get_requirements():
-    user_level = int(open("saves/active_user.txt", "r").readline().split(" ")[3])
-    values = open(f"parameters/levels info/{user_level}.txt", "r").readline().split(" ")
+    with open("saves/active_user.txt", "r") as f:
+        str_level = f.readline().split(" ")[3]
+    user_level = int(str_level)
+    with open(f"parameters/levels info/{user_level}.txt", "r") as f:
+        values = f.readline().split(" ")
     return int(values[0]), int(values[1])
 
 
@@ -396,9 +397,8 @@ def save_next_level_data(user_name, m_ai_data, winner_data):
 # returns current user's information
 def get_user_data():
     # active user format: "Name speed best_time level parts password volume1 volume2"
-    file = open("saves/active_user.txt", "r")
-    values_p = file.readline().split(" ")
-    file.close()
+    with open("saves/active_user.txt", "r") as file:
+        values_p = file.readline().split(" ")
     str_val = [values_p[0], values_p[5]]
     int_val = [int(value) for value in values_p if value.isdigit()]
     return str_val, int_val
@@ -407,13 +407,12 @@ def get_user_data():
 # saves current user's new information
 def save_user_data(name, b_speed, b_time, level, parts, password, volume1, volume2):
     line = f"{name} {b_speed} {b_time} {level} {parts} {password} {volume1} {volume2}"
-    file = open("saves/active_user.txt", "w")
-    file.write(line)
-    file.close()
-    file = open(f"saves/{name}/data.txt", "w")
+    with open("saves/active_user.txt", "w") as file:
+        file.write(line)
+
     line = f"{b_speed} {b_time} {level} {parts} {password} {volume1} {volume2}"
-    file.write(line)
-    file.close()
+    with open(f"saves/{name}/data.txt", "w") as file:
+        file.write(line)
 
 
 # updates user information after a played match is over, for Mission AI
@@ -537,23 +536,6 @@ def get_text_images(line):
 
 
 # creates a new text's image. those that will be chosen and displayed during a match
-def save_text_image(name):
-    screen2 = pygame.display.set_mode((519, 135))
-    background = load_image("texts/text_background.png")
-    file = open(f"texts/{name}.txt", "r")
-    lines = file.readlines()
-    file.close()
-    text_font = pygame.font.SysFont('Times New Roman', 20)
-    text_font.set_bold(True)
-    coordinates = ((12, 6), (12, 22), (12, 38), (12, 53), (12, 68), (12, 83), (12, 98))
-    texts = [text_font.render(lines[i][:-1], True, (0, 0, 0)) for i in range(7)]
-    screen2.blit(background, (0, 0))
-    [screen2.blit(texts[i], coordinates[i]) for i in range(7)]
-    pygame.display.update()
-    pygame.image.save(screen2, f"images/texts/{name}.png")
-
-
-# modifies a specific color turning it slightly different from the original
 def modify_color(color: tuple):
     new_color = []
     for i in range(3):
@@ -565,14 +547,14 @@ def modify_color(color: tuple):
     return tuple(new_color)
 
 
-# creates a sample of colors, which are slightly modifications of pre-existing colors
+# modifies a specific color turning it slightly different from the original
 def create_firework_colors(color_number):
     base_colors = [(255, 0, 0), (34, 177, 76), (0, 0, 255), (0, 255, 0), (255, 255, 0), (0, 255, 255), (255, 0, 255),
                    (255, 90, 0), (130, 0, 255)]
     return [modify_color(choice(base_colors)) for _ in range(color_number)]
 
 
-# returns x and y values for a rhomb like firework
+# creates a sample of colors, which are slightly modifications of pre-existing colors
 def calculate_rs_rhomb(x, y, radius):
     if random() > 0.5:
         additional = randint(0, int(radius)) * choice([-1, 1])
@@ -587,14 +569,29 @@ def calculate_rs_rhomb(x, y, radius):
     return r_x, r_y
 
 
-# returns x and y values for a squared like firework
+# returns x and y values for a rhomb like firework
 def calculate_rs_square(x, y, radius):
     r_x = x + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
     r_y = y + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
     return r_x, r_y
 
 
-# returns x and y values for a circle like firework
+def save_text_image(name):
+    screen2 = pygame.display.set_mode((519, 135))
+    background = load_image("texts/text_background.png")
+    with open(f"texts/{name}.txt", "r") as file:
+        lines = file.readlines()
+    text_font = pygame.font.SysFont('Times New Roman', 20)
+    text_font.set_bold(True)
+    coordinates = ((12, 6), (12, 22), (12, 38), (12, 53), (12, 68), (12, 83), (12, 98))
+    texts = [text_font.render(lines[i][:-1], True, (0, 0, 0)) for i in range(7)]
+    screen2.blit(background, (0, 0))
+    [screen2.blit(texts[i], coordinates[i]) for i in range(7)]
+    pygame.display.update()
+    pygame.image.save(screen2, f"images/texts/{name}.png")
+# returns x and y values for a squared like firework
+
+
 def calculate_rs_circle(x, y, radius):
     # condition for a point to be inside a circle: (x - center_x)**2 + (y - center_y)**2 < radius**2
     if random() > 0.5:
@@ -604,3 +601,4 @@ def calculate_rs_circle(x, y, radius):
         r_y = y + randint(0, int(radius))*choice([-1, 1])
         r_x = x + randint(0, int(abs(((r_y-y)**2 - radius**2)**(1/2)))) * choice([-1, 1])
     return r_x, r_y
+# returns x and y values for a circle like firework

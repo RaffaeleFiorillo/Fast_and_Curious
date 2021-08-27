@@ -925,20 +925,21 @@ class Results_AI:
 
 # Used every time a "Mission: PARTS" match is over and the game results must be displayed and processed
 class Results_Parts:
-    def __init__(self, screen, precision, speed, parts_collected, time):
+    def __init__(self, screen, precision, avg_speed, max_speed, parts_collected, time):
         self.screen = screen
-        self.image = Af.load_image(f"menu/interfaces/Main/Results_Parts.png")
+        self.image = Af.load_image("menu/interfaces/Main/Results_Parts.png")
         self.parts = 0
         self.time = int(time)
-        self.values_images = self.initiate_results(precision, speed, parts_collected)
+        self.values_images = self.initiate_results(precision, avg_speed, max_speed, parts_collected)
 
-    def initiate_results(self, precision, speed, parts_collected):
+    def initiate_results(self, precision, avg_speed, max_speed, parts_collected):
         values = []
         # results about parts
         font1 = pygame.font.SysFont('Times New Roman', 16)
         font1.set_bold(True)
         values.append(font1.render(str(int(precision)), True, (255, 255, 255)))
-        values.append(font1.render(str(int(speed)), True, (255, 255, 255)))
+        values.append(font1.render(str(int(avg_speed)), True, (255, 255, 255)))
+        values.append(font1.render(str(int(max_speed)), True, (255, 255, 255)))
         values.append(font1.render(str(self.time), True, (255, 255, 255)))
         values.append(font1.render(str(parts_collected), True, (255, 255, 255)))
         self.parts = parts_collected-300
@@ -946,7 +947,7 @@ class Results_Parts:
         return values
 
     def refresh(self):
-        coordinates = ((725, 357), (725, 390),  (725, 426), (725, 457), (725, 529))
+        coordinates = ((725, 330), (725, 362), (725, 396),  (725, 426), (725, 457), (725, 529))
         self.screen.blit(self.image, (287, 40))
         [self.screen.blit(image, coo) for image, coo in zip(self.values_images, coordinates)]
         pygame.display.update()
@@ -975,7 +976,7 @@ class Results_Parts:
 class Unlock_Level:
     def __init__(self, screen):
         self.screen = screen
-        self.image = Af.load_image(f"menu/interfaces/Main/unlock level.png")
+        self.image = Af.load_image("menu/interfaces/Main/unlock level.png")
         self.user = None
         self.parts_needed = None
         self.create_user()

@@ -19,7 +19,7 @@ wrong_letter_sound = Af.load_sound("game/letter_wrong.WAV")      # sound of the 
 
 # ----------------------------------------------- CLASSES --------------------------------------------------------------
 # Parent Class for managing a Mission-Type World
-class Mission_World:
+class Mission:
     def __init__(self, screen):
         self.screen = screen
         self.background = Af.load_image("HUD/HUD_background.png")
@@ -198,6 +198,9 @@ class Mission_World:
     def hud_time(self):
         pass
 
+    def take_exclusive_class_action(self):  # each Mission could do something different for each iteration
+        pass
+
     def refresh_game(self):
         self.screen.blit(self.background, (0, 308))
         for entity in [self.road, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]:
@@ -207,26 +210,28 @@ class Mission_World:
         self.screen.blit(self.text_to_write_image, (280, 320))
         if self.line == self.max_lines:
             self.set_up_texts()
+        self.take_exclusive_class_action()  # if a Mission wants to do something additional
         pygame.display.update()
 
     def display_countdown(self):
-        next_image = 1
-        current = 0
+        count_down_images = [Af.load_image(f"HUD/count_down/{image_index}.png") for image_index in range(4)]
+        next_image, time_passed = 1, 0
+        current_image_index = 0
+        coordinates = {0: (440, 150), 1: (440, 150), 2: (450, 160), 3: (400, 150)}
         Af.play(count_down_sound)
-        while self.time_passed < 4.5:
-            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 990
-            if self.time_passed <= 4:
-                current = int(self.time_passed) % 4
+        while time_passed < 4.5:
+            time_passed += self.clock.tick(Af.FRAME_RATE) / 1000
+            if time_passed <= 4:
+                current_image_index = int(time_passed)
             self.refresh_game()
-            self.screen.blit(Af.load_image(f"HUD/count_down/{current}.png"), (420, 150))
+            self.screen.blit(count_down_images[current_image_index], coordinates[current_image_index])
             pygame.display.update()
-            if current == next_image:
+            if current_image_index == next_image:
                 if next_image< 3:
                     Af.play(count_down_sound)
                 else:
                     Af.play(start_sound)
                 next_image += 1
-        self.time_passed = 0
         Af.play(go_sound)
         Af.play_music()
 
@@ -241,42 +246,23 @@ class Mission_World:
         else:
             self.precision = 100
 
-
-# Creates a game where there is a time limit of 60 seconds
-class Mission_AI(Mission_World):
-    def __init__(self, screen):
-        super().__init__(screen)
-        self.total_words_all = 0.0
-
-    def set_up_texts(self, first=False):
-        if not first:
-            self.terminate = True
-            return None
-        super(Mission_AI, self).set_up_texts()
-        pygame.display.update()
-
-    def hud_time(self):  # returns what to display on the clock of the HUD interface.
-        return 60-int(self.time_passed)
-
     def continue_game(self):
-        if int(self.resistance) <= 0:
-            return False
-        elif int(self.time_passed) >= 60:
-            return False
-        elif self.terminate:
-            return False
-        return True
+        pass
+
+    @staticmethod
+    def game_over():
+        Af.stop_all_sounds()
+        Af.play(game_over_sound)
 
     def game_loop(self):
         damage_count = 4  # waiting time the car has before taking more damage
         self.display_countdown()
         while self.run:
-            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 990
+            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 1000
     # terminate execution
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
-    # controls
                 if event.type == pygame.KEYDOWN:
                     self.manage_buttons(event)
     # parts effects
@@ -305,20 +291,45 @@ class Mission_AI(Mission_World):
             self.update_precision()
             if self.run:
                 self.run = self.continue_game()
-            if int(self.time_passed) == 51 and self.play_tic_toc:
-                Af.play(tic_toc_sound)
-                self.play_tic_toc = False
             self.refresh_game()
-        Af.stop_all_sounds()
-        Af.play(game_over_sound)
+
+
+# Creates a game where there is a time limit of 60 seconds
+class Mission_AI(Mission):
+    def __init__(self, screen):
+        super().__init__(screen)
+        self.total_words_all = 0.0
+
+    def set_up_texts(self, first=False):
+        if not first:
+            self.terminate = True
+            return None
+        super(Mission_AI, self).set_up_texts()
+        pygame.display.update()
+
+    def hud_time(self):  # returns what to display on the clock of the HUD interface.
+        return 60-int(self.time_passed)
+
+    def continue_game(self):
+        if int(self.resistance) <= 0:
+            return False
+        elif int(self.time_passed) >= 60:
+            return False
+        elif self.terminate:
+            return False
+        return True
+
+    def game_loop(self):
+        super(Mission_AI, self).game_loop()
+        self.game_over()
         return self.precision, self.speed, self.parts_collected, self.resistance, self.time_passed, self.terminate
 
 
 # Creates a game where the time limit is only imposed by the user's skills
-class Mission_PARTS(Mission_World):
+class Mission_PARTS(Mission):
     def __init__(self, screen):
         super().__init__(screen)
-        # text stuff
+        # performance stuff
         self.speed_list = []
         self.precision_list = []
         # loop stuff
@@ -345,46 +356,9 @@ class Mission_PARTS(Mission_World):
         return True
 
     def game_loop(self):
-        damage_count = 4  # waiting time the car has before taking more damage
-        self.display_countdown()
-        while self.run:
-            self.time_passed += self.clock.tick(Af.FRAME_RATE) / 990
-    # terminate execution
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.run = False
-                if event.type == pygame.KEYDOWN:
-                    self.manage_buttons(event)
-    # parts effects
-            self.parts_list.remover_parts(self.obstacles_list.internal_list)
-            self.parts_list.create_parts()
-    # car movement
-            self.car_movement_y()
-            self.car_movement_x()
-    # collision & damage
-            if self.time_passed >= 4:
-                if damage_count >= 0.5:
-                    if self.car.obstacle_collision(self.obstacles_list.internal_list):
-                        self.resistance -= 4
-                        self.car.x -= 10
-                        damage_count = 0
-                else:
-                    damage_count += 0.01
-            self.control_resistance_energy()
-            self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
-            self.parts_collected += value
-    # obstacles effects
-            self.obstacles_list.remove_obstacles()
-            self.obstacles_list.create_obstacles()
-    # Refresh screen
-            self.update_speed()
-            self.update_precision()
-            if self.run:
-                self.run = self.continue_game()
-            self.refresh_game()
-        Af.stop_all_sounds()
-        Af.play(game_over_sound)
+        super(Mission_PARTS, self).game_loop()
+        self.game_over()  # takes actions relative to the game being over
         self.set_up_texts()
-        pre = sum(self.precision_list) // len(self.precision_list)
+        precision = sum(self.precision_list) // len(self.precision_list)
         speed = sum(self.speed_list) // len(self.speed_list)
-        return pre, speed, self.parts_collected, self.total_time
+        return precision, speed, self.parts_collected, self.total_time, max(self.speed_list)

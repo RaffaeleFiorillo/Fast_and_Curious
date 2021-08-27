@@ -133,10 +133,10 @@ def game_ai(screen):
 # info is updated.
 def game_parts(screen):
     game = gc.Mission_PARTS(screen)
-    precision, speed, parts_collected, time = game.game_loop()
-    results = cm.Results_Parts(screen, precision, speed, parts_collected, time)
+    precision, avg_speed, parts_collected, time, max_speed = game.game_loop()
+    results = cm.Results_Parts(screen, precision, avg_speed, max_speed, parts_collected, time)
     parts = results.display()
-    Af.save_performance_parts(parts, speed, time)
+    Af.save_performance_parts(parts, max_speed, time)
     return "game_menu"
 
 

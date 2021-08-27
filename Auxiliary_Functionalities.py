@@ -391,14 +391,32 @@ def save_next_level_data(user_name, m_ai_data, winner_data):
         file.write(f"{m_ai_data} \n{winner_data}")
 
 
-# updates user information after a played match is over, for Mission AI
-def save_performance_ai(go_to_next_level, parts, speed):
+# returns current user's information
+def get_user_data():
     # active user format: "Name speed best_time level parts password volume1 volume2"
     file = open("saves/active_user.txt", "r")
     values_p = file.readline().split(" ")
     file.close()
     str_val = [values_p[0], values_p[5]]
     int_val = [int(value) for value in values_p if value.isdigit()]
+    return str_val, int_val
+
+
+# saves current user's new information
+def save_user_data(name, b_speed, b_time, level, parts, password, volume1, volume2):
+    line = f"{name} {b_speed} {b_time} {level} {parts} {password} {volume1} {volume2}"
+    file = open("saves/active_user.txt", "w")
+    file.write(line)
+    file.close()
+    file = open(f"saves/{name}/data.txt", "w")
+    line = f"{b_speed} {b_time} {level} {parts} {password} {volume1} {volume2}"
+    file.write(line)
+    file.close()
+
+
+# updates user information after a played match is over, for Mission AI
+def save_performance_ai(go_to_next_level, parts, speed):
+    str_val, int_val = get_user_data()
     if go_to_next_level:  # change user data in case he levels up
         if get_user_level() < 13:  # level 13 is the highest in the game
             int_val[2] +=1
@@ -410,24 +428,12 @@ def save_performance_ai(go_to_next_level, parts, speed):
         int_val[3] = 0
     if int_val[0] < speed:
         int_val[0] = int(speed)
-    line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
-    file = open("saves/active_user.txt", "w")
-    file.write(line)
-    file.close()
-    file = open(f"saves/{str_val[0]}/data.txt", "w")
-    line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[4]} {int_val[5]}"
-    file.write(line)
-    file.close()
+    save_user_data(str_val[0], int_val[0], int_val[1], int_val[2], int_val[3], str_val[1], int_val[5], int_val[6])
 
 
 # updates user information after a played match is over, for Mission Parts
 def save_performance_parts(parts, speed, time):
-    # active user format: "Name speed best_time level parts password volume1 volume2"
-    file = open("saves/active_user.txt", "r")
-    values_p = file.readline().split(" ")
-    file.close()
-    str_val = [values_p[0], values_p[5]]
-    int_val = [int(value) for value in values_p if value.isdigit()]
+    str_val, int_val = get_user_data()
     int_val[3] += parts
     if int_val[3] < 0:
         int_val[3] = 0
@@ -436,15 +442,7 @@ def save_performance_parts(parts, speed, time):
     if int_val[1] < time:
         int_val[1] = int(time)
     # name best-speed best-time level parts password music-volume sound-volume
-    line = f"{str_val[0]} {int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[5]} {int_val[6]}"
-    file = open("saves/active_user.txt", "w")
-    file.write(line)
-    file.close()
-    file = open(f"saves/{str_val[0]}/data.txt", "w")
-    # best-speed best-time level parts password music-volume sound-volume
-    line = f"{int_val[0]} {int_val[1]} {int_val[2]} {int_val[3]} {str_val[1]} {int_val[5]} {int_val[6]}"
-    file.write(line)
-    file.close()
+    save_user_data(str_val[0], int_val[0], int_val[1], int_val[2], int_val[3], str_val[1], int_val[5], int_val[6])
 
 
 # returns the current user's level

@@ -688,11 +688,8 @@ class Enter_Password:
         self.user.get_info()
 
     def show_error_message(self) -> None:
-        Af.play(error_sound)
         pygame.image.save(self.screen, "images/menu/interfaces/prov_image/prov_image.png")
-        self.screen.blit(Af.load_image(f"menu/messages/error5.png"), (230, 200))
-        pygame.display.update()
-        Af.wait(3)
+        Af.show_error_message(self.screen, 5)
         self.screen.blit(Af.load_image(f"menu/interfaces/prov_image/prov_image.png"), (0, 0))
 
     def show_success_message(self) -> None:
@@ -706,6 +703,7 @@ class Enter_Password:
             time = 1
         pygame.display.update()
         Af.wait(time)
+        pygame.event.clear()  # all pressed buttons are dismissed in this phase
 
     def verify_password(self):
         return "".join(self.password_list) == self.user.password
@@ -907,6 +905,7 @@ class Results_AI:
         self.screen.blit(Af.load_image(f"menu/messages/{message}.png"), (230, 200))
         pygame.display.update()
         Af.wait(time)
+        pygame.event.clear()  # all pressed buttons are dismissed in this phase
 
     def display(self):
         clock = pygame.time.Clock()
@@ -990,16 +989,10 @@ class Unlock_Level:
         file.close()
 
     def show_error_message(self) -> None:
-        Af.play(error_sound)
-        self.screen.blit(Af.load_image(f"menu/messages/error9.png"), (230, 200))
-        pygame.display.update()
-        Af.wait(3)
+        Af.show_error_message(self.screen, 9)
 
     def show_success_message(self) -> None:
-        Af.play(success_sound)
-        self.screen.blit(Af.load_image(f"menu/messages/success6.png"), (230, 200))
-        pygame.display.update()
-        Af.wait(3)
+        Af.show_success_message(self.screen, 6)
 
     def verify_parts_number(self):
         return self.parts_needed <= self.user.parts
@@ -1106,16 +1099,10 @@ class Add_Text:
             self.current_frame = 0
 
     def show_error_message(self) -> None:
-        Af.play(error_sound)
-        self.screen.blit(Af.load_image(f"menu/messages/error{self.error_code}.png"), (230, 200))
-        pygame.display.update()
-        Af.wait(3)
+        Af.show_error_message(self.screen, self.error_code)
 
     def show_success_message(self) -> None:
-        Af.play(success_sound)
-        self.screen.blit(Af.load_image(f"menu/messages/success7.png"), (230, 200))
-        pygame.display.update()
-        Af.wait(3)
+        Af.show_success_message(self.screen, 7)
 
     def display_menu(self):
         background = pygame.Surface(self.screen.get_size())

@@ -185,19 +185,21 @@ def get_music_volume():
 
 
 # displays on the screen an error message specified by his code
-def show_error_message(screen, code):
+def show_error_message(screen, code, waiting_time=3):
     play(error_sound)
     screen.blit(load_image(f"menu/messages/error{code}.png"), (230, 200))
     pygame.display.update()
-    wait(3)
+    wait(waiting_time)
+    pygame.event.clear()  # all pressed buttons are dismissed in this phase
 
 
 # displays on the screen a success message specified by his code
-def show_success_message(screen, code) -> None:
+def show_success_message(screen, code, waiting_time=3) -> None:
     play(success_sound)
     screen.blit(load_image(f"menu/messages/success{code}.png"), (230, 200))
     pygame.display.update()
-    wait(3)
+    wait(waiting_time)
+    pygame.event.clear()  # all pressed buttons are dismissed in this phase
 
 
 # creates a folder inside the root_directory with the name of the user creating the account

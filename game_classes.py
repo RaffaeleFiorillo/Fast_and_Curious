@@ -232,6 +232,7 @@ class Mission:
                 else:
                     Af.play(start_sound)
                 next_image += 1
+        pygame.event.clear()  # all pressed buttons are dismissed in this phase
         Af.play(go_sound)
         Af.play_music()
 

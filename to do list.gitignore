@@ -17,7 +17,7 @@ Refactoring: Game Classes (make a parent World class)                           
 ------------------------------------------------------------------------------------------------------------------
 Space-Time-Entity Attack's Effect (ligthning strikes the car when too close)      | Pendent |      5       |  7  |
 ------------------------------------------------------------------------------------------------------------------
-Fix the button detection bug (after a "wait" buttons should't be active)          | Pendent |      4       |  5  |
+Fix the button detection bug (after a "wait" buttons should't be active)          |  Done   |      4       |  4  |
 ------------------------------------------------------------------------------------------------------------------
-Fix performance check for Missions (pressing enter 6times gets Mission completed) | Pendent |      5       |  5  |
+Fix performance check for Missions (pressing enter 6times gets Mission completed) | Pendent |      5       |  10 |
 ------------------------------------------------------------------------------------------------------------------

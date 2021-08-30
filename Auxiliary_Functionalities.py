@@ -6,7 +6,7 @@ from sys import exit as exit_2
 from shutil import rmtree
 from gc import collect
 from random import choice as random_choice, randint as random_randint, random as random_random
-from math import tanh
+import math
 
 
 # ---------------------------------------- GLOBAL VARIABLES ------------------------------------------------------------
@@ -24,6 +24,7 @@ WEIGHTS = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.1709
 BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
 FRAME_RATE = 30
 SCREEN_LENGTH, SCREEN_WIDTH = 1080, 700
+CAR_STE_MIN_DAMAGE_DISTANCE = 400
 
 
 # --------------------------------------------- MODULES INITIALIZATION -------------------------------------------------
@@ -78,6 +79,18 @@ def randint(first_number, last_number):
 
 def random():
     return random_random()
+
+
+def arc_sin(value):
+    return math.degrees(math.asin(value))
+
+
+def sin(angle):
+    return math.sin(math.radians(angle))
+
+
+def cos(angle):
+    return math.cos(math.radians(angle))
 
 
 def wait(seconds):
@@ -154,13 +167,21 @@ def make_a_choice(info, weights=None, bias=None):
     if weights is None:
         weights, bias = WEIGHTS, BIAS
     soma = sum([weights[i] * info[i] + bias[i] for i in range(len(info))])
-    refined_value = tanh(soma)
+    refined_value = math.tanh(soma)
     if refined_value >= 0.70:
         return 1
     elif refined_value <= -0.70:
         return -1
     else:
         return 0
+
+
+# --------------------------------------------  TRIGONOMETRY  ----------------------------------------------------------
+def get_vector_distance(init_x, init_y, fin_x, fin_y):
+    x = math.pow(fin_x-init_x, 2)
+    y = math.pow(fin_y-init_y, 2)
+    vector = math.sqrt(x+y)
+    return vector
 
 
 # -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------

@@ -30,7 +30,7 @@ class Car:
         self.last_fire = False
         self.speed = 10
         self.direction = "STOP"
-        self.x = 290
+        self.x = 450
         self.y = self.y_values[1]
         self.damage_period = 0.0
         self.hit_box = pygame.mask.from_surface(self.image)
@@ -130,15 +130,85 @@ class Car:
         self.rect = (self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
 
 
+# -----------------------------------------------    LIGHTNING    ------------------------------------------------------
+class Lightning:
+    internal_beam_color = (255, 255, 0)  # (0, 255, 255)
+    external_beam_color = (0, 0, 255)
+    starting_point_coo = (95, 150)
+    frame = 0
+    segments_coo = ()
+
+    def __init__(self):
+        self.segment_number = None  # how many segments the lightning has
+        self.internal_beam_radius = None  # radius of the central part of the beam
+        self.external_beam_radius = None  # radius of the external part of the beam
+        self.last_segment_direction = None  # last segment goes up or down alternatively
+        self.change_properties()  # gives new valid values to the attributes
+
+    def change_properties(self):
+        self.segment_number = Af.randint(5, 7)
+        self.internal_beam_radius = Af.randint(5, 10)
+        self.external_beam_radius = Af.randint(15, 25)
+        self.frame = 0
+        self.segments_coo = [self.starting_point_coo]
+        self.last_segment_direction = Af.choice([-1, 1])
+
+    def get_segment_angle(self, hypotenuse, car_y):
+        opposite = self.starting_point_coo[1] - car_y
+        base_angle = Af.arc_sin(opposite/hypotenuse)
+        segment_angle = base_angle+Af.randint(-int(60-base_angle), int(60-base_angle))
+        print(f"Frame: {self.frame} | Opposite: {opposite} | Base angle: {base_angle} | Segment_angle: {segment_angle}")
+        return segment_angle
+
+    def add_segment(self, car_x, car_y):
+        if self.frame == self.segment_number:  # last segment is always the car's position
+            self.segments_coo.append((car_x, car_y))
+            return None
+        medium_segment_length = (car_x - self.segments_coo[0][0])//self.segment_number  # (Xf-Xi)/ n
+        segment_x = self.segments_coo[-1][0] + Af.randint(int(medium_segment_length*0.75), medium_segment_length)
+        segment_y = self.segments_coo[-1][1] + Af.randint(10, 70)*self.last_segment_direction
+        self.last_segment_direction *= -1  # invert next segment direction
+        self.segments_coo.append((segment_x, segment_y))
+
+    def draw_segments(self, screen):
+        starting_point = self.starting_point_coo
+        for ending_point in self.segments_coo:
+            pygame.draw.line(screen, self.internal_beam_color, starting_point, ending_point, 4)
+            starting_point = ending_point
+
+    def draw(self, screen, car_x, car_y):
+        car_y += 25  # adjust y coordinate to match car center
+        if car_x > Af.CAR_STE_MIN_DAMAGE_DISTANCE:  # lightning should not hit car if car is too far
+            car_x = Af.CAR_STE_MIN_DAMAGE_DISTANCE
+        self.frame += 1
+
+        self.add_segment(car_x, car_y)  # create a new segment of the lightning
+        
+        self.draw_segments(screen)
+
+        if self.frame == self.segment_number:  # lightning has been fully drawn
+            self.change_properties()
+            return False
+        return True
+
+
 # ----------------------------------------------- SPACE-TIME ENTITY ----------------------------------------------------
 class Space_Time_Entity:
     def __init__(self):
         self.images = [Af.load_image(f"Characters/Space-Time Entity/{i + 1}.png") for i in range(6)]
+        self.draw_lightning = False
+        self.lightning = Lightning()
         self.index = 0
 
-    def draw(self, screen):
+    def take_action(self, car_x):
+        if car_x <= Af.CAR_STE_MIN_DAMAGE_DISTANCE:
+            self.draw_lightning = True
+
+    def draw(self, screen, car_x, car_y):
         self.index = (self.index + 0.5) % 5
         screen.blit(self.images[int(self.index)], (0, 0))
+        if self.draw_lightning:
+            self.draw_lightning = self.lightning.draw(screen, car_x, car_y)
 
 
 # ---------------------------------------------------- ROAD ------------------------------------------------------------

@@ -73,7 +73,7 @@ class Mission:
         self.max_lines = int(lines[0])  # gets the number of lines that the chosen text has
 
     def control_resistance_energy(self):
-        if self.car.x <= 290 and int(self.time_passed) % 2:
+        if self.car.x <= Af.CAR_STE_MIN_DAMAGE_DISTANCE and int(self.time_passed) % 2:
             Af.play(space_time_hit_sound)
             self.resistance -= 0.08*((300-self.car.x) // 8)
             self.energy -= 0.2 * ((300 - self.car.x) // 8)
@@ -204,8 +204,9 @@ class Mission:
 
     def refresh_game(self):
         self.screen.blit(self.background, (0, 308))
-        for entity in [self.road, self.parts_list, self.obstacles_list, self.car, self.sp_ti_entity]:
+        for entity in [self.road, self.parts_list, self.obstacles_list, self.car]:
             entity.draw(self.screen)
+        self.sp_ti_entity.draw(self.screen, self.car.x, self.car.y)
         self.hud.draw(self.parts_collected, self.hud_time(), self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
         self.screen.blit(self.text_to_write_image, (280, 320))

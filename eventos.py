@@ -64,6 +64,12 @@ class Data_World:
         self.choice = self.make_a_choice()
         self.car.movement(self.choice)
 
+    def car_movement_x(self):
+        if self.car.x > Af.CAR_MAX_DISTANCE:
+            self.car.x = Af.CAR_MAX_DISTANCE
+        elif self.car.x < Af.CAR_MIN_DISTANCE:
+            self.car.x = Af.CAR_MIN_DISTANCE
+
     def manage_buttons(self, button):
         # self.car.vision(self.screen)
         # self.seen_values.append(self.car.seen_values)
@@ -76,9 +82,11 @@ class Data_World:
         elif button == pygame.K_RIGHT:
             # self.choices_made.append("UP")
             self.car.x += 10
+            print(self.car.x)
         elif button == pygame.K_LEFT:
             # self.choices_made.append("DWN")
             self.car.x -= 10
+            print(self.car.x)
         elif button == pygame.K_PLUS:
             if self.frame_rate < 90:
                 self.frame_rate += 10
@@ -111,6 +119,7 @@ class Data_World:
             self.parts_list.create_parts()
     # car movement
             self.car_movement_y()
+            self.car_movement_x()
     # collision & damage
             self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
             self.parts_collected += value

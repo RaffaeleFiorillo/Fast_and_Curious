@@ -30,7 +30,7 @@ class Car:
         self.last_fire = False
         self.speed = 10
         self.direction = "STOP"
-        self.x = 450
+        self.x = 420
         self.y = self.y_values[1]
         self.damage_period = 0.0
         self.hit_box = pygame.mask.from_surface(self.image)

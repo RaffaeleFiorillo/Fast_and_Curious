@@ -111,8 +111,10 @@ class Mission:
         if self.car.damage_period >= 1.0:
             self.car.x -= 1
             self.car.damage_period = 0
-        if self.car.x > 350:
-            self.car.x = 350
+        if self.car.x > Af.CAR_MAX_DISTANCE:
+            self.car.x = Af.CAR_MAX_DISTANCE
+        elif self.car.x < Af.CAR_MIN_DISTANCE:
+            self.car.x = Af.CAR_MIN_DISTANCE
 
     def last_letter_correct(self):
         last_letter_index = len(self.written_text[-1][-1])-1

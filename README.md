@@ -1,7 +1,7 @@
 # Fast and Curious
   A game to learn/improve keyboard typing skills. The main idea is to improve your typing skills and at the same time learn fun facts (some even from your own authory!).
 
-![sample](https://user-images.githubusercontent.com/75253335/131589669-ab852b07-9ddd-47ea-84b4-018adab8f619.png)
+![sample](https://user-images.githubusercontent.com/75253335/131589894-00e6f646-a507-440b-9e67-b080e4bafc23.png)
 
 
 ## How to set up and play the game:

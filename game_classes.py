@@ -213,10 +213,12 @@ class Mission:
     def take_exclusive_class_action(self):  # each Mission could do something different for each iteration
         pass
 
-    def refresh_game(self):
+    def refresh_game(self, other=False):
         self.screen.blit(self.background, (0, 308))
         for entity in [self.road, self.parts_list, self.obstacles_list, self.car]:
             entity.draw(self.screen)
+        if other:
+            self.screen.blit(other[0], other[1])
         self.sp_ti_entity.draw(self.screen, self.car.x, self.car.y)
         self.hud.draw(self.parts_collected, self.hud_time(), self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
@@ -233,12 +235,14 @@ class Mission:
         coordinates = {0: (440, 150), 1: (440, 150), 2: (450, 160), 3: (400, 150)}
         Af.play(count_down_sound)
         while time_passed < 4.5:
-            time_passed += self.clock.tick(Af.FRAME_RATE) / 1000
-            if time_passed <= 4:
-                current_image_index = int(time_passed)
-            self.refresh_game()
-            self.screen.blit(count_down_images[current_image_index], coordinates[current_image_index])
-            pygame.display.update()
+            self.clock.tick(Af.FRAME_RATE)
+            time_passed += 0.034
+            current_image_index = int(time_passed)
+            try:
+                self.refresh_game((count_down_images[current_image_index], coordinates[current_image_index]))
+            except IndexError:
+                self.refresh_game()
+                continue
             if current_image_index == next_image:
                 if next_image< 3:
                     Af.play(count_down_sound)

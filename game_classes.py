@@ -10,7 +10,6 @@ import Auxiliary_Functionalities as Af
 # ----------------------------------------------- SOUNDS ---------------------------------------------------------------
 go_sound = Af.load_sound("game/car_ignition.WAV")                # sound of after the final count down alert (GO)
 count_down_sound = Af.load_sound("game/count_down.WAV")          # sound of the usual count down (3, 2, 1)
-space_time_hit_sound = Af.load_sound("game/space_time_hit.WAV")  # sound of the space-time entity hitting
 tic_toc_sound = Af.load_sound("game/tic_toc.WAV")                # sound of the final clock ticking
 game_over_sound = Af.load_sound("game/game_over.WAV")            # sound of the match ending
 start_sound = Af.load_sound("game/go.WAV")                       # sound of the GO image
@@ -74,11 +73,19 @@ class Mission:
 
     def control_resistance_energy(self):
         if self.car.x <= Af.CAR_STE_MIN_DAMAGE_DISTANCE and int(self.time_passed) % 2:
-            Af.play(space_time_hit_sound)
-            self.resistance -= 0.08*((300-self.car.x) // 8)
-            self.energy -= 0.2 * ((300 - self.car.x) // 8)
-        if self.energy > 0:
-            self.energy -= 0.5
+            self.sp_ti_entity.take_action(self.car.x)
+            if not self.sp_ti_entity.already_hit_target:
+                damage = 0.5*(Af.CAR_STE_MIN_DAMAGE_DISTANCE-self.car.x)  # proportional damage<->distance
+                self.resistance -= damage
+                print(damage)
+            self.energy -= 1.6 * (Af.CAR_STE_MIN_DAMAGE_DISTANCE - self.car.x)
+            self.sp_ti_entity.already_hit_target = True  # prevents lightning from hitting twice
+        else:
+            self.sp_ti_entity.already_hit_target = False  # enables lightning again
+        self.energy -= 0.5
+
+        if self.energy < 0:
+            self.energy = 0
 
     def make_a_choice(self):
         if self.car.y in self.car.y_values:
@@ -109,34 +116,36 @@ class Mission:
     def car_movement_x(self):
         self.car.damage_period += 0.05
         if self.car.damage_period >= 1.0:
-            self.car.x -= 1
+            self.car.x -= 10
             self.car.damage_period = 0
         if self.car.x > Af.CAR_MAX_DISTANCE:
             self.car.x = Af.CAR_MAX_DISTANCE
         elif self.car.x < Af.CAR_MIN_DISTANCE:
             self.car.x = Af.CAR_MIN_DISTANCE
 
-    def last_letter_correct(self):
+    def last_letter_correct(self):  # returns True if last letter is correct, False if not
         last_letter_index = len(self.written_text[-1][-1])-1
         # every last written letter is wrong if the written word is longer than original
         if last_letter_index > len(self.text_to_write[self.line][self.current_word_index])-1:
-            if self.car.speed > 4:
-                self.car.speed -= 2
+            self.resistance -= 2  # each wrong letter will make the player loose 2% of the total resistance
+            if self.car.speed > 5:
+                self.car.speed -= 4
             return False
         elif self.written_text[-1][-1][-1] == self.text_to_write[self.line][self.current_word_index][last_letter_index]:
-            if self.car.speed < 8:
+            if self.car.speed < Af.CAR_MAX_SPEED-1:  # increase car's speed if needed
                 self.car.speed += 2
-            self.car.x += 1
-            self.car.activate_fire(False)
+            self.car.x += 6
+            self.car.activate_fire(False)  # activates red fire (less powerful-> moves one pixel)
             self.energy += 8
-            if self.energy > 100:
-                self.car.activate_fire(True)
-                if self.car.x < 350:
+            if self.energy >= 100:
+                self.car.activate_fire(True)  # activates blue fire (most powerful-> moves 10 pixels)
+                if self.car.x < Af.CAR_MAX_DISTANCE:
                     self.car.x += 10
-                self.energy = 78
+                self.energy = 75  # reduce energy when reach maximum to simulate blue-fire usage and forward sprint
             return True
-        if self.car.speed > 4:
-            self.car.speed -= 2
+        if self.car.speed > 5:  # make sure car's speed is never lower than 0
+            self.car.speed -= 4
+        self.resistance -= 2  # each wrong letter will make the player loose 2% of the total resistance
         return False
 
     def manage_buttons(self, event):
@@ -277,14 +286,13 @@ class Mission:
             self.car_movement_y()
             self.car_movement_x()
     # collision & damage
-            if self.time_passed >= 4:
-                if damage_count >= 0.5:
-                    if self.car.obstacle_collision(self.obstacles_list.internal_list):
-                        self.resistance -= 4
-                        self.car.x -= 10
-                        damage_count = 0
-                else:
-                    damage_count += 0.01
+            if damage_count >= 50:
+                if self.car.obstacle_collision(self.obstacles_list.internal_list):  # damage by obstacle collision
+                    self.resistance -= 10
+                    self.car.x -= 20
+                    damage_count = 0
+            else:
+                damage_count += 1
             self.control_resistance_energy()
             self.parts_list.internal_list, value = self.car.parts_collision(self.parts_list.internal_list)
             self.parts_collected += value

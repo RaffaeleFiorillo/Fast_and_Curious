@@ -28,9 +28,9 @@ class Car:
         self.fire_image = None
         self.fire_image_time = 0
         self.last_fire = False
-        self.speed = 10
+        self.speed = Af.CAR_MAX_SPEED
         self.direction = "STOP"
-        self.x = 420
+        self.x = Af.CAR_MAX_DISTANCE-20
         self.y = self.y_values[1]
         self.damage_period = 0.0
         self.hit_box = pygame.mask.from_surface(self.image)
@@ -101,7 +101,7 @@ class Car:
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
-        if self.fire_image_time and self.x < 350:
+        if self.fire_image_time and self.x < Af.CAR_MAX_DISTANCE:
             screen.blit(self.fire_image, (self.x - 40, self.y + 15))
             self.fire_image_time = 0
         # pygame.draw.rect(screen, (255, 255, 0), self.rect, 5)
@@ -132,10 +132,11 @@ class Car:
 
 # -----------------------------------------------    LIGHTNING    ------------------------------------------------------
 class Lightning:
-    internal_beam_color = (255, 255, 0)  # (0, 255, 255)
+    internal_beam_color = (0, 255, 255)
     external_beam_color = (0, 0, 255)
     starting_point_coo = (95, 150)
     frame = 0
+    space_time_hit_sound = Af.load_sound("game/space_time_hit.WAV")  # sound of the space-time entity hitting
     segments_coo = ()
 
     def __init__(self):
@@ -147,18 +148,11 @@ class Lightning:
 
     def change_properties(self):
         self.segment_number = Af.randint(5, 7)
-        self.internal_beam_radius = Af.randint(5, 10)
-        self.external_beam_radius = Af.randint(15, 25)
+        self.internal_beam_radius = 2*self.segment_number
+        self.external_beam_radius = Af.get_fibonacci(self.segment_number)
         self.frame = 0
         self.segments_coo = [self.starting_point_coo]
         self.last_segment_direction = Af.choice([-1, 1])
-
-    def get_segment_angle(self, hypotenuse, car_y):
-        opposite = self.starting_point_coo[1] - car_y
-        base_angle = Af.arc_sin(opposite/hypotenuse)
-        segment_angle = base_angle+Af.randint(-int(60-base_angle), int(60-base_angle))
-        print(f"Frame: {self.frame} | Opposite: {opposite} | Base angle: {base_angle} | Segment_angle: {segment_angle}")
-        return segment_angle
 
     def add_segment(self, car_x, car_y):
         if self.frame == self.segment_number:  # last segment is always the car's position
@@ -172,19 +166,33 @@ class Lightning:
 
     def draw_segments(self, screen):
         starting_point = self.starting_point_coo
-        for ending_point in self.segments_coo:
-            pygame.draw.line(screen, self.internal_beam_color, starting_point, ending_point, 4)
-            starting_point = ending_point
+        for adjust, ending_point in enumerate(self.segments_coo):
+            central_segment_width = int(self.internal_beam_radius*(1 - adjust/self.segment_number))+4
+            pygame.draw.line(screen, self.internal_beam_color, starting_point, ending_point, central_segment_width)
+            pygame.draw.line(screen, (255, 255, 255), starting_point, ending_point, 2)
+            external_beam_width = (self.segment_number-adjust)//2+1
+            upper_coo_start = (starting_point[0], starting_point[1]-central_segment_width//2)
+            upper_coo_ending = (ending_point[0], ending_point[1] - central_segment_width // 2)
+            pygame.draw.line(screen, self.external_beam_color, upper_coo_start, upper_coo_ending, external_beam_width)
+
+            lower_coo_start = (starting_point[0], starting_point[1] + central_segment_width//2)
+            lower_coo_ending = (ending_point[0], ending_point[1] + central_segment_width // 2)
+            pygame.draw.line(screen, self.external_beam_color, lower_coo_start, lower_coo_ending, external_beam_width)
+
+            starting_point = ending_point  # make next segment start where last one ended
 
     def draw(self, screen, car_x, car_y):
-        car_y += 25  # adjust y coordinate to match car center
+        if self.frame == 0:
+            Af.play(self.space_time_hit_sound)
         if car_x > Af.CAR_STE_MIN_DAMAGE_DISTANCE:  # lightning should not hit car if car is too far
             car_x = Af.CAR_STE_MIN_DAMAGE_DISTANCE
+
+        car_y += 25  # adjust y coordinate to match car center
+        car_x += 25  # adjust y coordinate to match car center
         self.frame += 1
 
         self.add_segment(car_x, car_y)  # create a new segment of the lightning
-        
-        self.draw_segments(screen)
+        self.draw_segments(screen)  # draw all segments
 
         if self.frame == self.segment_number:  # lightning has been fully drawn
             self.change_properties()
@@ -197,11 +205,12 @@ class Space_Time_Entity:
     def __init__(self):
         self.images = [Af.load_image(f"Characters/Space-Time Entity/{i + 1}.png") for i in range(6)]
         self.draw_lightning = False
+        self.already_hit_target = False
         self.lightning = Lightning()
         self.index = 0
 
     def take_action(self, car_x):
-        if car_x <= Af.CAR_STE_MIN_DAMAGE_DISTANCE:
+        if car_x <= Af.CAR_STE_MIN_DAMAGE_DISTANCE and not self.already_hit_target:
             self.draw_lightning = True
 
     def draw(self, screen, car_x, car_y):

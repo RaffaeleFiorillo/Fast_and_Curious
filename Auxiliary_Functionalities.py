@@ -24,9 +24,10 @@ WEIGHTS = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.1709
 BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
 FRAME_RATE = 30
 SCREEN_LENGTH, SCREEN_WIDTH = 1080, 700
-CAR_STE_MIN_DAMAGE_DISTANCE = 400
-CAR_MAX_DISTANCE = 470
-CAR_MIN_DISTANCE = 180
+CAR_MAX_SPEED = 10
+CAR_STE_MIN_DAMAGE_DISTANCE = 400  # distance at which the car starts getting damage from the Space-Time-Entity
+CAR_MAX_DISTANCE = 470  # maximum distance the car can reach (right)
+CAR_MIN_DISTANCE = CAR_STE_MIN_DAMAGE_DISTANCE - 20   # minimum distance the car can reach (left)
 
 
 # --------------------------------------------- MODULES INITIALIZATION -------------------------------------------------
@@ -178,12 +179,21 @@ def make_a_choice(info, weights=None, bias=None):
         return 0
 
 
-# --------------------------------------------  TRIGONOMETRY  ----------------------------------------------------------
+# --------------------------------------------      MATH      ----------------------------------------------------------
 def get_vector_distance(init_x, init_y, fin_x, fin_y):
     x = math.pow(fin_x-init_x, 2)
     y = math.pow(fin_y-init_y, 2)
     vector = math.sqrt(x+y)
     return vector
+
+
+def get_fibonacci(order):
+    if order < 3:
+        return 1
+    first, second, number = 1, 1, None
+    for _ in range(2, order):
+        second, first = first+second, second
+    return second
 
 
 # -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------

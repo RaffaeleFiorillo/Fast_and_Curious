@@ -9,15 +9,19 @@ Fix the music&volume bug (value exceeds max value)                              
 ------------------------------------------------------------------------------------------------------------------
 Fix the add text bug (letters reach out of the box)                               |  Done   |      2       |  2  |
 ------------------------------------------------------------------------------------------------------------------
-Fix the reverse count bug (numbers and letters blinc)                             | Pendent |      5       |  7  |
+Fix the reverse count bug (numbers and letters blinc)                             |  Done   |      5       |  7  |
 ------------------------------------------------------------------------------------------------------------------
 Show avg and max speed in Mission: Parts                                          |  Done   |      4       |  6  |
 ------------------------------------------------------------------------------------------------------------------
 Refactoring: Game Classes (make a parent World class)                             |  Done   |      2       |  6  |
 ------------------------------------------------------------------------------------------------------------------
-Space-Time-Entity Attack's Effect (ligthning strikes the car when too close)      | Pendent |      5       |  7  |
+Space-Time-Entity Attack's Effect (ligthning strikes the car when too close)      |  Done   |      5       |  7  |
 ------------------------------------------------------------------------------------------------------------------
 Fix the button detection bug (after a "wait" buttons should't be active)          |  Done   |      4       |  4  |
 ------------------------------------------------------------------------------------------------------------------
 Fix performance check for Missions (pressing enter 6times gets Mission completed) | Pendent |      5       |  10 |
+------------------------------------------------------------------------------------------------------------------
+Tune the Game for optimal experience                                              | Pendent |      6       |  10 |
+------------------------------------------------------------------------------------------------------------------
+Implement mouse input in the Menus                                                | Pendent |      6       |  7  |
 ------------------------------------------------------------------------------------------------------------------

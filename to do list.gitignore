@@ -19,9 +19,9 @@ Space-Time-Entity Attack's Effect (ligthning strikes the car when too close)    
 ------------------------------------------------------------------------------------------------------------------
 Fix the button detection bug (after a "wait" buttons should't be active)          |  Done   |      4       |  4  |
 ------------------------------------------------------------------------------------------------------------------
-Fix performance check for Missions (pressing enter 6times gets Mission completed) | Pendent |      5       |  10 |
+Fix performance check for Missions (pressing enter 6times gets Mission completed) |  Done   |      4       |  2  |
 ------------------------------------------------------------------------------------------------------------------
 Tune the Game for optimal experience                                              | Pendent |      6       |  10 |
 ------------------------------------------------------------------------------------------------------------------
-Implement mouse input in the Menus                                                | Pendent |      6       |  7  |
+Implement mouse input in the Menus                                                | Pendent |      8       |  10 |
 ------------------------------------------------------------------------------------------------------------------

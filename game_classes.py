@@ -254,8 +254,8 @@ class Mission:
         Af.play_music()
 
     def update_speed(self):
-        self.total_words = sum([len(line) for line in self.written_text]) - 1
-        self.speed = self.total_words*60/self.time_passed
+        self.total_words = (sum([len(word) for line in self.written_text for word in line]))/5  # characters_numb/5
+        self.speed = self.total_words*60/self.time_passed  # written_words*seconds_per_minute/time_passed
 
     def update_precision(self):
         total_letters = sum([sum([len(word) for word in line]) for line in self.written_text])

@@ -23,7 +23,9 @@
  ## Screenshots of the game
  
  ### Login
-    The game allows multiple accounts to be created. You can Login and Logout, allowing multiple people to play, learn and practice without loosing your own progress!
+ 
+    The game allows multiple accounts to be created. You can Login and Logout, allowing multiple people to play, learn and practice
+    without loosing your own progress!
     
    ![Choose account](https://user-images.githubusercontent.com/75253335/130338481-149ac771-5176-4120-8eb8-9ee1b2a3f301.png)
 

@@ -54,9 +54,9 @@ class Game:
         self.screen = SCREEN  # module must be initialized or the "convert_alpha" method wont work
 
     def start(self, link, state=True):
+        keys_list = list(self.link_function_dict.keys())
         while True:
             if state:
-                keys_list = list(self.link_function_dict.keys())
                 self.previous_link = keys_list[keys_list.index(link)]  # saving current link in case the state is False
                 state = self.link_function_dict[link](self.screen)
                 if state:

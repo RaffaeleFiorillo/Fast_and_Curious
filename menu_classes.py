@@ -284,16 +284,17 @@ class Basic_Input_Management:
 # ------------------------------------------------- MENU CLASSES -------------------------------------------------------
 # Used for "Story", and every Tutorial option
 class Menu_image_sequence(Basic_Input_Management):
-    def __init__(self, screen, pasta, num_pages, func_link, name):
+    def __init__(self, screen, folder, num_pages, func_link, name):
         buttons = [Button(110, 640, "menu/buttons/10/1.png", False, 0),
                    Button(745, 640, "menu/buttons/10/2.png", True, 1)]
         super().__init__(buttons)
         self.screen = screen
         self.name = name
         self.background_image = Af.load_image(f"menu/interfaces/Main/sequence.png")
-        self.images_list = [Af.load_image(f"slides/{pasta}/{i + 1}.png") for i in range(num_pages)]
-        self.slide_name = Af.load_image(f"slides/{pasta}/name.png")
+        self.folder = folder
+        self.slide_name = Af.load_image(f"slides/{folder}/name.png")
         self.num_pages = num_pages
+        self.update_screen = True  # variable that prevents updating screen without need
         self.current_page = 0
         self.origin_link = func_link
 
@@ -303,6 +304,7 @@ class Menu_image_sequence(Basic_Input_Management):
         else:
             Af.play(button_y_sound)
             self.current_page += 1
+            self.update_screen = True
 
     def go_to_previous_page(self):
         if self.current_page == 0:
@@ -310,6 +312,7 @@ class Menu_image_sequence(Basic_Input_Management):
         else:
             Af.play(button_y_sound)
             self.current_page -= 1
+            self.update_screen = True
 
     def manage_buttons(self, event):
         if event.key == pygame.K_RIGHT:
@@ -340,12 +343,15 @@ class Menu_image_sequence(Basic_Input_Management):
             self.go_to_previous_page()
 
     def refresh(self):
+        if not self.update_screen:  # if screen has not been changed menu shouldn't refresh anything
+            return None
         self.screen.blit(self.background_image, (0, 0))
-        self.screen.blit(self.images_list[self.current_page], (108, 120))
+        self.screen.blit(Af.load_image(f"slides/{self.folder}/{self.current_page + 1}.png"), (108, 120))
         self.screen.blit(self.slide_name, (400, 0))
         self.write_page_number()
         [button.draw(self.screen) for button in self.button_list]
         self.hide_unwanted_button()  # if at the beginning/end of slides, it wont show the button to go further
+        self.update_screen = False
         pygame.display.update()
 
     def display_menu(self):

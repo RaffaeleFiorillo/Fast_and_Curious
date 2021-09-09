@@ -77,7 +77,6 @@ class Mission:
             if not self.sp_ti_entity.already_hit_target:
                 damage = 0.5*(Af.CAR_STE_MIN_DAMAGE_DISTANCE-self.car.x)  # proportional damage<->distance
                 self.resistance -= damage
-                print(damage)
             self.energy -= 1.6 * (Af.CAR_STE_MIN_DAMAGE_DISTANCE - self.car.x)
             self.sp_ti_entity.already_hit_target = True  # prevents lightning from hitting twice
         else:

@@ -68,7 +68,11 @@ def create_new_account(screen):
     if len(Af.list_users()) == 7:
         Af.show_error_message(screen, 6)
         return "main_menu"
-    ac = cm.Create_Account("menu/interfaces/Main/create account.png", screen)
+    buttons = [cm.Button(335, 210, "/menu/buttons/5/0.png", None, 0),
+               cm.Button(335, 356, "/menu/buttons/5/0.png", None, 0),
+               cm.Button(335, 495, "/menu/buttons/5/1.png", False, 0),
+               cm.Button(573, 495, "/menu/buttons/5/2.png", True, 0)]
+    ac = cm.Create_Modify_Account("menu/interfaces/Main/create account.png", screen, buttons)
     effect = ac.display_menu()
     if effect == "new":
         return effect
@@ -80,8 +84,9 @@ def create_new_account(screen):
 # activated when a user wants to exit the Game, leads to finish the game's execution or Main Menu
 def exit_game(screen):
     Af.play(exit_sound)
-    if cm.Exit("menu/exit/exit_game.png", screen).display_menu():
-        Af.erase_active_user_data()
+    buttons = [cm.Button(240, 410, f"menu/buttons/3/1.png", False, 0),
+               cm.Button(580, 410, f"menu/buttons/3/2.png", True, 1)]
+    if not cm.Exit("menu/exit/exit_game.png", screen, buttons).display_menu():
         Af.terminate_execution()
     return "main_menu"
 
@@ -189,7 +194,9 @@ def unlock_next_level(screen):
 # activated when a user wants to exit the Game Menu, leads to the Main Menu or Game Menu
 def exit_game_menu(screen):
     Af.play(exit_sound)
-    if cm.Exit("menu/exit/exit_menu.png", screen).display_menu():
+    buttons = [cm.Button(240, 410, f"menu/buttons/3/1.png", False, 0),
+               cm.Button(580, 410, f"menu/buttons/3/2.png", True, 1)]
+    if not cm.Exit("menu/exit/exit_menu.png", screen, buttons).display_menu():
         Af.erase_active_user_data()
         return "main_menu"
     return "game_menu"
@@ -228,19 +235,23 @@ def tutorial_lu(screen):
 # display the Change Password Menu. It leads to the Management Menu (after password verification)
 def change_password(screen):
     Af.play(change_menu_sound)
-    cp = cm.Create_Account("menu/interfaces/Main/change password.png", screen, True)
-    effect = cp.display_menu()
+    buttons = [cm.Button(335, 210, "/menu/buttons/5/0.png", None, 0),
+               cm.Button(335, 356, "/menu/buttons/5/0.png", None, 0),
+               cm.Button(335, 495, "/menu/buttons/9/1.png", False, 0),
+               cm.Button(573, 495, "/menu/buttons/9/2.png", True, 0)]
+    cma = cm.Create_Modify_Account("menu/interfaces/Main/change password.png", screen, buttons, True)
+    effect = cma.display_menu()
     if effect == "change_password":
         return effect
-    elif effect:
-        return "manage"
     return "manage"
 
 
 # display the Delete Account Menu. It leads to the Main Menu (after password verification) or Management Menu
 def delete_account(screen):
     Af.play(change_menu_sound)
-    if cm.Exit("menu/exit/delete_account.png", screen).display_menu():
+    buttons = [cm.Button(240, 410, f"menu/buttons/3/1.png", True, 0),
+               cm.Button(580, 410, f"menu/buttons/3/2.png", False, 1)]
+    if cm.Exit("menu/exit/delete_account.png", screen, buttons).display_menu():
         file = open("saves/active_user.txt", "r")
         line = file.readline().split(" ")
         verification_password = cm.Enter_Password(screen, True).display_menu()
@@ -255,7 +266,9 @@ def delete_account(screen):
 # display the Add Text Menu. It leads to the Management Menu for both successful and Unsuccessful outcome
 def add_text(screen):
     Af.play(change_menu_sound)
-    at = cm.Add_Text(screen)
+    buttons = [cm.Button(335, 495, "/menu/buttons/5/1.png", False, 0),
+               cm.Button(573, 495, "/menu/buttons/5/2.png", True, 0)]
+    at = cm.Add_Text(screen, buttons)
     at.display_menu()
     return "manage"
 

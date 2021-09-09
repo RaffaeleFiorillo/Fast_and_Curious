@@ -4,12 +4,11 @@ import pygame
 from os import walk, mkdir
 from sys import exit as exit_2
 from shutil import rmtree
-from gc import collect
 from random import choice as random_choice, randint as random_randint, random as random_random
 import math
 
 
-# ---------------------------------------- GLOBAL VARIABLES ------------------------------------------------------------
+# --------------------------------------- GLOBAL VARIABLES -------------------------------------------------------------
 
 
 root_directory = "saves/"
@@ -30,13 +29,13 @@ CAR_MAX_DISTANCE = 470  # maximum distance the car can reach (right)
 CAR_MIN_DISTANCE = CAR_STE_MIN_DAMAGE_DISTANCE - 20   # minimum distance the car can reach (left)
 
 
-# --------------------------------------------- MODULES INITIALIZATION -------------------------------------------------
+# ----------------------------------- MODULES INITIALIZATION -----------------------------------------------------------
 pygame.mixer.init()
 pygame.init()
 SCREEN = pygame.display.set_mode((SCREEN_LENGTH, SCREEN_WIDTH))
 
 
-# ---------------------------------------     GAME CLASS      ----------------------------------------------------------
+# -------------------------------------     GAME CLASS      ------------------------------------------------------------
 # Generic game class that takes some parameters and creates a screen and a dictionary of string keys and
 # function values. The keys are a returned value that depends on the link_function in use (see more in the module:
 # link_functions). Basically this class just creates the connection between the different menus, functionalities, (...).
@@ -101,6 +100,7 @@ def wait(seconds):
 
 
 def terminate_execution():
+    erase_active_user_data()
     exit_2()
 
 
@@ -115,8 +115,8 @@ def load_image(directory):
 
 
 # plays a sound passed as argument
-def play(sound: pygame.mixer.Sound):
-    volume = get_sound_volume()
+def play(sound: pygame.mixer.Sound, volume=False):
+    volume = get_sound_volume() if volume is False else volume/10  # 0->10 must be divided by ten to be in 0->1 range
     sound.set_volume(volume)
     sound.play()
 
@@ -179,7 +179,7 @@ def make_a_choice(info, weights=None, bias=None):
         return 0
 
 
-# --------------------------------------------      MATH      ----------------------------------------------------------
+# -------------------------------------      MATH      -----------------------------------------------------------------
 def get_vector_distance(init_x, init_y, fin_x, fin_y):
     x = math.pow(fin_x-init_x, 2)
     y = math.pow(fin_y-init_y, 2)
@@ -196,7 +196,7 @@ def get_fibonacci(order):
     return second
 
 
-# -------------------------------------------- MENU FUNCTIONS ----------------------------------------------------------
+# ------------------------------------- MENU FUNCTIONS -----------------------------------------------------------------
 def get_sound_volume():
     with open("saves/active_user.txt", "r") as file:
         line = file.readline().split(" ")
@@ -390,24 +390,35 @@ def delete_user_account(user_name):
     rmtree(f'saves/{user_name}')
 
 
+# assembles text with user name on a background
+def user_name_button_image(background, background_size, text):
+    image = pygame.Surface(background_size)
+    image.blit(background, (0, 0))
+    image.blit(text, (10, 0))
+    return image
+
+
 # creates buttons images for the "Choose Account" menu. For both cases when the button is on and of
 def get_users_images():
-    collect()
     users = list_users()
-    user_images_active = []
-    user_images_passive = []
-    image_text1, image_text2 = None, None
+    user_images_active, user_images_passive = [], []
+    text_active, text_passive = None, None
     pygame.font.init()
+    active_background = load_image("menu/buttons/6/1.png")
+    passive_background = load_image("menu/buttons/6/2.png")
+    background_size = passive_background.get_size()
     for user in users:
-        for s in range(40)[::-1]:
-            text_font = pygame.font.SysFont('Times New Roman', s)
-            image_text1 = text_font.render(user, True, (0, 0, 0))
-            image_text2 = text_font.render(user, True, (255, 255, 255))
-            size = image_text1.get_size()
+        for text_size in range(40)[::-1]:
+            text_font = pygame.font.SysFont('Times New Roman', text_size)
+            text_active = text_font.render(user, True, (0, 0, 0))
+            text_passive = text_font.render(user, True, (255, 255, 255))
+            size = text_active.get_size()
             if size[0] <= 410:
                 break
-        user_images_active.append(image_text1.convert_alpha())
-        user_images_passive.append(image_text2.convert_alpha())
+        active = user_name_button_image(active_background, background_size, text_active)  # create active user image
+        passive = user_name_button_image(passive_background, background_size, text_passive)  # create passive user image
+        user_images_active.append(active)
+        user_images_passive.append(passive)
     return user_images_active, user_images_passive
 
 
@@ -496,7 +507,7 @@ def user_is_a_winner():
     return is_a_winner
 
 
-# --------------------------------------------- HUD FUNCTIONS ----------------------------------------------------------
+# ------------------------------------ HUD FUNCTIONS -------------------------------------------------------------------
 # This section contains functions designed for the proper functioning of the game's HUD interface.
 # the job and description of a function can be understood by his name. the last two words of every functions refer to
 # what they are responsible for displaying on the game screen

@@ -228,6 +228,7 @@ class Basic_Input_Management:
     def __init__(self, buttons=None):
         if buttons is None:
             buttons = []
+        self.button_activation_sound = button_y_sound
         self.clock = pygame.time.Clock()
         self.button_list = buttons
         self.active_code = 0
@@ -236,7 +237,7 @@ class Basic_Input_Management:
 
     def set_button_to_active(self, new_active_code):
         if new_active_code != self.active_code:
-            Af.play(button_y_sound)
+            Af.play(self.button_activation_sound)
             self.active_code = new_active_code
             self.coord_effect = self.update_coord_effect()
 
@@ -370,15 +371,24 @@ class Menu(Basic_Input_Management):
         self.directory = directory
         self.name = self.directory.split("/")[-1][:-4]
         self.name_image = Af.load_image(directory)
-        if self.name == "game menu":
-            self.effect = [Af.load_image(f"menu/effects/3/{i + 1}.png") for i in range(4)]
-        else:
-            self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
+        self.navigation_image = Af.load_image(f"menu/interfaces/navigation/navigation.png")
+        self.effect = self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
+        self.user_related_images = []
         self.active_code = 0
         self.screen = screen
         self.current_frame = 0
         self.user = user
         self.coord_effect = self.update_coord_effect()
+        self.menu_adjustments(user)  # based on menu type, some info could and should be different
+
+    def menu_adjustments(self, user):
+        if self.name == "game menu":
+            self.effect = [Af.load_image(f"menu/effects/3/{i + 1}.png") for i in range(4)]
+        if user:
+            self.user_related_images.append(Af.load_image(f"menu/interfaces/User/user_info/level{self.user.level}.png"))
+            self.user_related_images.append(Af.load_image(f"menu/interfaces/User/records.png"))
+            self.user_related_images.append(Af.load_image(f"menu/interfaces/User/parts.png"))
+            self.user_related_images.append(Af.load_image(f"cars/display/{self.user.level}.png"))
 
     def draw_buttons(self):
         coordinates = {0: (680, 90), 1: (698, 192), 2: (685, 178)}
@@ -434,18 +444,17 @@ class Menu(Basic_Input_Management):
         new_active_code = new_active_code % len(self.button_list)  # make sure active_code doesn't go off-boundaries
         self.set_button_to_active(new_active_code)
 
+    def draw_user_related_images(self):
+        for coo, image in zip([(0, 0), (20, 280), (0, 180), (2, 490)], self.user_related_images):
+            self.screen.blit(image, coo)
+        self.user.draw_text(self.screen)
+
     def refresh(self, background):
         self.screen.blit(background, (0, 0))
-        self.screen.blit(self.name_image, ((1080-470)//2, 0))
-        self.screen.blit(Af.load_image(f"menu/interfaces/navigation/navigation.png"), (355, 620))
-        if self.user is not None:
-            coo = (20, 490)
-            self.screen.blit(Af.load_image(f"menu/interfaces/User/user_info/level{self.user.level}.png"),
-                             (0, 0))
-            self.screen.blit(Af.load_image(f"menu/interfaces/User/records.png"), (coo[0], coo[1] - 210))
-            self.screen.blit(Af.load_image(f"menu/interfaces/User/parts.png"), (0, coo[1] - 310))
-            self.screen.blit(Af.load_image(f"cars/display/{self.user.level}.png"), (coo[0] - 18, coo[1]))
-            self.user.draw_text(self.screen)
+        self.screen.blit(self.name_image, (305, 0))
+        self.screen.blit(self.navigation_image, (355, 620))
+        if self.user:
+            self.draw_user_related_images()
         self.draw_buttons()
         pygame.display.update()
 
@@ -503,6 +512,7 @@ class Create_Modify_Account(Basic_Input_Management):
         self.name_image = Af.load_image(directory)
         self.effect = [Af.load_image(f"menu/effects/2/{i + 1}.png") for i in range(4)]
         self.active_code_y = 0
+        self.button_activation_sound = button_x_sound
         self.hide = False
         self.screen = screen
         self.inputs = [[], []]

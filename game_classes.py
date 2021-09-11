@@ -147,7 +147,7 @@ class Mission:
         self.resistance -= 2  # each wrong letter will make the player loose 2% of the total resistance
         return False
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: pygame.event.Event):
         if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             if self.line < 7:  # prevents from adding too much lines
                 self.written_text.append([""])

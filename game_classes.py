@@ -212,12 +212,12 @@ class Mission:
     def take_exclusive_class_action(self):  # each Mission could do something different for each iteration
         pass
 
-    def refresh_game(self, other=False):
+    def refresh_game(self, other_entity: (pygame.Surface, (int, int)) = ()):
         self.screen.blit(self.background, (0, 308))
         for entity in [self.road, self.parts_list, self.obstacles_list, self.car]:
             entity.draw(self.screen)
-        if other:
-            self.screen.blit(other[0], other[1])
+        if other_entity:
+            self.screen.blit(other_entity[0], other_entity[1])
         self.sp_ti_entity.draw(self.screen, self.car.x, self.car.y)
         self.hud.draw(self.parts_collected, self.hud_time(), self.speed, self.precision, self.energy, self.resistance)
         self.display_text()
@@ -230,7 +230,6 @@ class Mission:
     def display_countdown(self):
         count_down_images = [Af.load_image(f"HUD/count_down/{image_index}.png") for image_index in range(4)]
         next_image, time_passed = 1, 0
-        current_image_index = 0
         coordinates = {0: (440, 150), 1: (440, 150), 2: (450, 160), 3: (400, 150)}
         Af.play(count_down_sound)
         while time_passed < 4.5:

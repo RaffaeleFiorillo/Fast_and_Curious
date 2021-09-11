@@ -8,6 +8,8 @@
 
 # -------------------------------------------------- IMPORTS -----------------------------------------------------------
 import pygame
+from pygame import Surface
+from pygame.event import Event
 import Auxiliary_Functionalities as Af
 
 
@@ -24,31 +26,30 @@ success_sound = Af.load_sound("menu/success.WAV")                # sound for eve
 # These classes are used by the classes that manage the Menus interfaces
 
 class Button:
-    def __init__(self, x, y, directory, effect, code):
+    def __init__(self, x: int, y: int, directory: str, effect: str):
         self.x = x
         self.y = y
         if directory is not None:
             self.image = Af.load_image(directory)
         self.effect = effect
-        self.code = code
 
-    def cursor_is_inside(self, cursor_coo):
+    def cursor_is_inside(self, cursor_coo: (int, int)):
         cursor_x, cursor_y = cursor_coo[0], cursor_coo[1]
         button_width, button_height = self.image.get_size()[0], self.image.get_size()[1]
         if self.x <= cursor_x <= self.x + button_width and self.y <= cursor_y <= self.y + button_height:
             return True
         return False
 
-    def draw(self, screen):
+    def draw(self, screen: Surface):
         screen.blit(self.image, (self.x, self.y))
 
-    def change_image(self, directory):
+    def change_image(self, directory: str):
         self.image = Af.load_image(directory)
 
 
 class Button2(Button):
-    def __init__(self, x, y, directory, effect, code, id_c):
-        super().__init__(x, y, directory, effect, code)
+    def __init__(self, x: int, y: int, directory: str, effect: str, id_c: int):
+        super().__init__(x, y, directory, effect)
         self.value = 0
         self.effect = "manage"
         self.id = id_c
@@ -78,14 +79,14 @@ class Button2(Button):
         else:
             Af.play(volume_change_sound, volume=self.value)
 
-    def draw(self, screen):
+    def draw(self, screen: Surface):
         screen.blit(self.image, (self.x, self.y))
         [screen.blit(self.value_image, (self.x+145+20*i, self.y+15)) for i in range(self.value)]
 
 
 class Name_Button(Button):
-    def __init__(self, x, y, active_image, passive_image, name, code):
-        super().__init__(x, y, None, None, code)
+    def __init__(self, x: int, y: int, active_image: Surface, passive_image: Surface, name: str):
+        super().__init__(x, y, None, None)
         self.name = name
         self.active_image = active_image
         self.passive_image = passive_image
@@ -128,7 +129,7 @@ class User:
         self.parts_text, self.coo_p_t = Af.writable_parts_number(self.parts)
         self.name_text, self.coo_n_t = Af.writable_user_name(self.name)
 
-    def draw_text(self, screen) -> None:
+    def draw_text(self, screen: Surface) -> None:
         screen.blit(self.best_time_text, self.coo_bt_t)
         screen.blit(self.best_speed_text, self.coo_bs_t)
         screen.blit(self.parts_text, self.coo_p_t)
@@ -167,7 +168,7 @@ class Firework:
         self.time_alive = Af.randint(100, 200)
         self.radius = 10
 
-    def draw_ascending(self, screen):
+    def draw_ascending(self, screen: Surface):
         for i in range(Af.randint(7, 10)):
             r_x, r_y = self.x + Af.randint(2, 5) * Af.choice([-1, 1]), self.y + Af.randint(2, 5) * Af.choice([-1, 1])
             pygame.draw.circle(screen, Af.choice(self.colors), (r_x, r_y), 1, 1)
@@ -175,18 +176,18 @@ class Firework:
         self.x += self.x_speed
         self.y += self.y_speed
 
-    def draw_star(self, screen, min_sparkle_number, max_sparkle_number):
+    def draw_star(self, screen: Surface, min_sparkle_number: int, max_sparkle_number: int):
         for i in range(Af.randint(min_sparkle_number, max_sparkle_number)):
             calculate_rs = Af.choice([Af.calculate_rs_rhomb, Af.calculate_rs_square])  # randomly chooses shape
             r_x, r_y = calculate_rs(self.x, self.y, self.radius)
             pygame.draw.circle(screen, Af.choice(self.colors), (r_x, r_y), 1, 1)
 
-    def draw_circle(self, screen, min_sparkle_number, max_sparkle_number):
+    def draw_circle(self, screen: Surface, min_sparkle_number: int, max_sparkle_number: int):
         for i in range(Af.randint(min_sparkle_number, max_sparkle_number)):
             r_x, r_y = Af.calculate_rs_circle(self.x, self.y, self.radius)
             pygame.draw.circle(screen, Af.choice(self.colors), (r_x, r_y), 1, 1)
 
-    def draw_explosion(self, screen):
+    def draw_explosion(self, screen: Surface):
         min_sparkle_number = (200-self.time_alive)*200//100 - 30
         max_sparkle_number = (200 - self.time_alive) * 2 + 30
         types_of_firework = {"star": self.draw_star, "circle": self.draw_circle}
@@ -197,7 +198,7 @@ class Firework:
         if self.radius > 100:
             self.alive = False
 
-    def draw(self, screen):
+    def draw(self, screen: Surface):
         if self.y >= self.max_height:
             self.draw_ascending(screen)
         else:
@@ -217,7 +218,7 @@ class Fireworks:
             for y in self.y_values[:len(self.y_values)-len(self.firework_stock)]:
                 self.firework_stock.append(Firework(y))
 
-    def display(self, screen):
+    def display(self, screen: Surface):
         for firework in self.firework_stock:
             firework.draw(screen)
         self.update()
@@ -225,7 +226,7 @@ class Fireworks:
 
 # provides a simple way of managing user input, both keyboard and mouse
 class Basic_Input_Management:
-    def __init__(self, buttons=None):
+    def __init__(self, buttons: [Button] = None):
         if buttons is None:
             buttons = []
         self.button_activation_sound = button_y_sound
@@ -235,7 +236,7 @@ class Basic_Input_Management:
         self.coord_effect = None
         self.already_checked_cursor = False  # True means that actions have already been taken regarding cursor position
 
-    def set_button_to_active(self, new_active_code):
+    def set_button_to_active(self, new_active_code: int):
         if new_active_code != self.active_code:
             Af.play(self.button_activation_sound)
             self.active_code = new_active_code
@@ -254,11 +255,11 @@ class Basic_Input_Management:
                 self.already_checked_cursor = True
                 return self.get_effect_by_input()
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             return self.enter_action()
 
-    def get_effect_by_input(self, event=None):
+    def get_effect_by_input(self, event: Event = None):
         if event:  # if input is not None it means a key has been pressed
             effect = self.manage_buttons(event)
         else:
@@ -285,15 +286,15 @@ class Basic_Input_Management:
 # ------------------------------------------------- MENU CLASSES -------------------------------------------------------
 # Used for "Story", and every Tutorial option
 class Menu_image_sequence(Basic_Input_Management):
-    def __init__(self, screen, folder, num_pages, func_link, name):
-        buttons = [Button(110, 640, "menu/buttons/10/1.png", False, 0),
-                   Button(745, 640, "menu/buttons/10/2.png", True, 1)]
+    def __init__(self, screen: Surface, directory: str, num_pages: int, func_link: str, name: str):
+        buttons = [Button(110, 640, "menu/buttons/10/1.png", False),
+                   Button(745, 640, "menu/buttons/10/2.png", True)]
         super().__init__(buttons)
         self.screen = screen
         self.name = name
         self.background_image = Af.load_image(f"menu/interfaces/Main/sequence.png")
-        self.folder = folder
-        self.slide_name = Af.load_image(f"slides/{folder}/name.png")
+        self.directory = directory
+        self.slide_name = Af.load_image(f"slides/{self.directory}/name.png")
         self.num_pages = num_pages
         self.update_screen = True  # variable that prevents updating screen without need
         self.current_page = 0
@@ -315,7 +316,7 @@ class Menu_image_sequence(Basic_Input_Management):
             self.current_page -= 1
             self.update_screen = True
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_RIGHT:
             self.go_to_next_page()
         elif event.key == pygame.K_LEFT:
@@ -347,7 +348,7 @@ class Menu_image_sequence(Basic_Input_Management):
         if not self.update_screen:  # if screen has not been changed menu shouldn't refresh anything
             return None
         self.screen.blit(self.background_image, (0, 0))
-        self.screen.blit(Af.load_image(f"slides/{self.folder}/{self.current_page + 1}.png"), (108, 120))
+        self.screen.blit(Af.load_image(f"slides/{self.directory}/{self.current_page + 1}.png"), (108, 120))
         self.screen.blit(self.slide_name, (400, 0))
         self.write_page_number()
         [button.draw(self.screen) for button in self.button_list]
@@ -366,7 +367,7 @@ class Menu_image_sequence(Basic_Input_Management):
 
 # Used for the Main Menu, Game Menu and Tutorial
 class Menu(Basic_Input_Management):
-    def __init__(self, buttons, directory, screen, user=None):
+    def __init__(self, buttons: [Button], directory: str, screen: Surface, user: User = None):
         super().__init__(buttons)
         self.directory = directory
         self.name = self.directory.split("/")[-1][:-4]
@@ -381,7 +382,7 @@ class Menu(Basic_Input_Management):
         self.coord_effect = self.update_coord_effect()
         self.menu_adjustments(user)  # based on menu type, some info could and should be different
 
-    def menu_adjustments(self, user):
+    def menu_adjustments(self, user: User):
         if self.name == "game menu":
             self.effect = [Af.load_image(f"menu/effects/3/{i + 1}.png") for i in range(4)]
         if user:
@@ -409,7 +410,7 @@ class Menu(Basic_Input_Management):
     def update_coord_effect(self):
         return self.button_list[self.active_code].x-12, self.button_list[self.active_code].y-12
 
-    def get_effect_by_input(self, event=None):
+    def get_effect_by_input(self, event: Event = None):
         effect = super().get_effect_by_input(event)
         if effect == "m_ai":
             if Af.get_user_level() < 13:
@@ -433,7 +434,7 @@ class Menu(Basic_Input_Management):
                 self.cursor_is_on_button()  # mouse visual interaction with interface
             self.refresh(background)
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         new_active_code = self.active_code  # go up if value is -1 and down if it's 1
         if event.key == pygame.K_UP:
             new_active_code -= 1
@@ -449,7 +450,7 @@ class Menu(Basic_Input_Management):
             self.screen.blit(image, coo)
         self.user.draw_text(self.screen)
 
-    def refresh(self, background):
+    def refresh(self, background: Surface):
         self.screen.blit(background, (0, 0))
         self.screen.blit(self.name_image, (305, 0))
         self.screen.blit(self.navigation_image, (355, 620))
@@ -461,7 +462,7 @@ class Menu(Basic_Input_Management):
 
 # Used whenever the user wants to leave the game
 class Exit(Basic_Input_Management):
-    def __init__(self, directory, screen, buttons):
+    def __init__(self, directory: str, screen: Surface, buttons: [Button]):
         super().__init__(buttons)
         self.name_image = Af.load_image(directory)
         self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
@@ -487,7 +488,7 @@ class Exit(Basic_Input_Management):
                 self.cursor_is_on_button()  # mouse visual interaction with interface
             self.refresh()
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         new_active_code = self.active_code  # go up if value is -1 and down if it's 1
         if event.key == pygame.K_RIGHT:
             new_active_code += 1
@@ -507,7 +508,7 @@ class Exit(Basic_Input_Management):
 
 # Used when the "New Game" option in the Main Menu is selected or when, to change some info, credentials are required
 class Create_Modify_Account(Basic_Input_Management):
-    def __init__(self, directory, screen, buttons, change=False):
+    def __init__(self, directory: str, screen: Surface, buttons: [Button], change: bool = False):
         super().__init__(buttons)
         self.name_image = Af.load_image(directory)
         self.effect = [Af.load_image(f"menu/effects/2/{i + 1}.png") for i in range(4)]
@@ -522,7 +523,7 @@ class Create_Modify_Account(Basic_Input_Management):
         if change:
             self.user.get_active_user()
 
-    def activate_y_button(self, active_code):
+    def activate_y_button(self, active_code: int):
         self.active_code_y = active_code
         Af.play(button_y_sound)
 
@@ -608,7 +609,7 @@ class Create_Modify_Account(Basic_Input_Management):
             return "new"
         return False
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_RIGHT:
             Af.play(button_x_sound)
             self.active_code = 1
@@ -641,7 +642,7 @@ class Create_Modify_Account(Basic_Input_Management):
 
 # Used when the "Continue" option in the Main Menu is selected
 class Choose_Account(Basic_Input_Management):
-    def __init__(self, screen):
+    def __init__(self, screen: Surface):
         super().__init__()
         self.screen = screen
         self.image = Af.load_image(f"menu/interfaces/Main/choose account.png")
@@ -659,12 +660,12 @@ class Choose_Account(Basic_Input_Management):
                 self.cursor_is_on_button()  # mouse visual interaction with interface
             self.refresh()
 
-    def set_button_to_active(self, new_active_code):
+    def set_button_to_active(self, new_active_code: int):
         self.button_list[self.active_code].deactivate()  # deactivate previous active button
         super().set_button_to_active(new_active_code)
         self.button_list[self.active_code].activate()  # activate current active button
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         new_active_code = self.active_code
         if event.key == pygame.K_DOWN:
             new_active_code += 1
@@ -694,7 +695,7 @@ class Choose_Account(Basic_Input_Management):
         self.button_list = []
         for user_index, coordinates in enumerate(button_coordinates):
             x, y, active_image, passive_image = coordinates[0], coordinates[1], active[user_index], passive[user_index]
-            self.button_list.append(Name_Button(x, y, active_image, passive_image, users[user_index], user_index))
+            self.button_list.append(Name_Button(x, y, active_image, passive_image, users[user_index]))
         self.button_list[self.active_code].activate()  # first button is set to active
 
     def refresh(self):
@@ -706,7 +707,7 @@ class Choose_Account(Basic_Input_Management):
 
 # Used whenever is required the introduction of a password in order to complete a task
 class Enter_Password(Basic_Input_Management):
-    def __init__(self, screen, change=False):
+    def __init__(self, screen: Surface, change: bool = False):
         super().__init__(None)
         self.screen = screen
         self.image = Af.load_image(f"menu/interfaces/Main/insert_password.png")
@@ -752,7 +753,7 @@ class Enter_Password(Basic_Input_Management):
                 return effect
             self.refresh()
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_BACKSPACE:
             Af.play(erase_letter_sound)
             self.password_list = self.password_list[:-1]
@@ -785,7 +786,7 @@ class Enter_Password(Basic_Input_Management):
 
 # Used when the "Management" option in the Game Menu is selected
 class Management(Basic_Input_Management):
-    def __init__(self, buttons, directory, screen, user=None):
+    def __init__(self, buttons: [Button], directory: str, screen: Surface, user: User = None):
         super().__init__(buttons)
         self.directory = directory
         self.user = user
@@ -835,7 +836,7 @@ class Management(Basic_Input_Management):
         self.user.save_info()
         self.user.turn_active()
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         new_active_code = self.active_code  # go up if value is -1 and down if it's 1
         if event.key == pygame.K_UP:
             new_active_code -= 1
@@ -877,7 +878,8 @@ class Management(Basic_Input_Management):
 
 # Used every time a "Mission: AI" match is over and the game results must be displayed and processed
 class Results_AI(Basic_Input_Management):
-    def __init__(self, screen, precision, speed, parts_collected, resistance, time, finished):
+    def __init__(self, screen: Surface, precision: int, speed: int, parts_collected: int,
+                 resistance: int, time: int, finished: bool):
         super().__init__()
         self.screen = screen
         self.image = Af.load_image(f"menu/interfaces/Main/Results_AI.png")
@@ -885,7 +887,8 @@ class Results_AI(Basic_Input_Management):
         self.parts = 0
         self.values_images = self.initiate_results(precision, speed, parts_collected, resistance, time, finished)
 
-    def initiate_results(self, precision, speed, parts_collected, resistance, time, finished):
+    def initiate_results(self, precision: int, speed: int, parts_collected: int,
+                         resistance: int, time: int, finished: bool):
         values = []
         # results about level requirements
         c_w = {True: "correct", False: "wrong"}
@@ -919,7 +922,7 @@ class Results_AI(Basic_Input_Management):
         pygame.display.update()
 
     @staticmethod
-    def manage_buttons(event):
+    def manage_buttons(event: Event):
         if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             return True
         return False
@@ -948,7 +951,8 @@ class Results_AI(Basic_Input_Management):
 
 # Used every time a "Mission: PARTS" match is over and the game results must be displayed and processed
 class Results_Parts(Basic_Input_Management):
-    def __init__(self, screen, precision, avg_speed, max_speed, parts_collected, time):
+    def __init__(self, screen: Surface, precision: int, avg_speed: int, max_speed: int,
+                 parts_collected: int, time: bool):
         super().__init__()
         self.screen = screen
         self.image = Af.load_image("menu/interfaces/Main/Results_Parts.png")
@@ -956,7 +960,7 @@ class Results_Parts(Basic_Input_Management):
         self.time = int(time)
         self.values_images = self.initiate_results(precision, avg_speed, max_speed, parts_collected)
 
-    def initiate_results(self, precision, avg_speed, max_speed, parts_collected):
+    def initiate_results(self, precision: int, avg_speed: int, max_speed: int, parts_collected: int):
         values = []
         # results about parts
         font1 = pygame.font.SysFont('Times New Roman', 16)
@@ -977,7 +981,7 @@ class Results_Parts(Basic_Input_Management):
         pygame.display.update()
 
     @staticmethod
-    def manage_buttons(event):
+    def manage_buttons(event: Event):
         if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             return True
         return False
@@ -993,7 +997,7 @@ class Results_Parts(Basic_Input_Management):
 
 # Used every time a user manages to level up and he must unlock the "Mission: AI" option in the Game Menu
 class Unlock_Level(Basic_Input_Management):
-    def __init__(self, screen):
+    def __init__(self, screen: Surface):
         super().__init__()
         self.screen = screen
         self.image = Af.load_image("menu/interfaces/Main/unlock level.png")
@@ -1035,7 +1039,7 @@ class Unlock_Level(Basic_Input_Management):
                 return effect
             self.refresh()
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_ESCAPE:
             return True
         elif event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
@@ -1054,7 +1058,7 @@ class Unlock_Level(Basic_Input_Management):
 
 # The first Interface that shows up when the game is executed. It shows "Fast and Curious"'s logo
 class Start:
-    def __init__(self, screen):
+    def __init__(self, screen: Surface):
         self.screen = screen
         self.image = Af.load_image(f"general/Fast and Curious Logo.png")
         text_font = pygame.font.SysFont('Times New Roman', 20)
@@ -1085,7 +1089,7 @@ class Start:
 
 # Used when the "New Game" option in the Main Menu is selected
 class Add_Text(Basic_Input_Management):
-    def __init__(self, screen, buttons):
+    def __init__(self, screen: Surface, buttons: [Button]):
         super().__init__(buttons)
         self.image = Af.load_image(f"menu/interfaces/Main/add text.png")
         self.effect = [Af.load_image(f"menu/effects/2/{i + 1}.png") for i in range(4)]
@@ -1158,7 +1162,7 @@ class Add_Text(Basic_Input_Management):
             return last_word_length < 48
         return True
 
-    def manage_buttons(self, event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_RIGHT:
             Af.play(button_x_sound)
             self.active_code = 1
@@ -1209,7 +1213,7 @@ class Winner_Menu:
     image = Af.load_image(f"menu/interfaces/Main/winner.png")
     fireworks = Fireworks()
 
-    def __init__(self, screen):
+    def __init__(self, screen: Surface):
         self.screen = screen
         text_font = pygame.font.SysFont('Times New Roman', 20)
         text_font.set_bold(True)

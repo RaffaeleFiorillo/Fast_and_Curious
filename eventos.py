@@ -1,4 +1,4 @@
-# import menu_classes as cm
+import menu_classes as cm
 import Auxiliary_Functionalities as Af
 import game_classes as gc
 # import link_functions as lf
@@ -140,6 +140,10 @@ class Data_World:
 
 
 SCREEN = pygame.display.set_mode((Af.SCREEN_LENGTH, Af.SCREEN_WIDTH))
-World = Data_World(SCREEN)
-World.initiate_test()
+"""World = Data_World(SCREEN)
+World.initiate_test()"""
+
+menu = cm.Winner_Menu(SCREEN)
+menu.display_menu()
+
 

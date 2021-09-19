@@ -203,6 +203,7 @@ class Firework:
             self.draw_ascending(screen)
         else:
             self.draw_explosion(screen)
+        return self.alive
 
 
 # simulates a group of fireworks by managing single fireworks (Firework class)
@@ -214,14 +215,14 @@ class Fireworks:
 
     def update(self):
         self.firework_stock = [firework if firework.alive else Firework(720) for firework in self.firework_stock]
-        if len(self.y_values) != len(self.firework_stock):
-            for y in self.y_values[:len(self.y_values)-len(self.firework_stock)]:
-                self.firework_stock.append(Firework(y))
 
     def display(self, screen: Surface):
+        update_needed = False  # update should be made only if a firework is dead
         for firework in self.firework_stock:
-            firework.draw(screen)
-        self.update()
+            if firework.draw(screen):  # draw function returns True if firework is "dead" (which means update is needed)
+                update_needed = True
+        if update_needed:
+            self.update()
 
 
 # provides a simple way of managing user input, both keyboard and mouse

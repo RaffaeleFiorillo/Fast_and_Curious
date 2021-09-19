@@ -265,6 +265,13 @@ class Mission:
     def continue_game(self):
         pass
 
+    def manage_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # terminate execution
+                self.run = False
+            elif event.type == pygame.KEYDOWN:
+                self.manage_buttons(event)
+
     @staticmethod
     def game_over():
         Af.stop_all_sounds()
@@ -275,12 +282,8 @@ class Mission:
         self.display_countdown()
         while self.run:
             self.time_passed += self.clock.tick(Af.FRAME_RATE) / 1000
-    # terminate execution
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.run = False
-                if event.type == pygame.KEYDOWN:
-                    self.manage_buttons(event)
+    # input management
+            self.manage_events()
     # parts effects
             self.parts_list.remover_parts(self.obstacles_list.internal_list)
             self.parts_list.create_parts()
@@ -323,7 +326,7 @@ class Mission_AI(Mission):
         pygame.display.update()
 
     def hud_time(self):  # returns what to display on the clock of the HUD interface.
-        return 60-int(self.time_passed)
+        return 60-round(self.time_passed)
 
     def continue_game(self):
         if int(self.resistance) <= 0:
@@ -350,6 +353,9 @@ class Mission_PARTS(Mission):
         # loop stuff
         self.total_time = 0.0
 
+    def take_exclusive_class_action(self):
+        print(self.resistance)
+
     def set_up_texts(self, first=False):
         super(Mission_PARTS, self).set_up_texts()  # sets up next text to be displayed
         if not first:  # if it's not the first text to be loaded:
@@ -373,7 +379,10 @@ class Mission_PARTS(Mission):
     def game_loop(self):
         super(Mission_PARTS, self).game_loop()
         self.game_over()  # takes actions relative to the game being over
-        self.set_up_texts()
-        precision = sum(self.precision_list) // len(self.precision_list)
-        speed = sum(self.speed_list) // len(self.speed_list)
-        return precision, speed, self.parts_collected, self.total_time, max(self.speed_list)
+        if len_precision_list:= len(self.precision_list):  # makes sure there is not a DivisionByZero error
+            precision = sum(self.precision_list) // len_precision_list
+            speed = sum(self.speed_list) // len(self.speed_list)
+            max_speed = max(self.speed_list)
+        else:
+            precision, speed, max_speed = 0, 0, 0
+        return precision, speed, self.parts_collected, self.total_time, max_speed

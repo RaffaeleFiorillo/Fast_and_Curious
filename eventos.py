@@ -5,11 +5,11 @@ import game_classes as gc
 import entity_classes as ce
 # import math
 # import time
-import pygame
+# import pygame
 
 
 # Creates a world where Car-movement-data can be extracted
-class Data_World:
+"""class Data_World:
     def __init__(self, screen_i):
         self.screen = screen_i
         # Game objects
@@ -137,13 +137,23 @@ class Data_World:
         Af.stop_all_sounds()
         Af.play(gc.game_over_sound)
         return False  # if it gets here, it means it not good enough
+"""
 
 
-SCREEN = pygame.display.set_mode((Af.SCREEN_LENGTH, Af.SCREEN_WIDTH))
+# SCREEN = pygame.display.set_mode((Af.SCREEN_LENGTH, Af.SCREEN_WIDTH))
 """World = Data_World(SCREEN)
 World.initiate_test()"""
 
-menu = cm.Winner_Menu(SCREEN)
-menu.display_menu()
+"""menu = cm.Winner_Menu(SCREEN)
+menu.display_menu()"""
 
+"""file = open("my name encrypted.txt", "w")
+file.write(Af.encrypt_line("Raffaele Fiorillo"))
+file.close()"""
+
+Af.encrypt_file("test_file.txt")
+Af.decrypt_file("test_file.txt")
+
+Af.print_file("test_file.txt")
+Af.reset_file("test_file.txt")
 

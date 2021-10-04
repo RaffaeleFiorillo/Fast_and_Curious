@@ -18,6 +18,7 @@ parts_colors = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [23
                 [120, 0, 120], [0, 255, 255], [0, 0, 255]]
 road_colors = [[0, 0, 0], [108, 108, 108]]
 code_meaning = {3: "unknown", 0: "road", 1: "parts", -1: "lava"}
+valid_characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQERSUVWXYZ_"
 # AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
 WEIGHTS = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
@@ -649,3 +650,74 @@ def calculate_rs_circle(x: int, y: int, radius: int) -> (int, int):
         r_y = y + randint(0, int(radius))*choice([-1, 1])
         r_x = x + randint(0, int(abs(((r_y-y)**2 - radius**2)**(1/2)))) * choice([-1, 1])
     return r_x, r_y
+
+
+# ------------------------------------- ENCRYPTION ---------------------------------------------------------------------
+# functions to encrypt and decrypt user information. Important because if data is not encrypted the user could just open
+# files and easily change progress (increase parts collected, level up,...)
+
+
+# encrypts a letter based on a given key_value
+def encrypt_letter(letter: str, key: int) -> str:
+    new_index = (valid_characters.index(letter) + key) % len(valid_characters)
+    return valid_characters[new_index]
+
+
+# given a string, returns the encrypted version of it
+def encrypt_line(data: str, key: int)-> str:
+    data = data if "\n" not in data else data[:-1]
+    encrypted_data = "".join(reversed([encrypt_letter(char, key) if char != " " else " " for char in data]))
+    return encrypted_data
+
+
+# encrypts a file given his directory
+def encrypt_file(directory: str) -> None:
+    with open(directory, "r") as file:  # get file content
+        lines = file.readlines()
+    with open(directory, "w") as file:
+        for line in lines[:-1]:
+            key = randint(1, len(valid_characters) - 1)
+            file.write(f"{key} {encrypt_line(line, key)}\n")
+        key = randint(1, len(valid_characters) - 1)
+        file.write(f"{key} {encrypt_line(lines[-1], key)}")
+
+
+# encrypts a letter based on a given key_value
+def decrypt_letter(letter: str, key: int) -> str:
+    new_index = (valid_characters.index(letter) - key) % len(valid_characters)
+    return valid_characters[new_index]
+
+
+# given a string, returns the decrypted version of it
+def decrypt_line(data: str, key):
+    data = data if "\n" not in data else data[:-1]
+    decrypted_data = "".join(reversed([decrypt_letter(char, key) if char != " " else " " for char in data]))
+    return decrypted_data
+
+
+# de crypts a file given his directory
+def decrypt_file(directory: str):
+    with open(directory, "r") as file:  # get file content
+        lines = file.readlines()
+    with open(directory, "w") as file:
+        for line in lines[:-1]:
+            key = int(line.split(" ")[0])
+            start_index = line.index(" ")
+            file.write(f"{decrypt_line(line[start_index:], key)}\n")
+        key = int(lines[-1].split(" ")[0])
+        start_index = lines[-1].index(" ")
+        file.write(decrypt_line(lines[-1][start_index:], key))
+
+
+def print_file(directory):
+    with open(directory, "r") as file:
+        lines = file.readlines()
+        for line in lines:
+            print(line)
+
+
+def reset_file(directory):
+    text = "this file is just for testing 1\nthis file is just for testing 2\nthis file is just for testing 3\nthis " \
+           "file is just for testing 4"
+    with open(directory, "w") as file:
+        file.write(text)

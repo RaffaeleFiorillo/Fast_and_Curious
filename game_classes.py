@@ -61,8 +61,7 @@ class Mission:
     def set_up_texts(self, first=False):
         self.text_name = Af.choice(Af.get_text_names())[:-4]  # chooses random text from existing texts
         self.text_to_write_image = Af.load_image(f"texts/{self.text_name}.png")  # loads the text's image
-        with open(f"texts/{self.text_name}.txt", "r") as file:  # loads the text's content
-            lines = file.readlines()
+        lines = Af.read_file_content(f"texts/{self.text_name}.txt")  # loads the text's content
         self.text_to_write = [line.split(" ") for line in lines[1:]]  # sets the text in proper format
         self.screen.blit(self.text_to_write_image, (280, 320))
         image = Af.get_text_images("")  # turns written text into images to display
@@ -352,9 +351,6 @@ class Mission_PARTS(Mission):
         self.precision_list = []
         # loop stuff
         self.total_time = 0.0
-
-    def take_exclusive_class_action(self):
-        print(self.resistance)
 
     def set_up_texts(self, first=False):
         super(Mission_PARTS, self).set_up_texts()  # sets up next text to be displayed

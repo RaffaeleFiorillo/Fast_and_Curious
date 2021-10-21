@@ -57,10 +57,7 @@ class Button2(Button):
         self.get_value()
 
     def get_value(self):
-        with open("saves/active_user.txt", "r") as file:
-            line = file.readline()
-        values = line.split(" ")
-        values = values[-2:]
+        values = Af.read_file_content("saves/active_user.txt", 1)[0].split(" ")[-2:]
         self.value = int(values[self.id])
 
     def change_value(self, add=0, cursor_x=0):
@@ -117,8 +114,7 @@ class User:
         self.sound_volume = 8
 
     def get_info(self) -> None:
-        with open(f"saves/{self.name}/data.txt", "r") as file:
-            data = file.readline().split(" ")
+        data = Af.read_file_content(f"saves/{self.name}/data.txt", 1)[0].split(" ")
         self.best_speed, self.best_time, self.level, self.parts, self.password, self.music_volume, self.sound_volume = \
             int(data[0]), int(data[1]), int(data[2]), int(data[3]), data[4], int(data[5]), int(data[6])
         self.image = Af.load_image(f"menu/interfaces/User/user_info/level{self.level}.png")
@@ -136,22 +132,21 @@ class User:
         screen.blit(self.name_text, self.coo_n_t)
 
     def get_active_user(self) -> None:
-        with open(f"saves/active_user.txt", "r") as file:
-            data = file.readline().split(" ")
-        self.name, self.best_speed, self.best_time, self.level, self.parts, self.password = \
-            data[0], int(data[1]), int(data[2]), int(data[3]), int(data[4]), data[5]
+        data = Af.read_file_content("saves/active_user.txt", 1)[0].split(" ")
+        self.name, self.best_speed, self.best_time = data[0], int(data[1]), int(data[2])
+        self.level, self.parts, self.password = int(data[3]), int(data[4]), data[5]
+        self.music_volume, self.sound_volume = data[6], data[7]
         self.image = Af.load_image(f"menu/interfaces/User/user_info/level{self.level}.png")
 
+    def get_string_attributes(self):
+        return f"{self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} {self.music_volume}" \
+               f" {self.sound_volume}"
+
     def turn_active(self) -> None:
-        with open(f"saves/active_user.txt", "w") as file:
-            file.write(f"{self.name} {self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} "+
-                       f"{self.music_volume} {self.sound_volume}")
+        Af.write_file_content("saves/active_user.txt",  f"{self.name} {self.get_string_attributes()}")
 
     def save_info(self) -> None:
-        with open(f"saves/{self.name}/data.txt", "w") as file:
-            data = f"{self.best_speed} {self.best_time} {self.level} {self.parts} {self.password} {self.music_volume}" \
-                   f" {self.sound_volume}"
-            file.write(data)
+        Af.write_file_content(f"saves/{self.name}/data.txt", self.get_string_attributes())
 
 
 # simulates a single firework
@@ -374,7 +369,7 @@ class Menu(Basic_Input_Management):
         self.name = self.directory.split("/")[-1][:-4]
         self.name_image = Af.load_image(directory)
         self.navigation_image = Af.load_image(f"menu/interfaces/navigation/navigation.png")
-        self.effect = self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
+        self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
         self.user_related_images = []
         self.active_code = 0
         self.screen = screen
@@ -561,9 +556,9 @@ class Create_Modify_Account(Basic_Input_Management):
     def create_account(self) -> None:
         name = "".join(self.inputs[0])
         Af.create_folder(name)  # create the user's folder
-        with open(f"saves/{name}/next_level.txt", "w") as file:  # create a file in the user's folder named next_level
-            file.write("1 \n")  # this value means that the MISSION AI is available
-            file.write("0")  # this value means that the user has not yet won the game
+        content = ["1 \n", "0"]  # user is initiated with Mission AI available and that he didn't win the game
+        # create a file in the user's folder named next_level
+        Af.write_file_content(f"saves/{name}/next_level.txt", content)
 
     def validate_user_information(self) -> bool:
         password = "".join(self.inputs[0])
@@ -1010,8 +1005,8 @@ class Unlock_Level(Basic_Input_Management):
         self.user = User()
         self.user.get_active_user()
         self.user.get_info()
-        with open(f"parameters/levels info/{self.user.level}.txt", "r") as file:
-            self.parts_needed = int(file.readline().split(" ")[2])
+        content = Af.read_file_content(f"parameters/levels info/{self.user.level}.txt", 1)[0].split(" ")[2]
+        self.parts_needed = int(content)
 
     def show_error_message(self) -> None:
         Af.show_error_message(self.screen, 9)
@@ -1023,8 +1018,7 @@ class Unlock_Level(Basic_Input_Management):
         return self.parts_needed <= self.user.parts
 
     def save_state(self):
-        with open(f"saves/{self.user.name}/next_level.txt", "w") as file:
-            file.write("1")
+        Af.write_file_content(f"saves/{self.user.name}/next_level.txt", "1")
         self.user.parts = self.user.parts - self.parts_needed
         self.user.save_info()
         self.user.turn_active()
@@ -1128,6 +1122,12 @@ class Add_Text(Basic_Input_Management):
                 self.cursor_is_on_button()  # mouse visual interaction with interface
             self.refresh()
 
+    def create_text_content(self) -> [str]:
+        text_content = [f"{len(self.text_lines)} \n"]  # first line of these files holds the number of lines in the text
+        for line in self.text_lines:
+            text_content.append(line + "\n")
+        return text_content
+
     def create_text(self) -> None:
         # creating the image
         self.text_lines, self.text_lines_images = Af.convert_text_to_images(self.written_text, True)
@@ -1139,10 +1139,7 @@ class Add_Text(Basic_Input_Management):
         last_number_text = Af.get_last_text_number()
         pygame.image.save(text_background, f"images/texts/{last_number_text+1}.png")
         # creating the txt file
-        with open(f"texts/{last_number_text+1}.txt", "w") as file:
-            file.write(f"{len(self.text_lines)} \n")  # first line of these files holds the number of lines in the text
-            for line in self.text_lines:
-                file.write(line+"\n")
+        Af.write_file_content(f"texts/{last_number_text+1}.txt", self.create_text_content())
 
     def validate_text_information(self) -> bool:
         special = [",", ".", "'", " "]

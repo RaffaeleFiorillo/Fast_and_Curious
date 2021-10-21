@@ -108,7 +108,8 @@ def game_menu(screen: Af.Surface):
     g_m = cm.Menu(buttons_game, f"menu/interfaces/Main/game menu.png", screen, user)
     next_link = g_m.display_menu()
     if next_link == "m_ai":
-        if not int(open(f"saves/{user.name}/next_level.txt").readline()):
+        mission_is_unlocked = int(Af.read_file_content(f"saves/{user.name}/next_level.txt", 1)[0])
+        if not mission_is_unlocked:
             next_link = "nx_l"
     return next_link
 
@@ -252,13 +253,11 @@ def delete_account(screen: Af.Surface):
     buttons = [cm.Button(240, 410, f"menu/buttons/3/1.png", True),
                cm.Button(580, 410, f"menu/buttons/3/2.png", False)]
     if cm.Exit("menu/exit/delete_account.png", screen, buttons).display_menu():
-        file = open("saves/active_user.txt", "r")
-        line = file.readline().split(" ")
+        user_name = Af.read_file_content("saves/active_user.txt", 1)[0].split(" ")[0]
         verification_password = cm.Enter_Password(screen, True).display_menu()
-        file.close()
         if verification_password == "main_menu":
             Af.play(delete_account_sound)
-            Af.delete_user_account(line[0])
+            Af.delete_user_account(user_name)
         return verification_password
     return "manage"
 

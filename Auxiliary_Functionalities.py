@@ -18,7 +18,7 @@ parts_colors = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [23
                 [120, 0, 120], [0, 255, 255], [0, 0, 255]]
 road_colors = [[0, 0, 0], [108, 108, 108]]
 code_meaning = {3: "unknown", 0: "road", 1: "parts", -1: "lava"}
-valid_characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQERSUVWXYZ_"
+valid_characters = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ _,.'"
 # AI variables achieved by a genetic algorithm that can be found in the genetic_algorithm module
 WEIGHTS = [-0.024636661554064646, 0.9490338548623168, 0.9490338548623168, 0.17090764398454833, 1.0661495372951384]
 BIAS = [0.2670813587084078, -0.6691533200275781, -0.5723370239650385, 0.25406116993577665, -0.486196069971221]
@@ -199,8 +199,7 @@ def get_fibonacci(order: int)-> int:
 
 # ------------------------------------- MENU FUNCTIONS -----------------------------------------------------------------
 def get_sound_volume()-> float:
-    with open("saves/active_user.txt", "r") as file:
-        line = file.readline().split(" ")
+    line = read_file_content("saves/active_user.txt", 1)[0].split(" ")
     if len(line) != 1:
         return float(line[7])/10
     else:
@@ -208,8 +207,7 @@ def get_sound_volume()-> float:
 
 
 def get_music_volume()-> float:
-    with open("saves/active_user.txt", "r") as file:
-        line = file.readline().split(" ")
+    line = read_file_content("saves/active_user.txt", 1)[0].split(" ")
     if len(line) != 1:
         return float(line[6])/20.0
     else:
@@ -425,25 +423,20 @@ def get_users_images() -> ([Surface], [Surface]):
 
 # gets the requirement values in order to verify if user has leveled up from the parameters file and returns them
 def get_requirements() -> (int, int):
-    with open("saves/active_user.txt", "r") as f:
-        str_level = f.readline().split(" ")[3]
-    user_level = int(str_level)
-    with open(f"parameters/levels info/{user_level}.txt", "r") as f:
-        values = f.readline().split(" ")
-    return int(values[0]), int(values[1])
+    user_level = int(read_file_content("saves/active_user.txt", 1)[0].split(" ")[3])  # get user level in his file
+    speed, precision, _parts = read_file_content(f"parameters/levels info/{user_level}.txt", 1)[0].split(" ")
+    return int(speed), int(precision)
 
 
 # updates the data in the next_level.txt file
 def save_next_level_data(user_name: str, m_ai_data: int, winner_data: int) -> None:
-    with open(f"saves/{user_name}/next_level.txt", "w") as file:
-        file.write(f"{m_ai_data} \n{winner_data}")
+    write_file_content(f"saves/{user_name}/next_level.txt", [f"{m_ai_data} \n{winner_data}"])
 
 
 # returns current user's information
 def get_user_data() -> ([str], [int]):
     # active user format: "Name speed best_time level parts password volume1 volume2"
-    with open("saves/active_user.txt", "r") as file:
-        values_p = file.readline().split(" ")
+    values_p = read_file_content("saves/active_user.txt", 1)[0].split(" ")
     str_val = [values_p[0], values_p[5]]
     int_val = [int(value) for value in values_p if value.isdigit()]
     return str_val, int_val
@@ -453,12 +446,9 @@ def get_user_data() -> ([str], [int]):
 def save_user_data(data: (str, int, int, int, int, str, int, int)) -> None:
     name, b_speed, b_time, level, parts, password, volume1, volume2 = data
     line = f"{name} {b_speed} {b_time} {level} {parts} {password} {volume1} {volume2}"
-    with open("saves/active_user.txt", "w") as file:
-        file.write(line)
-
+    write_file_content("saves/active_user.txt", line)
     line = f"{b_speed} {b_time} {level} {parts} {password} {volume1} {volume2}"
-    with open(f"saves/{name}/data.txt", "w") as file:
-        file.write(line)
+    write_file_content(f"saves/{name}/data.txt", line)
 
 
 # updates user information after a played match is over, for Mission AI
@@ -496,18 +486,14 @@ def save_performance_parts(parts: int, speed: int, time: int) -> None:
 
 # returns the current user's level
 def get_user_level() -> int:
-    with open("saves/active_user.txt", "r") as file:
-        user_level = int(file.readline().split(" ")[3])
+    user_level = int(read_file_content("saves/active_user.txt", 1)[0].split(" ")[3])
     return user_level
 
 
 # returns True if the user has already won the game before, and False in the opposite case
 def user_is_a_winner() -> int:
-    with open("saves/active_user.txt", "r") as file:
-        user_name = file.readline().split(" ")[0]
-    with open(f"saves/{user_name}/next_level.txt", "r") as file:
-        file.readline()  # ignore the first line
-        is_a_winner = int(file.readline())
+    user_name = int(read_file_content("saves/active_user.txt", 1)[0].split(" ")[3])
+    is_a_winner = int(read_file_content(f"saves/{user_name}/next_level.txt")[1])
     return is_a_winner
 
 
@@ -587,8 +573,7 @@ def get_text_images(line: [str]) -> Surface:
 def save_text_image(name: str) -> None:
     screen2 = pygame.display.set_mode((519, 135))
     background = load_image("texts/text_background.png")
-    with open(f"texts/{name}.txt", "r") as file:
-        lines = file.readlines()
+    lines = read_file_content(f"texts/{name}.txt")
     text_font = pygame.font.SysFont('Times New Roman', 20)
     text_font.set_bold(True)
     coordinates = ((12, 6), (12, 22), (12, 38), (12, 53), (12, 68), (12, 83), (12, 98))
@@ -665,8 +650,8 @@ def encrypt_letter(letter: str, key: int) -> str:
 
 # given a string, returns the encrypted version of it
 def encrypt_line(data: str, key: int)-> str:
-    data = data if "\n" not in data else data[:-1]
-    encrypted_data = "".join(reversed([encrypt_letter(char, key) if char != " " else " " for char in data]))
+    data = data.strip() if "\n" not in data else data[:-1]
+    encrypted_data = "".join(reversed([encrypt_letter(char, key) for char in data]))
     return encrypted_data
 
 
@@ -674,12 +659,15 @@ def encrypt_line(data: str, key: int)-> str:
 def encrypt_file(directory: str) -> None:
     with open(directory, "r") as file:  # get file content
         lines = file.readlines()
+    if len(lines) == 0:  # prevents list index error if file is empty
+        return None
     with open(directory, "w") as file:
-        for line in lines[:-1]:
+        for line in lines:
             key = randint(1, len(valid_characters) - 1)
-            file.write(f"{key} {encrypt_line(line, key)}\n")
-        key = randint(1, len(valid_characters) - 1)
-        file.write(f"{key} {encrypt_line(lines[-1], key)}")
+            if line is not lines[-1]:
+                file.write(f"{key} {encrypt_line(line, key)}\n")
+            else:
+                file.write(f"{key} {encrypt_line(lines[-1], key)}")
 
 
 # encrypts a letter based on a given key_value
@@ -691,7 +679,7 @@ def decrypt_letter(letter: str, key: int) -> str:
 # given a string, returns the decrypted version of it
 def decrypt_line(data: str, key):
     data = data if "\n" not in data else data[:-1]
-    decrypted_data = "".join(reversed([decrypt_letter(char, key) if char != " " else " " for char in data]))
+    decrypted_data = "".join(reversed([decrypt_letter(char, key) for char in data]))
     return decrypted_data
 
 
@@ -699,25 +687,48 @@ def decrypt_line(data: str, key):
 def decrypt_file(directory: str):
     with open(directory, "r") as file:  # get file content
         lines = file.readlines()
+    if len(lines) == 0:  # prevents list index error if file is empty
+        return None
     with open(directory, "w") as file:
-        for line in lines[:-1]:
-            key = int(line.split(" ")[0])
-            start_index = line.index(" ")
-            file.write(f"{decrypt_line(line[start_index:], key)}\n")
-        key = int(lines[-1].split(" ")[0])
-        start_index = lines[-1].index(" ")
-        file.write(decrypt_line(lines[-1][start_index:], key))
-
-
-def print_file(directory):
-    with open(directory, "r") as file:
-        lines = file.readlines()
         for line in lines:
-            print(line)
+            key = int(line.split(" ")[0])
+            start_index = line.index(" ")+1
+            if line is not lines[-1]:
+                file.write(f"{decrypt_line(line[start_index:], key)}\n")
+            else:
+                file.write(decrypt_line(lines[-1][start_index:], key))
 
 
-def reset_file(directory):
-    text = "this file is just for testing 1\nthis file is just for testing 2\nthis file is just for testing 3\nthis " \
-           "file is just for testing 4"
-    with open(directory, "w") as file:
-        file.write(text)
+def read_file_content(file_directory, lines_to_read=0):
+    decrypt_file(file_directory)
+    with open(file_directory, "r") as file:
+        if lines_to_read == 0:
+            file_content = file.readlines()
+        else:
+            file_content = [file.readline() for _ in range(lines_to_read)]
+    encrypt_file(file_directory)
+    return file_content
+
+
+def write_file_content(file_directory, content):
+    with open(file_directory, "w") as file:
+        file.writelines(content)
+    encrypt_file(file_directory)
+
+
+def encrypt_all_files(directories):
+    for directory in directories:
+        print(f"encrypting: {directory}")
+        try:
+            encrypt_file(directory)
+        except ValueError:
+            print(f"!!! Error in current directory: {directory} !!!")
+
+
+def decrypt_all_files(directories):
+    for directory in directories:
+        print(f"decrypting: {directory}")
+        try:
+            decrypt_file(directory)
+        except ValueError:
+            print(f"!!! Error in current directory: {directory} !!!")

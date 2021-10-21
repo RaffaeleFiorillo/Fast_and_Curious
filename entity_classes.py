@@ -66,8 +66,7 @@ class Car:
     @staticmethod
     def get_car_image():
         try:
-            with open("saves/active_user.txt", "r") as file:
-                level = file.readline().split(" ")[3]
+            level = Af.read_file_content("saves/active_user.txt", 1)[0].split(" ")[3]
         except IndexError:
             level = 21
         return Af.load_image(f"cars/{level}.png")

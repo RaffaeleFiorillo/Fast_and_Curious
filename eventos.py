@@ -3,6 +3,7 @@ import Auxiliary_Functionalities as Af
 import game_classes as gc
 # import link_functions as lf
 import entity_classes as ce
+
 # import math
 # import time
 # import pygame
@@ -139,7 +140,6 @@ import entity_classes as ce
         return False  # if it gets here, it means it not good enough
 """
 
-
 # SCREEN = pygame.display.set_mode((Af.SCREEN_LENGTH, Af.SCREEN_WIDTH))
 """World = Data_World(SCREEN)
 World.initiate_test()"""
@@ -151,9 +151,15 @@ menu.display_menu()"""
 file.write(Af.encrypt_line("Raffaele Fiorillo"))
 file.close()"""
 
-Af.encrypt_file("test_file.txt")
-Af.decrypt_file("test_file.txt")
+directories = ["saves/R.F.J.8/data.txt", "saves/Raffaele/data.txt", "saves/teste/data.txt",
+               "saves/R.F.J.8/next_level.txt", "saves/Raffaele/next_level.txt", "saves/teste/next_level.txt",
+               "parameters/levels info/1.txt", "parameters/levels info/2.txt", "parameters/levels info/3.txt",
+               "parameters/levels info/4.txt", "parameters/levels info/5.txt", "parameters/levels info/6.txt",
+               "parameters/levels info/7.txt", "parameters/levels info/8.txt", "parameters/levels info/9.txt",
+               "parameters/levels info/10.txt", "parameters/levels info/11.txt", "parameters/levels info/12.txt",
+               "parameters/levels info/13.txt", "texts/1.txt", "texts/2.txt", "texts/3.txt", "texts/4.txt",
+               "texts/5.txt", "texts/6.txt", "texts/7.txt", "texts/8.txt", ]
 
-Af.print_file("test_file.txt")
-Af.reset_file("test_file.txt")
+Af.encrypt_all_files(directories)
 
+# [print(f'"{directory}",') for directory in directories]

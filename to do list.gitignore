@@ -25,11 +25,15 @@ Tune the Game for optimal experience                                            
 ------------------------------------------------------------------------------------------------------------------
 Implement mouse input in the Menus                                                |  Done   |      8       |  10 |
 ------------------------------------------------------------------------------------------------------------------
-Encript user data                                                                 | Pendent |      5       |  5  |
+Encript user data                                                                 |  Done   |      10      |  10 |
 ------------------------------------------------------------------------------------------------------------------
 Fix performance check for Missions (pressing enter when at good speed)            | Pendent |      3       |  3  |
 ------------------------------------------------------------------------------------------------------------------
 Comment all the code!!!                                                           | Pendent |      3       |  10 |
 ------------------------------------------------------------------------------------------------------------------
-Include type-hints for variables and returned values                              | Pendent |      1       |  10  |
+Include type-hints for variables and returned values                              | Done    |      1       |  10 |
+------------------------------------------------------------------------------------------------------------------
+During the game rare Letters turn red and in one text they form a cheat-word      | Pendent |      9       |  9  |
+------------------------------------------------------------------------------------------------------------------
+Make cheat-words to unlock hidden functionalities&stuff (like skins,boosts&powers)| Pendent |      9       |  9  |
 ------------------------------------------------------------------------------------------------------------------

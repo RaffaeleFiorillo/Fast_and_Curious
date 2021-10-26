@@ -160,6 +160,6 @@ directories = ["saves/R.F.J.8/data.txt", "saves/Raffaele/data.txt", "saves/teste
                "parameters/levels info/13.txt", "texts/1.txt", "texts/2.txt", "texts/3.txt", "texts/4.txt",
                "texts/5.txt", "texts/6.txt", "texts/7.txt", "texts/8.txt", ]
 
-Af.encrypt_all_files(directories)
+# Af.encrypt_all_files(directories)
 
 # [print(f'"{directory}",') for directory in directories]

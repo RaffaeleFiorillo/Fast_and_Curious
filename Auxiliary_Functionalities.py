@@ -677,14 +677,14 @@ def decrypt_letter(letter: str, key: int) -> str:
 
 
 # given a string, returns the decrypted version of it
-def decrypt_line(data: str, key):
+def decrypt_line(data: str, key) -> str:
     data = data if "\n" not in data else data[:-1]
     decrypted_data = "".join(reversed([decrypt_letter(char, key) for char in data]))
     return decrypted_data
 
 
 # de crypts a file given his directory
-def decrypt_file(directory: str):
+def decrypt_file(directory: str) -> None:
     with open(directory, "r") as file:  # get file content
         lines = file.readlines()
     if len(lines) == 0:  # prevents list index error if file is empty
@@ -699,7 +699,9 @@ def decrypt_file(directory: str):
                 file.write(decrypt_line(lines[-1][start_index:], key))
 
 
-def read_file_content(file_directory, lines_to_read=0):
+# reads  an encrypted file and returns its decrypted content. Takes the directory of the encrypted file and the number
+# of lines that we need to be returned. the output is a list of strings (every string is a different line of the file).
+def read_file_content(file_directory: str, lines_to_read: int = 0) -> [str]:
     decrypt_file(file_directory)
     with open(file_directory, "r") as file:
         if lines_to_read == 0:
@@ -710,13 +712,16 @@ def read_file_content(file_directory, lines_to_read=0):
     return file_content
 
 
-def write_file_content(file_directory, content):
+# Takes as parameters the file directory where the data will be written; and the content (to be written). content is
+# a string containing all the data to be written in the file.
+def write_file_content(file_directory: str, content: str) -> None:
     with open(file_directory, "w") as file:
         file.writelines(content)
     encrypt_file(file_directory)
 
 
-def encrypt_all_files(directories):
+# encrypts all .txt files  in a list of directories passed as parameter
+def encrypt_all_files(directories: [str]) -> None:
     for directory in directories:
         print(f"encrypting: {directory}")
         try:
@@ -725,7 +730,8 @@ def encrypt_all_files(directories):
             print(f"!!! Error in current directory: {directory} !!!")
 
 
-def decrypt_all_files(directories):
+# decrypts all .txt files  in a list of directories passed as parameter
+def decrypt_all_files(directories: [str]) -> None:
     for directory in directories:
         print(f"decrypting: {directory}")
         try:

@@ -311,7 +311,7 @@ class Mission:
             self.refresh_game()
 
 
-# Creates a game where there is a time limit of 60 seconds
+# Creates a game where there is a time limit of 60 seconds to type a given text
 class Mission_AI(Mission):
     def __init__(self, screen):
         super().__init__(screen)
@@ -342,7 +342,7 @@ class Mission_AI(Mission):
         return self.precision, self.speed, self.parts_collected, self.resistance, self.time_passed, self.terminate
 
 
-# Creates a game where the time limit is only imposed by the user's skills
+# Creates a game where the time limit is only imposed by the user's typing skills
 class Mission_PARTS(Mission):
     def __init__(self, screen):
         super().__init__(screen)

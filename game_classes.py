@@ -372,13 +372,22 @@ class Mission_PARTS(Mission):
             return False
         return True
 
+    def player_is_cheating(self):
+        # makes sure there is not a DivisionByZero error
+        # player quit the game without ending any text
+        if not len(self.precision_list):
+            return True
+        # player just pretended writing/only pressed Enter
+        if sum(self.speed_list)/len(self.speed_list) <= 10 and len(self.speed_list) >= 5:
+            return True
+        return False
+
     def game_loop(self):
         super(Mission_PARTS, self).game_loop()
         self.game_over()  # takes actions relative to the game being over
-        if len_precision_list:= len(self.precision_list):  # makes sure there is not a DivisionByZero error
-            precision = sum(self.precision_list) // len_precision_list
-            speed = sum(self.speed_list) // len(self.speed_list)
-            max_speed = max(self.speed_list)
-        else:
-            precision, speed, max_speed = 0, 0, 0
+        if self.player_is_cheating():  # apply a cheating detection system. The results of a match are nullified
+            return 0, 0, -1000, 0, 0
+        precision = sum(self.precision_list) // len(self.precision_list)
+        speed = sum(self.speed_list) // len(self.speed_list)
+        max_speed = max(self.speed_list)
         return precision, speed, self.parts_collected, self.total_time, max_speed

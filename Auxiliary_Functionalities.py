@@ -480,7 +480,7 @@ def save_performance_parts(parts: int, speed: int, time: int) -> None:
     if int_val[1] < time:
         int_val[1] = int(time)
     # name best-speed best-time level parts password music-volume sound-volume
-    data = (str_val[0], int_val[0], int_val[1], int_val[2], int_val[3], str_val[1], int_val[5], int_val[6])
+    data = (str_val[0], int_val[0], int_val[1], int_val[2], int_val[3], str_val[1], int_val[4], int_val[5])
     save_user_data(data)
 
 

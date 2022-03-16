@@ -39,5 +39,11 @@ Make cheat-words to unlock hidden functionalities&stuff (like skins,boosts&power
 ------------------------------------------------------------------------------------------------------------------
 Change some of the "exit" buttons to a more adapt name                            | Pendent |      2       |  2  |
 ------------------------------------------------------------------------------------------------------------------
-low frame rate sets a speed limit to type                                         | Pendent |      8       |  7  |
+Low frame rate sets a speed limit to the typing                                   | Pendent |      8       |  7  |
+------------------------------------------------------------------------------------------------------------------
+Investigate about the reduntant creation of users during the game (Menus)         | Pendent |      6       |  7  |
+------------------------------------------------------------------------------------------------------------------
+Create a specific command to automatically build the new version of the Game.exe  | Pendent |      6       |  8  |
+------------------------------------------------------------------------------------------------------------------
+Make a second style of text display (unique text with colors to identify state)   | Pendent |      7       |  10 |
 ------------------------------------------------------------------------------------------------------------------

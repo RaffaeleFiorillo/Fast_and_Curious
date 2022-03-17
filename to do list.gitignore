@@ -27,7 +27,7 @@ This table shows stuff to be done in the future (to expand the game or to fix bu
 ------------------------------------------------------------------------------------------------------------------------
  12 |Encript user data                                                                  |  Done   |      10      |  10 |
 ------------------------------------------------------------------------------------------------------------------------
- 13 |Fix performance check for Missions (pressing enter when at good speed)             | Pendent |      3       |  3  |
+ 13 |Fix performance check for Missions (pressing enter when at good speed)             |  Done   |      3       |  3  |
 ------------------------------------------------------------------------------------------------------------------------
  14 |Comment all the code!!!                                                            | Pendent |      3       |  10 |
 ------------------------------------------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ This table shows stuff to be done in the future (to expand the game or to fix bu
 ------------------------------------------------------------------------------------------------------------------------
  22 |Make a second style of text display (unique text with colors to identify state)    | Pendent |      7       |  10 |
 ------------------------------------------------------------------------------------------------------------------------
- 23 |Cheating Detection System                                                          | Pendent |      5       |  5  |
+ 23 |Introduce (basic) Cheating Detection System                                        | Done    |      5       |  5  |
 ------------------------------------------------------------------------------------------------------------------------
  24 |Change "Mission Parts" in main menu to "Missions" (to contain all Side-Missions)   | Pendent |      10      |  10 |
 ------------------------------------------------------------------------------------------------------------------------

@@ -873,7 +873,7 @@ class Management(Basic_Input_Management):
 
 
 # Used every time a "Mission: AI" match is over and the game results must be displayed and processed
-class Results_AI(Basic_Input_Management):
+class Report_Mission_AI(Basic_Input_Management):
     def __init__(self, screen: Surface, precision: int, speed: int, parts_collected: int,
                  resistance: int, time: int, finished: bool):
         super().__init__()
@@ -881,7 +881,12 @@ class Results_AI(Basic_Input_Management):
         self.image = Af.load_image(f"menu/interfaces/Main/Results_AI.png")
         self.requirements_satisfied = False
         self.parts = 0
+        self.coordinates = ((635, 360), (635, 300), (622, 397),
+                            (515, 360), (515, 300),
+                            (713, 275), (713, 336), (713, 397),
+                            (725, 503), (725, 471), (725, 540), (725, 576))
         self.values_images = self.initiate_results(precision, speed, parts_collected, resistance, time, finished)
+        self.refresh()
 
     def initiate_results(self, precision: int, speed: int, parts_collected: int,
                          resistance: int, time: int, finished: bool):
@@ -890,13 +895,15 @@ class Results_AI(Basic_Input_Management):
         c_w = {True: "correct", False: "wrong"}
         font1 = pygame.font.SysFont('Times New Roman', 20)
         font1.set_bold(True)
-        values.append(font1.render(str(int(precision)), True, (255, 255, 255)))
-        values.append(font1.render(str(int(speed)), True, (255, 255, 255)))
-        speed2, precision2 = Af.get_requirements()
-        values.append(font1.render(str(precision2), True, (255, 255, 255)))
-        values.append(font1.render(str(speed2), True, (255, 255, 255)))
-        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[speed >= speed2]}.png"))
-        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[precision >= precision2]}.png"))
+        values.append(font1.render(str(int(precision)), True, (255, 255, 255)))  # player's achieved precision
+        values.append(font1.render(str(int(speed)), True, (255, 255, 255)))  # player's achieved speed
+        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[finished]}.png"))   # player typed all the text
+        required_speed, required_precision = Af.get_requirements()  # get required speed and precision to pass level
+        values.append(font1.render(str(required_precision), True, (255, 255, 255)))  # player's required precision
+        values.append(font1.render(str(required_speed), True, (255, 255, 255)))  # player's required speed
+        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[speed >= required_speed]}.png"))  # speed status
+        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[precision >= required_precision]}.png"))
+        values.append(Af.load_image(f"menu/interfaces/navigation/{c_w[finished]}.png"))  # text completed status
         # results about parts
         font1 = pygame.font.SysFont('Times New Roman', 16)
         font1.set_bold(True)
@@ -906,19 +913,16 @@ class Results_AI(Basic_Input_Management):
         self.parts = parts_collected-(100-int(resistance))*3
         values.append(font1.render(str(self.parts), True, (255, 255, 255)))
         # verify if requirements were satisfied in order to proceed to next level
-        if speed>=speed2 and precision>=precision2 and (int(time)>= 60 or finished):
+        if speed>=required_speed and precision>= required_precision and (int(time)>= 60 or finished):
             self.requirements_satisfied = True
         return values
 
     def refresh(self):
-        coordinates = ((635, 360), (635, 300), (515, 360), (515, 300), (713, 275), (713, 336), (725, 457), (725, 425),
-                       (725, 494), (725, 530))
         self.screen.blit(self.image, (287, 40))
-        [self.screen.blit(image, coo) for image, coo in zip(self.values_images, coordinates)]
+        [self.screen.blit(image, coo) for image, coo in zip(self.values_images, self.coordinates)]
         pygame.display.update()
 
-    @staticmethod
-    def manage_buttons(event: Event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             return True
         return False
@@ -942,19 +946,22 @@ class Results_AI(Basic_Input_Management):
             if effect is not None:
                 self.display_level_info_message()
                 return self.requirements_satisfied, self.parts
-            self.refresh()
+            # self.refresh() -> moved to the constructor since the image is static and doesn't need to refresh
 
 
 # Used every time a "Mission: PARTS" match is over and the game results must be displayed and processed
-class Results_Parts(Basic_Input_Management):
+class Report_Mission_Parts(Basic_Input_Management):
     def __init__(self, screen: Surface, precision: int, avg_speed: int, max_speed: int,
-                 parts_collected: int, time: bool):
+                 parts_collected: int, time: float):
         super().__init__()
         self.screen = screen
+        self.is_cheating = False  # value is set to True if,based on the data given to the constructor, player cheated
         self.image = Af.load_image("menu/interfaces/Main/Results_Parts.png")
         self.parts = 0
         self.time = int(time)
+        self.coordinates = [(725, 330), (725, 362), (725, 396), (725, 426), (725, 457), (725, 529)]  # screen x,y values
         self.values_images = self.initiate_results(precision, avg_speed, max_speed, parts_collected)
+        self.refresh()
 
     def initiate_results(self, precision: int, avg_speed: int, max_speed: int, parts_collected: int):
         values = []
@@ -968,16 +975,23 @@ class Results_Parts(Basic_Input_Management):
         values.append(font1.render(str(parts_collected), True, (255, 255, 255)))
         self.parts = parts_collected-300
         values.append(font1.render(str(self.parts), True, (255, 255, 255)))
+        if self.parts == -1300:  # player cheated and it shows because he got penalized
+            font2 = pygame.font.SysFont('Times New Roman', 23)
+            font2.set_bold(True)
+            inform_cheating_1 = "You Cheated!!!"
+            inform_cheating_2 = "Your Scores Are Now Nullified and You Will Loose 1300parts"
+            values.append(font2.render(inform_cheating_1, True, (255, 0, 0)))
+            values.append(font1.render(inform_cheating_2, True, (255, 0, 0)))
+            self.coordinates.append((460, 200))
+            self.coordinates.append((315, 240))
         return values
 
     def refresh(self):
-        coordinates = ((725, 330), (725, 362), (725, 396),  (725, 426), (725, 457), (725, 529))
         self.screen.blit(self.image, (287, 40))
-        [self.screen.blit(image, coo) for image, coo in zip(self.values_images, coordinates)]
+        [self.screen.blit(image, coo) for image, coo in zip(self.values_images, self.coordinates)]
         pygame.display.update()
 
-    @staticmethod
-    def manage_buttons(event: Event):
+    def manage_buttons(self, event: Event):
         if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
             return True
         return False
@@ -988,7 +1002,7 @@ class Results_Parts(Basic_Input_Management):
             effect = self.manage_events()
             if effect is not None:
                 return self.parts
-            self.refresh()
+            # self.refresh() -> moved to the constructor since the image is static and doesn't need to refresh
 
 
 # Used every time a user manages to level up and he must unlock the "Mission: AI" option in the Game Menu

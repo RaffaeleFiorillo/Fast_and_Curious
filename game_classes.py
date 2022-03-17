@@ -385,8 +385,8 @@ class Mission_PARTS(Mission):
     def game_loop(self):
         super(Mission_PARTS, self).game_loop()
         self.game_over()  # takes actions relative to the game being over
-        if self.player_is_cheating():  # apply a cheating detection system. The results of a match are nullified
-            return 0, 0, -1000, 0, 0
+        if self.player_is_cheating():  # apply a cheating detection system
+            return 0, 0, -1000, 0, 0  # The results of a match are nullified and player looses 1000 parts
         precision = sum(self.precision_list) // len(self.precision_list)
         speed = sum(self.speed_list) // len(self.speed_list)
         max_speed = max(self.speed_list)

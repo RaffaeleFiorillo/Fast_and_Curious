@@ -37,11 +37,11 @@ This table shows stuff to be done in the future (to expand the game or to fix bu
 ------------------------------------------------------------------------------------------------------------------------
  17 |Make cheat-words to unlock hidden functionalities&stuff (like skins,boosts&powers) | Pendent |      9       |  9  |
 ------------------------------------------------------------------------------------------------------------------------
- 18 |Change some of the "exit" buttons to a more adapt name                             | Pendent |      2       |  2  |
+ 18 |Change some of the "exit" buttons to a more adapt name                             | Done    |      2       |  2  |
 ------------------------------------------------------------------------------------------------------------------------
  19 |Rise Frame rate (Low frame rate sets a speed limit to the typing)                  | Pendent |      8       |  7  |
 ------------------------------------------------------------------------------------------------------------------------
- 20 |Investigate about the reduntant creation of users during the game (Menus)          | Pendent |      6       |  7  |
+ 20 |Investigate about the reduntant creation of users during the game (Menus)          | Done    |      6       |  7  |
 ------------------------------------------------------------------------------------------------------------------------
  21 |Create a specific command to automatically build the new version of the Game.exe   | Pendent |      6       |  8  |
 ------------------------------------------------------------------------------------------------------------------------
@@ -55,5 +55,5 @@ This table shows stuff to be done in the future (to expand the game or to fix bu
 ------------------------------------------------------------------------------------------------------------------------
  26 |Create a new Mission to improve cursor/mouse skills                                | Pendent |      7       |  10 |
 ------------------------------------------------------------------------------------------------------------------------
- 23 |Release Version 3.0: ID->[13,16,17,18,19,20,21,22,23,24,25,26]                     | Pendent |      7       |  10 |
+ 23 |Release Version 3.0: ID->Undone[16,17,19,21,22,24,25,26] | Done-> [13,18,20,23]    | Pendent |      10      |  10 |
 ------------------------------------------------------------------------------------------------------------------------

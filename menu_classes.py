@@ -112,6 +112,7 @@ class User:
         self.name_text, self.coo_n_t = None, (0, 0)
         self.music_volume = 8
         self.sound_volume = 8
+        print("User has been created")
 
     def get_info(self) -> None:
         data = Af.read_file_content(f"saves/{self.name}/data.txt", 1)[0].split(" ")

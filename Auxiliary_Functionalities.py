@@ -196,6 +196,16 @@ def get_fibonacci(order: int)-> int:
         second, first = first+second, second
     return second
 
+# ------------------------------------- LINK FUNCTIONS -----------------------------------------------------------------
+def create_buttons(button, button_direc: str, effects: [str], y_coo=None):
+    position_x = (1080 - 260) // 2
+    position_y = y_coo if y_coo is not None else [y for y in range(150, 600, 150)]
+    buttons = []
+    for i, y in enumerate(position_y[:len(effects)]):
+        direc = f"{button_direc}/{i + 1}.png"
+        buttons.append(button(position_x, y, direc, effects[i]))
+    return buttons
+
 
 # ------------------------------------- MENU FUNCTIONS -----------------------------------------------------------------
 def get_sound_volume()-> float:

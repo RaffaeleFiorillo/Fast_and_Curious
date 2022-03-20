@@ -112,7 +112,6 @@ class User:
         self.name_text, self.coo_n_t = None, (0, 0)
         self.music_volume = 8
         self.sound_volume = 8
-        print("User has been created")
 
     def get_info(self) -> None:
         data = Af.read_file_content(f"saves/{self.name}/data.txt", 1)[0].split(" ")
@@ -280,6 +279,98 @@ class Basic_Input_Management:
         self.already_checked_cursor = False   # allows the cursor to interact with buttons again after the user clicks
 
 
+# provides a simple structure for a menu. The Main Menu directly uses it
+class Basic_Menu(Basic_Input_Management):
+    def __init__(self, screen: Surface, direct: str, buttons: [Button], e_coo: {int: (int, int, int)}, eff: [Surface]):
+        super().__init__(buttons)
+        self.screen = screen  # screen surface
+        self.name = direct.split("/")[-1][:-4]  # the name of the menu (extracted from its directory)
+        self.menu_image = Af.load_image(direct)  # image of the menu's background (loaded based on its name)
+        self.navigation_image = Af.load_image(f"menu/interfaces/navigation/navigation.png")  # img with info about menu
+        self.info_images = [Af.load_image(f"menu/info/info_{self.name}/{i + 1}.png") for i, _ in enumerate(buttons)]
+        self.effect = eff  # list of effects to be used for evidencing the buttons
+        self.active_code = 0  # index of the active button
+        self.current_frame = 0  # frame representing the current state of the button's evidencing effect
+        self.effect_coo = e_coo  # coordinates where the effects will be displayed
+        self.coord_effect = self.update_coord_effect()  # actual coordinate of the effect currently at use
+
+    def draw_buttons(self):
+        self.screen.blit(self.effect[int(self.current_frame)], self.coord_effect)  # draw button's evidencing effect
+        self.screen.blit(self.info_images[self.active_code], self.effect_coo[self.active_code])  # draw button info
+        [but.draw(self.screen) for but in self.button_list]  # draw each button
+        self.current_frame = (self.current_frame + 0.25) % 3  # update frame in a way that it restarts at a value of 3
+
+    def update_coord_effect(self):
+        return self.button_list[self.active_code].x-12, self.button_list[self.active_code].y-12
+
+    def get_effect_by_input(self, event: Event = None):
+        effect = super().get_effect_by_input(event)
+        if effect == "m_ai":
+            if Af.get_user_level() < 13:
+                return effect
+            else:
+                Af.show_error_message(self.screen, 12)
+        else:
+            return effect
+
+    def display_menu(self):
+        background = pygame.Surface(self.screen.get_size())
+        background.convert().fill((0, 0, 0))
+        while True:
+            self.clock.tick(30)
+            # effect carries information about what to do based on input. None is base case and means "do nothing"
+            effect = self.manage_events()  # taking and evaluating input
+            if effect is not None:  # if meaningful input is given take respective action
+                return effect
+            if not self.already_checked_cursor:  # saves time avoiding iterating over buttons when it was done already
+                self.cursor_is_on_button()  # mouse visual interaction with interface
+            self.refresh(background)
+
+    def manage_buttons(self, event: Event):
+        new_active_code = self.active_code  # go up if value is -1 and down if it's 1
+        if event.key == pygame.K_UP:
+            new_active_code -= 1
+        elif event.key == pygame.K_DOWN:
+            new_active_code += 1
+        elif event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
+            return self.enter_action()
+        new_active_code = new_active_code % len(self.button_list)  # make sure active_code doesn't go off-boundaries
+        self.set_button_to_active(new_active_code)
+
+    def refresh(self, background: Surface):
+        self.screen.blit(background, (0, 0))
+        self.screen.blit(self.menu_image, (305, 0))
+        self.screen.blit(self.navigation_image, (355, 620))
+        self.draw_buttons()
+        pygame.display.update()
+
+
+# provides some changes to the Basic_Menu in order to include a display of user information. Tutorial Menu uses it
+class User_Menu(Basic_Menu):
+    def __init__(self, screen: Surface, direct: str, buttons: [Button], b_coo: {int: (int, int, int)}, eff: [Surface],
+                 user: User):
+        super().__init__(screen, direct, buttons, b_coo, eff)
+        self.user = user
+        self.user_related_images = []
+        self.user_related_images.append(Af.load_image(f"menu/interfaces/User/user_info/level{self.user.level}.png"))
+        self.user_related_images.append(Af.load_image(f"menu/interfaces/User/records.png"))
+        self.user_related_images.append(Af.load_image(f"menu/interfaces/User/parts.png"))
+        self.user_related_images.append(Af.load_image(f"cars/display/{self.user.level}.png"))
+
+    def draw_user_related_images(self):
+        for coo, image in zip([(0, 0), (20, 280), (0, 180), (2, 490)], self.user_related_images):
+            self.screen.blit(image, coo)
+        self.user.draw_text(self.screen)
+
+    def refresh(self, background: Surface):
+        self.screen.blit(background, (0, 0))
+        self.screen.blit(self.menu_image, (305, 0))
+        self.screen.blit(self.navigation_image, (355, 620))
+        self.draw_user_related_images()
+        self.draw_buttons()
+        pygame.display.update()
+
+
 # ------------------------------------------------- MENU CLASSES -------------------------------------------------------
 # Used for "Story", and every Tutorial option
 class Menu_image_sequence(Basic_Input_Management):
@@ -361,52 +452,8 @@ class Menu_image_sequence(Basic_Input_Management):
                 return effect
             self.refresh()
 
-
-# Used for the Main Menu, Game Menu and Tutorial
-class Menu(Basic_Input_Management):
-    def __init__(self, buttons: [Button], directory: str, screen: Surface, user: User = None):
-        super().__init__(buttons)
-        self.directory = directory
-        self.name = self.directory.split("/")[-1][:-4]
-        self.name_image = Af.load_image(directory)
-        self.navigation_image = Af.load_image(f"menu/interfaces/navigation/navigation.png")
-        self.effect = [Af.load_image(f"menu/effects/1/{i + 1}.png") for i in range(4)]
-        self.user_related_images = []
-        self.active_code = 0
-        self.screen = screen
-        self.current_frame = 0
-        self.user = user
-        self.coord_effect = self.update_coord_effect()
-        self.menu_adjustments(user)  # based on menu type, some info could and should be different
-
-    def menu_adjustments(self, user: User):
-        if self.name == "game menu":
-            self.effect = [Af.load_image(f"menu/effects/3/{i + 1}.png") for i in range(4)]
-        if user:
-            self.user_related_images.append(Af.load_image(f"menu/interfaces/User/user_info/level{self.user.level}.png"))
-            self.user_related_images.append(Af.load_image(f"menu/interfaces/User/records.png"))
-            self.user_related_images.append(Af.load_image(f"menu/interfaces/User/parts.png"))
-            self.user_related_images.append(Af.load_image(f"cars/display/{self.user.level}.png"))
-
-    def draw_buttons(self):
-        coordinates = {0: (680, 90), 1: (698, 192), 2: (685, 178)}
-        coordinates2 = {0: (687, 90), 1: (687, 90), 2: (687, 192), 3: (687, 178), 4: (687, 178),  5: (687, 178)}
-        coordinates3 = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178)}
-        ch = {"main menu": coordinates, "game menu": coordinates2, "tutorial": coordinates3}
-        co_cho = ch[self.name]
-        coo = co_cho[self.active_code]
-        self.screen.blit(self.effect[int(self.current_frame)], self.coord_effect)
-        self.screen.blit(Af.load_image(f"menu/info/info_{self.name}/{self.active_code + 1}.png"),
-                         (coo[0], coo[1]))
-        for but in self.button_list:
-            but.draw(self.screen)
-        self.current_frame += 0.25
-        if self.current_frame > 3:
-            self.current_frame = 0
-
-    def update_coord_effect(self):
-        return self.button_list[self.active_code].x-12, self.button_list[self.active_code].y-12
-
+# Used for the Game Menu. Just implements some changes in the way some buttons work
+class Game_Menu(User_Menu):
     def get_effect_by_input(self, event: Event = None):
         effect = super().get_effect_by_input(event)
         if effect == "m_ai":
@@ -416,45 +463,6 @@ class Menu(Basic_Input_Management):
                 Af.show_error_message(self.screen, 12)
         else:
             return effect
-
-    def display_menu(self):
-        background = pygame.Surface(self.screen.get_size())
-        background = background.convert()
-        background.fill((0, 0, 0))
-        while True:
-            self.clock.tick(30)
-            # effect carries information about what to do based on input. None is base case and means "do nothing"
-            effect = self.manage_events()  # taking and evaluating input
-            if effect is not None:  # if meaningful input is given take respective action
-                return effect
-            if not self.already_checked_cursor:  # saves time avoiding iterating over buttons when it was done already
-                self.cursor_is_on_button()  # mouse visual interaction with interface
-            self.refresh(background)
-
-    def manage_buttons(self, event: Event):
-        new_active_code = self.active_code  # go up if value is -1 and down if it's 1
-        if event.key == pygame.K_UP:
-            new_active_code -= 1
-        elif event.key == pygame.K_DOWN:
-            new_active_code += 1
-        elif event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
-            return self.enter_action()
-        new_active_code = new_active_code % len(self.button_list)  # make sure active_code doesn't go off-boundaries
-        self.set_button_to_active(new_active_code)
-
-    def draw_user_related_images(self):
-        for coo, image in zip([(0, 0), (20, 280), (0, 180), (2, 490)], self.user_related_images):
-            self.screen.blit(image, coo)
-        self.user.draw_text(self.screen)
-
-    def refresh(self, background: Surface):
-        self.screen.blit(background, (0, 0))
-        self.screen.blit(self.name_image, (305, 0))
-        self.screen.blit(self.navigation_image, (355, 620))
-        if self.user:
-            self.draw_user_related_images()
-        self.draw_buttons()
-        pygame.display.update()
 
 
 # Used whenever the user wants to leave the game

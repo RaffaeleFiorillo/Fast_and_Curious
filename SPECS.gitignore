@@ -39,7 +39,7 @@ O executavel não vai funcionar em Linux! Mas o codigo pode ser rodado.
 ---------------------------- Como executar --------------------------------------
 Executar "Game.exe" encontrado na pasta "Fast and Curious" (pode demorar alguns segundos para abrir).
 Comando usado para criar o executavel:
-	 "pyinstaller --onefile --noconsole --windowed --icon=images\general\fire.ICO main.py"
+	 "pyinstaller --onefile --noconsole --windowed --name=Game --icon=images\general\fire.ICO main.py"
 Nota: fire.ICO é o nome do icone do executavel. estava na mesma pasta do main quando o comando foi executado.
 
 ##############################################################################################################

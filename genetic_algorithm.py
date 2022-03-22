@@ -98,7 +98,7 @@ class Training_World:
                 if event.type == pygame.KEYDOWN:
                     self.manage_buttons(event.key)
     # parts effects
-            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.remove_parts(self.obstacles_list.internal_list)
             self.parts_list.create_parts()
     # car movement
             self.car_movement_y()
@@ -211,7 +211,7 @@ class Data_World:
                 if event.type == pygame.KEYDOWN:
                     self.manage_buttons(event.key)
     # parts effects
-            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.remove_parts(self.obstacles_list.internal_list)
             self.parts_list.create_parts()
     # car movement
             self.car_movement_y()

@@ -2,16 +2,15 @@
 # -------------------------------------------- IMPORTS -----------------------------------------------------------------
 import pygame
 from pygame import Surface
-from os import walk, mkdir
+from os import walk, mkdir, remove, path
 from sys import exit as exit_2
 from shutil import rmtree
 from random import choice as random_choice, randint as random_randint, random as random_random
 import math
+import time
 
 
 # --------------------------------------- GLOBAL VARIABLES -------------------------------------------------------------
-
-
 obstacle_colors = [[196, 15, 23], [239, 10, 9], [191, 15, 23], [245, 71, 20], [252, 130, 18], [255, 17, 11],
                    [255, 18, 11], [255, 18, 12], [195, 195, 195], [163, 73, 164], [248, 12, 35], [255, 255, 255]]
 parts_colors = [[255, 128, 0], [255, 242, 0], [34, 177, 76], [252, 130, 19], [237, 28, 36], [255, 0, 255],
@@ -75,45 +74,34 @@ class Game:
 def choice(list_r: list):
     return random_choice(list_r)
 
-
 def randint(first_number: int, last_number: int)-> int:
     return random_randint(first_number, last_number)
-
 
 def random()-> float:
     return random_random()
 
-
 def arc_sin(value: int)-> float:
     return math.degrees(math.asin(value))
-
 
 def sin(angle: int)-> float:
     return math.sin(math.radians(angle))
 
-
 def cos(angle: int)-> float:
     return math.cos(math.radians(angle))
-
 
 def wait(milliseconds: int) -> None:
     pygame.time.wait(milliseconds*1000)
 
 
-def terminate_execution() -> None:
-    erase_active_user_data()
-    exit_2()
-
+# ------------------------------------- VISUAL/SOUND EFFECTS -----------------------------------------------------------
 
 # uses the pygame module to load a sound to memory and returns it
 def load_sound(directory: str)-> pygame.mixer.Sound:
     return pygame.mixer.Sound(f"sounds/{directory}")
 
-
 # returns an image ready to be displayed on the screen. "convert_alpha" makes it much faster to display
 def load_image(directory: str)-> Surface:
     return pygame.image.load(f"images/{directory}").convert_alpha()
-
 
 # plays a sound passed as argument
 def play(sound: pygame.mixer.Sound, volume=False) -> None:
@@ -121,17 +109,14 @@ def play(sound: pygame.mixer.Sound, volume=False) -> None:
     sound.set_volume(volume)
     sound.play()
 
-
 def play_music() -> None:
     sound = music_sound
     volume = get_music_volume()
     sound.set_volume(volume)
     sound.play(-1)
 
-
 def music_fade_out() -> None:
     music_sound.fadeout(2)
-
 
 # stops all currently playing sounds
 def stop_all_sounds() -> None:
@@ -165,7 +150,6 @@ def see(screen: Surface, coo: (int, int))-> int:
     # print(sign)
     return current_code
 
-
 # Given all seen values, gives back a code value for what to do
 def make_a_choice(info: [int], weights=None, bias=None)-> int:
     if weights is None:
@@ -187,7 +171,6 @@ def get_vector_distance(init_x: int, init_y: int, fin_x: int, fin_y: int):
     vector = math.sqrt(x+y)
     return vector
 
-
 def get_fibonacci(order: int)-> int:
     if order < 3:
         return 1
@@ -208,6 +191,15 @@ def create_buttons(button, button_direc: str, effects: [str], y_coo=None):
 
 
 # ------------------------------------- MENU FUNCTIONS -----------------------------------------------------------------
+def remove_prov_image():
+    if path.isfile("images/menu/interfaces/prov_image/prov_image.png"):
+        remove("images/menu/interfaces/prov_image/prov_image.png")
+
+def terminate_execution() -> None:
+    erase_active_user_data()
+    remove_prov_image()
+    exit_2()
+
 def get_sound_volume()-> float:
     line = read_file_content("saves/active_user.txt", 1)[0].split(" ")
     if len(line) != 1:
@@ -215,14 +207,12 @@ def get_sound_volume()-> float:
     else:
         return 1.0
 
-
 def get_music_volume()-> float:
     line = read_file_content("saves/active_user.txt", 1)[0].split(" ")
     if len(line) != 1:
         return float(line[6])/20.0
     else:
         return 0.5
-
 
 # displays on the screen an error message specified by his code
 def show_error_message(screen: Surface, code: int, waiting_time=3) -> None:
@@ -232,7 +222,6 @@ def show_error_message(screen: Surface, code: int, waiting_time=3) -> None:
     wait(waiting_time)
     pygame.event.clear()  # all pressed buttons are dismissed in this phase
 
-
 # displays on the screen a success message specified by his code
 def show_success_message(screen: Surface, code: int, waiting_time=3) -> None:
     play(success_sound)
@@ -241,23 +230,19 @@ def show_success_message(screen: Surface, code: int, waiting_time=3) -> None:
     wait(waiting_time)
     pygame.event.clear()  # all pressed buttons are dismissed in this phase
 
-
 # creates a folder inside the root_directory with the name of the user creating the account
 def create_folder(user_name: str) -> None:
     mkdir(f"saves/{user_name}")
 
-
 # returns a list with all the usernames currently existing, but only on windows, linux and Mac OS
 def list_users()-> [str]:
     return list(walk("saves"))[0][1]
-
 
 # returns a list with all the names of the texts that the user will type in the matches
 def get_text_names()-> [str]:
     texts = walk("texts")
     texts = [text for text in texts][0][1:][1][:-1]
     return texts
-
 
 # return a text image that fits into a set size, with some customizations (like color and font size)
 def create_sized_text(max_size_image: int, max_size_letter: int, text: str,
@@ -271,7 +256,6 @@ def create_sized_text(max_size_image: int, max_size_letter: int, text: str,
         if rendered_text.get_size()[0] <= max_size_image:
             break
     return rendered_text.convert_alpha()
-
 
 # writes the name and password typed by a user in the Create User Menu
 def write_name_password(screen: Surface, name: [str], password: [str], active: int, hide: bool) -> None:
@@ -290,7 +274,6 @@ def write_name_password(screen: Surface, name: [str], password: [str], active: i
     screen.blit(name_text, coordinates2[0])
     screen.blit(password_text, coordinates2[1])
 
-
 # Writes the password typed by a user when Insert Password Menu appears (hides it with "*" if the hide variable is True)
 def write_password(screen: Surface, password: [str], hide: bool) -> None:
     pygame.font.init()
@@ -303,12 +286,10 @@ def write_password(screen: Surface, password: [str], hide: bool) -> None:
     password_text = text_font.render(password, True, (0, 0, 0)).convert_alpha()
     screen.blit(password_text, (290, 330))
 
-
 # Writes the user name into the Welcome interface. Changes the letter size in order to fit into the given space
 def write_name(screen: Surface, name: str) -> None:
     name_text_image = create_sized_text(540, 50, name, (0, 255, 0))
     screen.blit(name_text_image, ((screen.get_width()-name_text_image.get_size()[0])//2+7, 330))
-
 
 # Writes the user's "best time" value in the Game Menu. Changes the letter size in order to fit into the given space
 def writable_best_time(best_time: int) -> [Surface, (int, int)]:
@@ -320,7 +301,6 @@ def writable_best_time(best_time: int) -> [Surface, (int, int)]:
     image_text = text_font.render(new_text, True, (255, 255, 255))
     return [image_text, coordinates]
 
-
 # Writes the user's "best speed" value in the Game Menu. Changes the letter size in order to fit into the given space
 def writable_best_speed(best_speed: int) -> [Surface, (int, int)]:
     pygame.font.init()
@@ -331,7 +311,6 @@ def writable_best_speed(best_speed: int) -> [Surface, (int, int)]:
     image_text = text_font.render(new_text, True, (255, 255, 255))
     return [image_text, coordinates]
 
-
 # Writes the user's username in the Game Menu. Changes the letter size in order to fit into the given space
 def writable_user_name(name: str) -> [Surface, (int, int)]:
     pygame.font.init()
@@ -340,14 +319,12 @@ def writable_user_name(name: str) -> [Surface, (int, int)]:
     coordinates = (107, 85-size[1]/2)
     return [image_text, coordinates]
 
-
 # Writes the user's collected Parts number in the Game Menu.Changes the letter size in order to fit into the given space
 def writable_parts_number(number: int) -> [Surface, (int, int)]:
     image_text = create_sized_text(170, 65, str(number), (255, 255, 0))
     size = image_text.get_size()
     coordinates = (132, 226-size[1]/2)
     return [image_text, coordinates]
-
 
 # converts the written text in the Add Text Menu, to images.Changes the letter size in order to fit into the given space
 def convert_text_to_images(text: str, real_application=False) -> ([str], [Surface]):
@@ -372,13 +349,11 @@ def convert_text_to_images(text: str, real_application=False) -> ([str], [Surfac
     images = [text_font.render(lin, True, (0, 0, 0)).convert_alpha() for lin in lines]
     return lines, images
 
-
 # returns the number of the last existing text
 def get_last_text_number() -> int:
     texts = get_text_names()
     last_text_name = texts[-1].split(".")[0]
     return int(last_text_name)
-
 
 # cleans the background of the screen in order for it to take images correctly
 def clean_background(screen: Surface) -> None:
@@ -387,17 +362,14 @@ def clean_background(screen: Surface) -> None:
     background.fill((0, 0, 0))
     screen.blit(background, (0, 0))
 
-
 # erases the data inside the file: "active user data.txt" when the user logs out or exits the game
 def erase_active_user_data() -> None:
     file = open("saves/active_user.txt", "w")
     file.close()
 
-
 # deletes the folder that has the data of the users that is requesting it to be deleted
 def delete_user_account(user_name: str) -> None:
     rmtree(f'saves/{user_name}')
-
 
 # assembles text with user name on a background
 def user_name_button_image(background: Surface, background_size: (int, int), text: Surface) -> Surface:
@@ -405,7 +377,6 @@ def user_name_button_image(background: Surface, background_size: (int, int), tex
     image.blit(background, (0, 0))
     image.blit(text, (10, 0))
     return image
-
 
 # creates buttons images for the "Choose Account" menu. For both cases when the button is on and of
 def get_users_images() -> ([Surface], [Surface]):
@@ -430,18 +401,15 @@ def get_users_images() -> ([Surface], [Surface]):
         user_images_passive.append(passive)
     return user_images_active, user_images_passive
 
-
 # gets the requirement values in order to verify if user has leveled up from the parameters file and returns them
 def get_requirements() -> (int, int):
     user_level = int(read_file_content("saves/active_user.txt", 1)[0].split(" ")[3])  # get user level in his file
     speed, precision, _parts = read_file_content(f"parameters/levels info/{user_level}.txt", 1)[0].split(" ")
     return int(speed), int(precision)
 
-
 # updates the data in the next_level.txt file
 def save_next_level_data(user_name: str, m_ai_data: int, winner_data: int) -> None:
     write_file_content(f"saves/{user_name}/next_level.txt", [f"{m_ai_data} \n{winner_data}"])
-
 
 # returns current user's information
 def get_user_data() -> ([str], [int]):
@@ -451,7 +419,6 @@ def get_user_data() -> ([str], [int]):
     int_val = [int(value) for value in values_p if value.isdigit()]
     return str_val, int_val
 
-
 # saves current user's new information
 def save_user_data(data: (str, int, int, int, int, str, int, int)) -> None:
     name, b_speed, b_time, level, parts, password, volume1, volume2 = data
@@ -459,7 +426,6 @@ def save_user_data(data: (str, int, int, int, int, str, int, int)) -> None:
     write_file_content("saves/active_user.txt", line)
     line = f"{b_speed} {b_time} {level} {parts} {password} {volume1} {volume2}"
     write_file_content(f"saves/{name}/data.txt", line)
-
 
 # updates user information after a played match is over, for Mission AI
 def save_performance_ai(go_to_next_level: bool, parts: int, speed: int) -> None:
@@ -478,7 +444,6 @@ def save_performance_ai(go_to_next_level: bool, parts: int, speed: int) -> None:
     data = (str_val[0], int_val[0], int_val[1], int_val[2], int_val[3], str_val[1], int_val[4], int_val[5])
     save_user_data(data)
 
-
 # updates user information after a played match is over, for Mission Parts
 def save_performance_parts(parts: int, speed: int, time: int) -> None:
     str_val, int_val = get_user_data()
@@ -493,12 +458,10 @@ def save_performance_parts(parts: int, speed: int, time: int) -> None:
     data = (str_val[0], int_val[0], int_val[1], int_val[2], int_val[3], str_val[1], int_val[4], int_val[5])
     save_user_data(data)
 
-
 # returns the current user's level
 def get_user_level() -> int:
     user_level = int(read_file_content("saves/active_user.txt", 1)[0].split(" ")[3])
     return user_level
-
 
 # returns True if the user has already won the game before, and False in the opposite case
 def user_is_a_winner() -> int:
@@ -518,7 +481,6 @@ def write_HUD_parts_value(screen: Surface, number_parts: int) -> None:
     text_image = create_sized_text(165, 25, text, (0, 0, 0), 7)
     screen.blit(text_image, (540-adjust, 600))
 
-
 def write_HUD_time_value(screen: Surface, time_value: int) -> None:
     if time_value == "i":
         screen.blit(load_image("HUD/infinite.png"), (529, 665))
@@ -527,7 +489,6 @@ def write_HUD_time_value(screen: Surface, time_value: int) -> None:
         adjust = len(text)*4
         text_image = create_sized_text(100, 16, text, (0, 0, 0), 7)
         screen.blit(text_image, (540-adjust, 670))
-
 
 def display_HUD_speed_meter(screen: Surface, speed: int) -> None:
     text = str(int(speed))
@@ -541,7 +502,6 @@ def display_HUD_speed_meter(screen: Surface, speed: int) -> None:
     screen.blit(load_image(f"HUD/meter/{image_number}.png"), (20, 420))
     screen.blit(text_image, (148-adjust, 596))
 
-
 def display_HUD_precision_meter(screen: Surface, precision: int) -> None:
     text = str(int(precision))
     image_number = int(precision/6.7)
@@ -554,7 +514,6 @@ def display_HUD_precision_meter(screen: Surface, precision: int) -> None:
     screen.blit(load_image(f"HUD/meter/{image_number}.png"), (811, 420))
     screen.blit(text_image, (940-adjust, 596))
 
-
 def display_HUD_energy_bar(screen: Surface, energy_level: int) -> None:
     image_number = int(energy_level/3.333)
     if image_number > 30:
@@ -562,7 +521,6 @@ def display_HUD_energy_bar(screen: Surface, energy_level: int) -> None:
     elif image_number < 0:
         image_number = 0
     screen.blit(load_image(f"HUD/barr/{image_number}.png"), (296, 640))
-
 
 def display_HUD_resistance_bar(screen: Surface, resistance_level: int) -> None:
     image_number = int(resistance_level/3.333)
@@ -572,12 +530,10 @@ def display_HUD_resistance_bar(screen: Surface, resistance_level: int) -> None:
         image_number = 0
     screen.blit(load_image(f"HUD/barr/{image_number}.png"), (605, 640))
 
-
 # turns a typed line (text/string) into an image
 def get_text_images(line: [str]) -> Surface:
     text_font = pygame.font.SysFont('Arial', 22)
     return text_font.render(" ".join(line).strip(), True, (0, 0, 0)).convert_alpha()
-
 
 # creates a new text's image (those that will be chosen and displayed during a match) and saves it
 def save_text_image(name: str) -> None:
@@ -593,7 +549,6 @@ def save_text_image(name: str) -> None:
     pygame.display.update()
     pygame.image.save(screen2, f"images/texts/{name}.png")
 
-
 # modifies a specific color turning it slightly different from the original
 def modify_color(color: (int, int, int)) -> (int, int, int):
     new_color = []
@@ -605,13 +560,11 @@ def modify_color(color: (int, int, int)) -> (int, int, int):
         new_color.append(new_tone)
     return tuple(new_color)
 
-
 # creates a sample of colors, which are slightly modifications of pre-existing colors
 def create_firework_colors(color_number: int) -> [(int, int, int)]:
     base_colors = [(255, 0, 0), (34, 177, 76), (0, 0, 255), (0, 255, 0), (255, 255, 0), (0, 255, 255), (255, 0, 255),
                    (255, 90, 0), (130, 0, 255)]
     return [modify_color(choice(base_colors)) for _ in range(color_number)]
-
 
 # returns x and y values for a square like firework
 def calculate_rs_rhomb(x: int, y: int, radius: int) -> (int, int):
@@ -627,13 +580,11 @@ def calculate_rs_rhomb(x: int, y: int, radius: int) -> (int, int):
         r_x = x + randint(0, max_x_size) * choice([-1, 1])
     return r_x, r_y
 
-
 # returns x and y values for a square like firework
 def calculate_rs_square(x: int, y: int, radius: int) -> (int, int):
     r_x = x + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
     r_y = y + randint(0, int(radius-radius*0.3)) * choice([-1, 1])
     return r_x, r_y
-
 
 # returns x and y values for a circle like firework
 def calculate_rs_circle(x: int, y: int, radius: int) -> (int, int): 
@@ -657,13 +608,11 @@ def encrypt_letter(letter: str, key: int) -> str:
     new_index = (valid_characters.index(letter) + key) % len(valid_characters)
     return valid_characters[new_index]
 
-
 # given a string, returns the encrypted version of it
 def encrypt_line(data: str, key: int)-> str:
     data = data.strip() if "\n" not in data else data[:-1]
     encrypted_data = "".join(reversed([encrypt_letter(char, key) for char in data]))
     return encrypted_data
-
 
 # encrypts a file given his directory
 def encrypt_file(directory: str) -> None:
@@ -679,19 +628,16 @@ def encrypt_file(directory: str) -> None:
             else:
                 file.write(f"{key} {encrypt_line(lines[-1], key)}")
 
-
 # encrypts a letter based on a given key_value
 def decrypt_letter(letter: str, key: int) -> str:
     new_index = (valid_characters.index(letter) - key) % len(valid_characters)
     return valid_characters[new_index]
-
 
 # given a string, returns the decrypted version of it
 def decrypt_line(data: str, key) -> str:
     data = data if "\n" not in data else data[:-1]
     decrypted_data = "".join(reversed([decrypt_letter(char, key) for char in data]))
     return decrypted_data
-
 
 # de crypts a file given his directory
 def decrypt_file(directory: str) -> None:
@@ -708,7 +654,6 @@ def decrypt_file(directory: str) -> None:
             else:
                 file.write(decrypt_line(lines[-1][start_index:], key))
 
-
 # reads  an encrypted file and returns its decrypted content. Takes the directory of the encrypted file and the number
 # of lines that we need to be returned. the output is a list of strings (every string is a different line of the file).
 def read_file_content(file_directory: str, lines_to_read: int = 0) -> [str]:
@@ -721,14 +666,12 @@ def read_file_content(file_directory: str, lines_to_read: int = 0) -> [str]:
     encrypt_file(file_directory)
     return file_content
 
-
 # Takes as parameters the file directory where the data will be written; and the content (to be written). content is
 # a string containing all the data to be written in the file.
 def write_file_content(file_directory: str, content: str) -> None:
     with open(file_directory, "w") as file:
         file.writelines(content)
     encrypt_file(file_directory)
-
 
 # encrypts all .txt files  in a list of directories passed as parameter
 def encrypt_all_files(directories: [str]) -> None:
@@ -738,7 +681,6 @@ def encrypt_all_files(directories: [str]) -> None:
             encrypt_file(directory)
         except ValueError:
             print(f"!!! Error in current directory: {directory} !!!")
-
 
 # decrypts all .txt files  in a list of directories passed as parameter
 def decrypt_all_files(directories: [str]) -> None:

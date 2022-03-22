@@ -27,7 +27,7 @@ class Mission:
         self.car = ce.Car()
         self.road = ce.Road()
         self.obstacles_list = ce.Obstacles()
-        self.parts_list = ce.parts()
+        self.parts_list = ce.Parts()
         self.parts_collected = 0
         # HUD stuff
         self.energy = 100
@@ -284,7 +284,7 @@ class Mission:
     # input management
             self.manage_events()
     # parts effects
-            self.parts_list.remover_parts(self.obstacles_list.internal_list)
+            self.parts_list.remove_parts(self.obstacles_list.internal_list)
             self.parts_list.create_parts()
     # car movement
             self.car_movement_y()

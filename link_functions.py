@@ -304,4 +304,6 @@ def add_text(screen: Af.Surface):
 def enter_password(screen: Af.Surface):
     e_m = mc.Enter_Password(screen)
     Af.play(enter_password_sound)
-    return e_m.display_menu()
+    effect = e_m.display_menu()
+    Af.remove_prov_image()  # remove a background image with compromising info
+    return effect

@@ -222,13 +222,17 @@ class Space_Time_Entity:
 # ---------------------------------------------------- ROAD ------------------------------------------------------------
 class Road:
     def __init__(self):
-        self.current_frame = 0
-        self.images_road = [Af.load_image(f"estrada/frame{frame + 1}.png") for frame in range(19)]
-        self.frames = len(self.images_road)
+        self.rect = (0, 0, Af.SCREEN_LENGTH, 308)  # characteristics of the road (how it will be drawn)
+        self.color = (108, 108, 108)  # color of the road's background
+        self.current_frame = 0  # number that varies between 0 and 19 describing the current state of the road
+        self.frame_number = 19  # number of frames required for the road cycle to start over
 
     def draw(self, screen):
-        screen.blit(self.images_road[self.current_frame], self.images_road[self.current_frame].get_rect())
-        self.current_frame = (self.current_frame + 1) % self.frames
+        pygame.draw.rect(screen, self.color, self.rect)  # draw road background
+        for i in range(7):  # draw road separations (white rectangles)
+            pygame.draw.rect(screen, (255, 255, 255), (i*194-self.current_frame*10, 81, 114, 13))
+            pygame.draw.rect(screen, (255, 255, 255), (i*194-self.current_frame*10, 200, 114, 13))
+        self.current_frame = (self.current_frame + 1) % self.frame_number  # update frame to create movement effect
 
 
 # ------------------------------------------------ SINGLE OBSTACLE -----------------------------------------------------
@@ -345,7 +349,7 @@ class _part:
 
 
 # ----------------------------------------------- PARTS COLLECTION -----------------------------------------------------
-class parts:
+class Parts:
     def __init__(self):
         self.internal_list = []
         self.first_parts = True
@@ -358,10 +362,7 @@ class parts:
         self.max_parts = 7
 
     def control_last(self):
-        if self.internal_list[-1].x <= space_between_obstacles[-2]:
-            return True
-        else:
-            return False
+        return self.internal_list[-1].x <= space_between_obstacles[-2]
 
     def create_parts(self):
         dist_between_blocs = Af.randint(self.min_dist_between_blocs, self.max_dist_between_blocs)
@@ -383,22 +384,17 @@ class parts:
 
     @staticmethod
     def calculate_type_part():
-        probability = Af.random()
-        if probability <= 0.3:
-            return 1
-        elif 0.3 < probability <= 0.55:
-            return 2
-        elif 0.55 < probability <= 0.75:
-            return 3
-        elif 0.75 < probability <= 0.9:
-            return 4
-        else:
-            return 5
+        return Af.choice([1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 5])  # random type (some are more rare than others)
 
-    def remover_parts(self, internal_list_obst):
+    def remove_parts(self, internal_list_obst):
         for part, obst in zip(self.internal_list, internal_list_obst):
-            if part.x < -part.length:
+            if part.x < -part.length:  # part is outside of the screen
                 self.internal_list.remove(part)
+            # parts are overlapping with obstacle
+            """elif obst.x + obst.length > part.x + part.length and obst.x < part.x:
+                print(self.y, obst.y, (self.y - 10)//100 == (obst.y-10)//100, sep=" | ")
+                if (self.y - 10)//100 == (obst.y-10)//100:
+                    self.internal_list.remove(part)"""
 
     def draw(self, screen):
         for part in self.internal_list:

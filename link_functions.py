@@ -171,7 +171,7 @@ def manage_account(screen: Af.Surface):
     Af.play(change_menu_sound)
     position_x = (1080 - 260) // 2
     position_y = [y for y in range(155, 600, 70)]
-    effects = ["", "", "add", "change_password", "eliminate_account", "exit3"]
+    effects = ["", "", "manage_gp", "manage_ch", "manage_us", "exit3"]
     buttons = [mc.Button(position_x, y + 20, f"menu/buttons/8/{position_y.index(y) + 1}.png",
                          effects[position_y.index(y)])
                for y in position_y[:len(effects)]]
@@ -258,7 +258,7 @@ def tutorial_lu(screen: Af.Surface):
     return effect
 
 
-# --------------------------------------------- MANAGEMENT -------------------------------------------------------------
+# ----------------------------------------- MANAGEMENT USER ------------------------------------------------------------
 # display the Change Password Menu. It leads to the Management Menu (after password verification)
 def change_password(screen: Af.Surface):
     Af.play(change_menu_sound)
@@ -273,7 +273,7 @@ def change_password(screen: Af.Surface):
     return "manage"
 
 
-# display the Delete Account Menu. It leads to the Main Menu (after password verification) or Management Menu
+# display the Delete Account Menu. It leads to the Main Menu (after password verification) or Management User Menu
 def delete_account(screen: Af.Surface):
     Af.play(change_menu_sound)
     buttons = [mc.Button(240, 410, f"menu/buttons/3/1.png", True),
@@ -288,7 +288,23 @@ def delete_account(screen: Af.Surface):
     return "manage"
 
 
-# display the Add Text Menu. It leads to the Management Menu for both successful and Unsuccessful outcome
+# display the Delete Statistics Menu. It leads to the Management User Menu
+def delete_statistics(screen: Af.Surface):
+    Af.play(change_menu_sound)
+    buttons = [mc.Button(240, 410, f"menu/buttons/3/1.png", True),
+               mc.Button(580, 410, f"menu/buttons/3/2.png", False)]
+    if mc.Exit("menu/exit/delete_account.png", screen, buttons).display_menu():
+        user_name = Af.read_file_content("saves/active_user.txt", 1)[0].split(" ")[0]
+        verification_password = mc.Enter_Password(screen, True).display_menu()
+        if verification_password == "main_menu":
+            Af.play(delete_account_sound)
+            Af.delete_user_account(user_name)
+        return verification_password
+    return "manage"
+
+
+# ---------------------------------------- MANAGEMENT GAMEPLAY ---------------------------------------------------------
+# display the Add Text Menu. It leads to the Management Gameplay Menu for both successful and Unsuccessful outcome
 def add_text(screen: Af.Surface):
     Af.play(change_menu_sound)
     buttons = [mc.Button(335, 495, "/menu/buttons/5/1.png", False),
@@ -296,6 +312,9 @@ def add_text(screen: Af.Surface):
     at = mc.Add_Text(screen, buttons)
     at.display_menu()
     return "manage"
+
+
+# ----------------------------------------- MANAGEMENT CHEATS ----------------------------------------------------------
 
 
 # ----------------------------------------------- GLOBAL ---------------------------------------------------------------

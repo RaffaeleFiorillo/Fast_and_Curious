@@ -39,7 +39,7 @@ This table shows stuff to be done in the future (to expand the game or to fix bu
 ------------------------------------------------------------------------------------------------------------------------
  18 |Change some of the "exit" buttons to a more adapt name                             | Done    |      2       |  2  |
 ------------------------------------------------------------------------------------------------------------------------
- 19 |Rise Frame rate (Low frame rate sets a speed limit to the typing)                  | Pendent |      8       |  7  |
+ 19 |Rise Frame rate and change clock position (Low frame means a typing speed limit)   | Pendent |      8       |  7  |
 ------------------------------------------------------------------------------------------------------------------------
  20 |Investigate about the reduntant creation of users during the game (Menus)          | Done    |      6       |  7  |
 ------------------------------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ This table shows stuff to be done in the future (to expand the game or to fix bu
 ------------------------------------------------------------------------------------------------------------------------
  26 |Create a new Mission to improve cursor/mouse skills                                | Pendent |      7       |  10 |
 ------------------------------------------------------------------------------------------------------------------------
- 27 |Reconstruction of the Menu based on new features                                   | Pendent |      10       |  10 |
+ 27 |Reconstruction of the Menu based on new features                                   | Pendent |      10      |  10 |
 ------------------------------------------------------------------------------------------------------------------------
- 28 |Release Version 3.0: ID->Undone[16,17,19,22,25,26] | Done-> [13,18,20,23,24]       | Pendent |      10      |  10 |
+ 28 |Release Version 3.0: Undone->[16,17,19,22,25,26] | Done-> [13,18,20,23,24,27]      | Pendent |      10      |  10 |
 ------------------------------------------------------------------------------------------------------------------------

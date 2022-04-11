@@ -7,7 +7,6 @@ from sys import exit as exit_2
 from shutil import rmtree
 from random import choice as random_choice, randint as random_randint, random as random_random
 import math
-import time
 
 
 # --------------------------------------- GLOBAL VARIABLES -------------------------------------------------------------
@@ -51,7 +50,7 @@ class Game:
     def create_screen(self, lable: str) -> None:
         global SCREEN
         pygame.display.set_caption(lable)
-        self.screen = SCREEN  # module must be initialized or the "convert_alpha" method wont work
+        self.screen = SCREEN  # module must be initialized or the "convert_alpha" method won't work
 
     def start(self, link: str, state=True) -> None:
         keys_list = list(self.link_function_dict.keys())
@@ -101,7 +100,10 @@ def load_sound(directory: str)-> pygame.mixer.Sound:
 
 # returns an image ready to be displayed on the screen. "convert_alpha" makes it much faster to display
 def load_image(directory: str)-> Surface:
-    return pygame.image.load(f"images/{directory}").convert_alpha()
+    try:
+        return pygame.image.load(f"images/{directory}").convert_alpha()
+    except FileNotFoundError:
+        exit(f"Error: Directory *{directory}* Not Found")
 
 # plays a sound passed as argument
 def play(sound: pygame.mixer.Sound, volume=False) -> None:
@@ -180,13 +182,13 @@ def get_fibonacci(order: int)-> int:
     return second
 
 # ------------------------------------- LINK FUNCTIONS -----------------------------------------------------------------
-def create_buttons(button, button_direc: str, effects: [str], y_coo=None):
+def create_buttons(button, button_dir: str, effects: [str], y_coo=None):
     position_x = (1080 - 260) // 2
     position_y = y_coo if y_coo is not None else [y for y in range(150, 600, 150)]
     buttons = []
     for i, y in enumerate(position_y[:len(effects)]):
-        direc = f"{button_direc}/{i + 1}.png"
-        buttons.append(button(position_x, y, direc, effects[i]))
+        directory = f"{button_dir}/{i + 1}.png"
+        buttons.append(button(position_x, y, directory, effects[i]))
     return buttons
 
 
@@ -234,7 +236,7 @@ def show_success_message(screen: Surface, code: int, waiting_time=3) -> None:
 def create_folder(user_name: str) -> None:
     mkdir(f"saves/{user_name}")
 
-# returns a list with all the usernames currently existing, but only on windows, linux and Mac OS
+# returns a list with all the usernames currently existing, but only on Windows, linux and macOS
 def list_users()-> [str]:
     return list(walk("saves"))[0][1]
 
@@ -286,7 +288,7 @@ def write_password(screen: Surface, password: [str], hide: bool) -> None:
     password_text = text_font.render(password, True, (0, 0, 0)).convert_alpha()
     screen.blit(password_text, (290, 330))
 
-# Writes the user name into the Welcome interface. Changes the letter size in order to fit into the given space
+# Writes the username into the Welcome interface. Changes the letter size in order to fit into the given space
 def write_name(screen: Surface, name: str) -> None:
     name_text_image = create_sized_text(540, 50, name, (0, 255, 0))
     screen.blit(name_text_image, ((screen.get_width()-name_text_image.get_size()[0])//2+7, 330))
@@ -371,14 +373,14 @@ def erase_active_user_data() -> None:
 def delete_user_account(user_name: str) -> None:
     rmtree(f'saves/{user_name}')
 
-# assembles text with user name on a background
+# assembles text with username on a background
 def user_name_button_image(background: Surface, background_size: (int, int), text: Surface) -> Surface:
     image = Surface(background_size)
     image.blit(background, (0, 0))
     image.blit(text, (10, 0))
     return image
 
-# creates buttons images for the "Choose Account" menu. For both cases when the button is on and of
+# creates button images for the "Choose Account" menu. For both cases when the button is on and off
 def get_users_images() -> ([Surface], [Surface]):
     users = list_users()
     user_images_active, user_images_passive = [], []
@@ -454,7 +456,7 @@ def save_performance_parts(parts: int, speed: int, time: int) -> None:
         int_val[0] = int(speed)
     if int_val[1] < time:
         int_val[1] = int(time)
-    # name best-speed best-time level parts password music-volume sound-volume
+    # name best-speed best-time level 'parts' password music-volume sound-volume
     data = (str_val[0], int_val[0], int_val[1], int_val[2], int_val[3], str_val[1], int_val[4], int_val[5])
     save_user_data(data)
 
@@ -472,7 +474,7 @@ def user_is_a_winner() -> int:
 
 # ------------------------------------ HUD FUNCTIONS -------------------------------------------------------------------
 # This section contains functions designed for the proper functioning of the game's HUD interface.
-# the job and description of a function can be understood by his name. the last two words of every functions refer to
+# the job and description of a function can be understood by his name. the last two words of every function refer to
 # what they are responsible for displaying on the game screen
 
 def write_HUD_parts_value(screen: Surface, number_parts: int) -> None:
@@ -601,7 +603,6 @@ def calculate_rs_circle(x: int, y: int, radius: int) -> (int, int):
 # ------------------------------------- ENCRYPTION ---------------------------------------------------------------------
 # functions to encrypt and decrypt user information. Important because if data is not encrypted the user could just open
 # files and easily change progress (increase parts collected, level up,...)
-
 
 # encrypts a letter based on a given key_value
 def encrypt_letter(letter: str, key: int) -> str:

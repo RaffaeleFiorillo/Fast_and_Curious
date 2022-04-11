@@ -1,5 +1,5 @@
 # This module contains all the functions called by the main module.
-# Al the functions take the screen where the images are going to be displayed as a parameter
+# All the functions take the screen where the images are going to be displayed as a parameter
 # For each of the functions there is a correspondent class that manages the functionality of the function
 # Each function in this module returns values that correspond to the functionality that the game should open next
 # A function's comment in this module has a description and the functions it can lead to when it finishes
@@ -51,13 +51,11 @@ def main_menu(screen: Af.Surface):
     m_m = mc.Basic_Menu(screen, f"menu/interfaces/Main/main menu.png", buttons, button_coo, effects)
     return m_m.display_menu()
 
-
 # display Choose User Menu, leads to the Game Menu(after password verification), itself or the Main Menu.
 def choose_user(screen: Af.Surface):
     Af.play(change_menu_sound)
     m_m = mc.Choose_Account(screen)
     return m_m.display_menu()
-
 
 # display the Create Account Menu, leads to the Game Menu or to the Main Menu
 def create_new_account(screen: Af.Surface):
@@ -76,7 +74,6 @@ def create_new_account(screen: Af.Surface):
     elif effect:
         return "game_menu"
     return "main_menu"
-
 
 # activated when a user wants to exit the Game, leads to finish the game's execution or Main Menu
 def exit_game(screen: Af.Surface):
@@ -107,8 +104,8 @@ def game_menu(screen: Af.Surface):
         mission_is_unlocked = int(Af.read_file_content(f"saves/{user.name}/next_level.txt", 1)[0])
         if not mission_is_unlocked:
             next_link = "nx_l"
+    Af.write_file_content("parameters/prev_men.txt", "game_menu")  # make sure any submenu returns to Game Menu after
     return next_link
-
 
 # A sequence of slides with the game's story images and texts. Leads to the Game Menu or to the next slide of the story
 def display_story(screen: Af.Surface):
@@ -116,7 +113,6 @@ def display_story(screen: Af.Surface):
     story_slides = mc.Menu_image_sequence(screen, "story", 10, "game_menu", "Story")
     effect = story_slides.display_menu()
     return effect
-
 
 # Starts and manages the game (for level up). After the game ends, a window with the results is shown and the player
 # info is updated.
@@ -130,12 +126,11 @@ def game_ai(screen: Af.Surface):
         return "winner"
     return "game_menu"
 
-
 # display the Missions Menu. Leads to all the available side missions (the ones for practice instead of level up)
 def missions(screen: Af.Surface):
     Af.play(change_menu_sound)
     y_coo = [y for y in range(107, 600, 80)]
-    effects_game = ["m_endless", "m_aim", "missions", "missions", "missions", "exit3"]
+    effects_game = ["m_endless", "m_aim", "missions", "missions", "missions", "game_menu"]
     buttons = Af.create_buttons(mc.Button, "menu/buttons/11", effects_game, y_coo)
     effects_coo = {0: (687, 90), 1: (687, 90), 2: (687, 192), 3: (687, 178), 4: (687, 178), 5: (687, 178)}
     effects = [Af.load_image(f"menu/effects/3/{i + 1}.png") for i in range(4)]
@@ -144,15 +139,15 @@ def missions(screen: Af.Surface):
     user.get_texts()
     missions_menu = mc.User_Menu(screen, f"menu/interfaces/Main/missions menu.png", buttons, effects_coo, effects, user)
     next_link = missions_menu.display_menu()
+    Af.write_file_content("parameters/prev_men.txt", "game_menu")  # make sure any submenu returns to Game Menu after
     return next_link
-
 
 # display the Tutorial Menu, leads to all the tutorials available or to the Game Menu
 def tutorial(screen: Af.Surface):
     Af.play(change_menu_sound)
     position_x_tutorial = (1080 - 260) // 2
     position_y_tutorial = [y for y in range(110, 600, 100)]
-    effects_tutorial = ["controls", "save", "enemy", "level_up", "exit3"]
+    effects_tutorial = ["controls", "save", "enemy", "level_up", "game_menu"]
     buttons = [
         mc.Button(position_x_tutorial, y, f"menu/buttons/4/{position_y_tutorial.index(y) + 1}.png",
                   effects_tutorial[position_y_tutorial.index(y)]) for y in
@@ -163,15 +158,15 @@ def tutorial(screen: Af.Surface):
     user.get_active_user()
     user.get_texts()
     tutorial_menu = mc.User_Menu(screen, f"menu/interfaces/Main/tutorial.png", buttons, button_coo, effects, user)
+    Af.write_file_content("parameters/prev_men.txt", "game_menu")  # make sure any submenu returns to Game Menu after
     return tutorial_menu.display_menu()
 
-
 # display the Management Menu. It leads to the Game Menu, Delete Account Menu, Change Password Menu or Add Text Menu
-def manage_account(screen: Af.Surface):
+def management(screen: Af.Surface):
     Af.play(change_menu_sound)
     position_x = (1080 - 260) // 2
     position_y = [y for y in range(155, 600, 70)]
-    effects = ["", "", "manage_gp", "manage_ch", "manage_us", "exit3"]
+    effects = ["", "", "manage_gp", "manage_ch", "manage_us", "game_menu"]
     buttons = [mc.Button(position_x, y + 20, f"menu/buttons/8/{position_y.index(y) + 1}.png",
                          effects[position_y.index(y)])
                for y in position_y[:len(effects)]]
@@ -187,13 +182,11 @@ def manage_account(screen: Af.Surface):
     m = mc.Management(buttons, f"menu/interfaces/Main/management.png", screen, user)
     return m.display_menu()
 
-
 # activated when a user wants to unlock the ability to go to next level for the current level
 def unlock_next_level(screen: Af.Surface):
     nxt_lvl = mc.Unlock_Level(screen)
     nxt_lvl.display_menu()
     return "game_menu"
-
 
 # activated when a user wants to exit the Game Menu, leads to the Main Menu or Game Menu
 def exit_game_menu(screen: Af.Surface):
@@ -217,7 +210,6 @@ def game_parts(screen: Af.Surface):
     Af.save_performance_parts(parts, max_speed, time)
     return "missions"
 
-
 # Starts and manages the game: Mouse improvement. After the game ends, a window with the results is shown and the player
 # info is updated. NOT IMPLEMENTED YET!!!
 def game_mouse(screen: Af.Surface):
@@ -236,20 +228,17 @@ def tutorial_s(screen: Af.Surface):
     effect = tut_s_slides.display_menu()
     return effect
 
-
 def tutorial_c(screen: Af.Surface):
     Af.play(change_menu_sound)
     tut_c_slides = mc.Menu_image_sequence(screen, "tutorial_controls", 5, "tutorial", "Controls")
     effect = tut_c_slides.display_menu()
     return effect
 
-
 def tutorial_e(screen: Af.Surface):
     Af.play(change_menu_sound)
     tut_e_slides = mc.Menu_image_sequence(screen, "tutorial_enemies", 2, "tutorial", "Enemies")
     effect = tut_e_slides.display_menu()
     return effect
-
 
 def tutorial_lu(screen: Af.Surface):
     Af.play(change_menu_sound)
@@ -259,7 +248,24 @@ def tutorial_lu(screen: Af.Surface):
 
 
 # ----------------------------------------- MANAGEMENT USER ------------------------------------------------------------
-# display the Change Password Menu. It leads to the Management Menu (after password verification)
+# Display Account Management Menu. It leads to its sub-menus (listed in this section) or to the Management Menu
+def management_user(screen: Af.Surface):
+    Af.write_file_content("parameters/prev_men.txt", "manage")  # make sure any submenu returns to management after
+    Af.play(change_menu_sound)
+    y_coo = [110, 190, 270, 510]
+    effects = ["change_password", "delete_account", "manage_us", "manage"]
+    buttons = Af.create_buttons(mc.Button, "menu/buttons/12", effects, y_coo)
+    effects_coo = {0: (687, 90), 1: (687, 90), 2: (687, 192), 3: (687, 178), 4: (687, 178)}
+    effects = [Af.load_image(f"menu/effects/3/{i + 1}.png") for i in range(4)]
+    user = mc.User()
+    user.get_active_user()
+    user.get_texts()
+    directory = "menu/interfaces/Main/management_account.png"  # directory for the background image of the menu
+    m_user_menu = mc.User_Menu(screen, directory, buttons, effects_coo, effects, user)
+    next_link = m_user_menu.display_menu()
+    return next_link
+
+# display the Change Password Menu. It leads to the Account Management Menu (after password verification)
 def change_password(screen: Af.Surface):
     Af.play(change_menu_sound)
     buttons = [mc.Button(335, 210, "/menu/buttons/5/0.png", None),
@@ -270,10 +276,9 @@ def change_password(screen: Af.Surface):
     effect = cma.display_menu()
     if effect == "change_password":
         return effect
-    return "manage"
+    return "manage_us"
 
-
-# display the Delete Account Menu. It leads to the Main Menu (after password verification) or Management User Menu
+# display Delete Account Menu. It leads to the Main Menu (after password verification) or Management User Menu
 def delete_account(screen: Af.Surface):
     Af.play(change_menu_sound)
     buttons = [mc.Button(240, 410, f"menu/buttons/3/1.png", True),
@@ -285,10 +290,9 @@ def delete_account(screen: Af.Surface):
             Af.play(delete_account_sound)
             Af.delete_user_account(user_name)
         return verification_password
-    return "manage"
+    return "manage_us"
 
-
-# display the Delete Statistics Menu. It leads to the Management User Menu
+# display Delete Statistics Menu. It leads to the Account Management User Menu
 def delete_statistics(screen: Af.Surface):
     Af.play(change_menu_sound)
     buttons = [mc.Button(240, 410, f"menu/buttons/3/1.png", True),
@@ -300,22 +304,30 @@ def delete_statistics(screen: Af.Surface):
             Af.play(delete_account_sound)
             Af.delete_user_account(user_name)
         return verification_password
-    return "manage"
+    return "manage_us"
 
 
 # ---------------------------------------- MANAGEMENT GAMEPLAY ---------------------------------------------------------
-# display the Add Text Menu. It leads to the Management Gameplay Menu for both successful and Unsuccessful outcome
+# Display Gameplay Management Menu. It leads to its sub-menus (listed in this section) or to the Management Menu
+def management_gameplay(screen: Af.Surface):
+    # effects = ["add", "", "", "manage"]
+    return "manage"
+
+# display the Add Text Menu. It leads to the Gameplay Management Menu for both successful and Unsuccessful outcome
 def add_text(screen: Af.Surface):
     Af.play(change_menu_sound)
     buttons = [mc.Button(335, 495, "/menu/buttons/5/1.png", False),
                mc.Button(573, 495, "/menu/buttons/5/2.png", True)]
     at = mc.Add_Text(screen, buttons)
     at.display_menu()
-    return "manage"
+    return "manage_gp"
 
 
 # ----------------------------------------- MANAGEMENT CHEATS ----------------------------------------------------------
-
+# Display Cheats Management Menu. It leads to its sub-menus (listed in this section) or to the Management Menu
+def management_cheats(screen: Af.Surface):
+    # effects = ["", "", "", "manage"]
+    return "manage"
 
 # ----------------------------------------------- GLOBAL ---------------------------------------------------------------
 # display the Enter_Password_Menu which is needed whenever a validation needs to be done, where it leads depends on who

@@ -14,8 +14,8 @@ import Auxiliary_Functionalities as Af
 
 
 # --------------------------------------------------- SOUNDS ----------------------------------------------------------
-button_y_sound = Af.load_sound("menu/button_activation.WAV")     # sound for changing button on y axis
-button_x_sound = Af.load_sound("menu/button_lateral.WAV")        # sound for changing button on x axis
+button_y_sound = Af.load_sound("menu/button_activation.WAV")     # sound for changing button on y-axis
+button_x_sound = Af.load_sound("menu/button_lateral.WAV")        # sound for changing button on x-axis
 volume_change_sound = Af.load_sound("menu/volume_change.WAV")    # sound for changing volume
 erase_letter_sound = Af.load_sound("menu/typing.WAV")            # sound for every time a letter is erased
 error_sound = Af.load_sound("menu/error_message2.WAV")           # sound for every time an error occurs
@@ -26,11 +26,14 @@ success_sound = Af.load_sound("menu/success.WAV")                # sound for eve
 # These classes are used by the classes that manage the Menus interfaces
 
 class Button:
+    pointer_image = Af.load_image("menu/info/pointer.png")
+
     def __init__(self, x: int, y: int, directory: str, effect: str):
         self.x = x
         self.y = y
         if directory is not None:
             self.image = Af.load_image(directory)
+            self.size = self.image.get_size()
         self.effect = effect
 
     def cursor_is_inside(self, cursor_coo: (int, int)):
@@ -42,6 +45,13 @@ class Button:
 
     def draw(self, screen: Surface):
         screen.blit(self.image, (self.x, self.y))
+
+    def draw_info(self, screen):
+        screen.blit(self.pointer_image, (685, self.y+self.size[1]//2-19))  # draw the head of the arrow (pointer)
+        # line from pointer to center line (vertical)
+        pygame.draw.line(screen, (0, 255, 255), (730, self.y+self.size[1]//2+3), (730, 343), 5)
+        # center line (horizontal)
+        pygame.draw.rect(screen, (0, 255, 255), (728, 342, 30, 5))
 
     def change_image(self, directory: str):
         self.image = Af.load_image(directory)
@@ -75,6 +85,13 @@ class Button2(Button):
             Af.play(error_sound)
         else:
             Af.play(volume_change_sound, volume=self.value)
+
+    def draw_info(self, screen):
+        screen.blit(self.pointer_image, (710, self.y+self.size[1]//2-19))  # draw the head of the arrow (pointer)
+        # line from pointer to center line (vertical)
+        pygame.draw.line(screen, (0, 255, 255), (755, self.y+self.size[1]//2+3), (755, 343), 5)
+        # center line (horizontal)
+        pygame.draw.rect(screen, (0, 255, 255), (753, 342, 5, 5))
 
     def draw(self, screen: Surface):
         screen.blit(self.image, (self.x, self.y))
@@ -296,8 +313,8 @@ class Basic_Menu(Basic_Input_Management):
 
     def draw_buttons(self):
         self.screen.blit(self.effect[int(self.current_frame)], self.coord_effect)  # draw button's evidencing effect
-        self.screen.blit(self.info_images[self.active_code], self.effect_coo[self.active_code])  # draw button info
         [but.draw(self.screen) for but in self.button_list]  # draw each button
+        self.button_list[self.active_code].draw_info(self.screen)  # displays information about current active button
         self.current_frame = (self.current_frame + 0.25) % 3  # update frame in a way that it restarts at a value of 3
 
     def update_coord_effect(self):
@@ -342,6 +359,7 @@ class Basic_Menu(Basic_Input_Management):
         self.screen.blit(self.menu_image, (305, 0))
         self.screen.blit(self.navigation_image, (355, 620))
         self.draw_buttons()
+        self.screen.blit(self.info_images[self.active_code], (786, 195))
         pygame.display.update()
 
 
@@ -367,6 +385,7 @@ class User_Menu(Basic_Menu):
         self.screen.blit(self.menu_image, (305, 0))
         self.screen.blit(self.navigation_image, (355, 620))
         self.draw_user_related_images()
+        self.screen.blit(self.info_images[self.active_code], (786, 195))
         self.draw_buttons()
         pygame.display.update()
 
@@ -440,7 +459,7 @@ class Menu_image_sequence(Basic_Input_Management):
         self.screen.blit(self.slide_name, (400, 0))
         self.write_page_number()
         [button.draw(self.screen) for button in self.button_list]
-        self.hide_unwanted_button()  # if at the beginning/end of slides, it wont show the button to go further
+        self.hide_unwanted_button()  # if at the beginning/end of slides, it won't show the button to go further
         self.update_screen = False
         pygame.display.update()
 
@@ -875,8 +894,8 @@ class Management(Basic_Input_Management):
         self.screen.blit(self.parts_image, (0, 180))
         self.screen.blit(self.car_image, (2, 490))
         self.user.draw_text(self.screen)
-        coordinates = {0: (680, 90), 1: (680, 90), 2: (698, 192), 3: (685, 178), 4: (685, 178), 5: (685, 178)}
-        self.screen.blit(self.info_images[self.active_code], coordinates[self.active_code])
+        self.screen.blit(self.info_images[self.active_code], (786, 195))
+        self.button_list[self.active_code].draw_info(self.screen)
         self.draw_buttons()
         pygame.display.update()
 
@@ -1014,7 +1033,7 @@ class Report_Mission_Parts(Basic_Input_Management):
             # self.refresh() -> moved to the constructor since the image is static and doesn't need to refresh
 
 
-# Used every time a user manages to level up and he must unlock the "Mission: AI" option in the Game Menu
+# Used every time a user manages to level up, and he must unlock the "Mission: AI" option in the Game Menu
 class Unlock_Level(Basic_Input_Management):
     def __init__(self, screen: Surface):
         super().__init__()

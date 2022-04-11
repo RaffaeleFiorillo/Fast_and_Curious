@@ -56,3 +56,5 @@ Nota1: Em cada sub-pasta dentro da pasta "Fast and Curious" tem um ficheiro txt 
  que contém informaçoes sobre o conteudo da mesma.
 
 Nota2: Em caso de erros ou bugs gostaria de ser informado pelo email: "raffadeus8@gmail.com" com o titulo: "Fast and Curious Help"
+
+Game-Builder command: pyinstaller --onefile --name=Game-Builder --icon=images\general\builder-img.ICO build.py

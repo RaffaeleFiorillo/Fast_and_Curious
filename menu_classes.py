@@ -394,8 +394,7 @@ class User_Menu(Basic_Menu):
 # Used for "Story", and every Tutorial option
 class Menu_image_sequence(Basic_Input_Management):
     def __init__(self, screen: Surface, directory: str, num_pages: int, func_link: str, name: str):
-        buttons = [Button(110, 640, "menu/buttons/10/1.png", False),
-                   Button(745, 640, "menu/buttons/10/2.png", True)]
+        buttons = [Button(110, 640, "menu/buttons/10/1.png", False), Button(745, 640, "menu/buttons/10/2.png", True)]
         super().__init__(buttons)
         self.screen = screen
         self.name = name

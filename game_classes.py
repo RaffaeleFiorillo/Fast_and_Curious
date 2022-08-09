@@ -21,7 +21,6 @@ wrong_letter_sound = Af.load_sound("game/letter_wrong.WAV")      # sound of the 
 class Mission:
     def __init__(self, screen):
         self.screen = screen
-        self.background = Af.load_image("HUD/HUD_background.png")
         # Game objects
         self.sp_ti_entity = ce.Space_Time_Entity()
         self.car = ce.Car()
@@ -30,12 +29,14 @@ class Mission:
         self.parts_list = ce.Parts()
         self.parts_collected = 0
         # HUD stuff
+        self.background = Af.load_HUD_background()  # Af.load_image("HUD/HUD_background.png")
         self.energy = 100
         self.resistance = 100
         self.hud = ce.HUD(self.screen)
         self.speed = 0
         self.precision = 100
         # text stuff
+        self.text_coordinates = Af.load_text_coordinates()
         self.cursor = Af.load_image("texts/cursor.png")
         self.written_text = [[""]]
         self.text_name = None
@@ -191,19 +192,18 @@ class Mission:
                 Af.play(wrong_letter_sound)
 
     def display_text(self):
-        coordinates = [(290, 454), (290, 469), (290, 484), (290, 499), (290, 514), (290, 529), (290, 544), (290, 559)]
         self.written_text_images[self.line] = Af.get_text_images(self.written_text[-1])
-        for image, coo in zip(self.written_text_images, coordinates):
+        for image, coo in zip(self.written_text_images, self.text_coordinates):
             self.screen.blit(image, coo)
         if int(self.time_passed+self.time_passed*1.5) % 2:  # make the cursor blink periodically
             if self.written_text[-1][-1] == "" and self.written_text[-1] != [""]:
-                self.screen.blit(self.cursor, (coordinates[self.line][0]+
+                self.screen.blit(self.cursor, (self.text_coordinates[self.line][0]+
                                                self.written_text_images[self.line].get_size()[0]+5,
-                                               coordinates[self.line][1]+3))
+                                               self.text_coordinates[self.line][1]+3))
             else:
-                self.screen.blit(self.cursor, (coordinates[self.line][0]+
+                self.screen.blit(self.cursor, (self.text_coordinates[self.line][0]+
                                                self.written_text_images[self.line].get_size()[0],
-                                               coordinates[self.line][1]+3))
+                                               self.text_coordinates[self.line][1]+3))
 
     def hud_time(self):
         pass

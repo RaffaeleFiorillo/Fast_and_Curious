@@ -5,40 +5,518 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d18b3cc1-ecc7-41c3-828a-e9b9f7943e64" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Encryptor.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/encryptor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Genetic_Algorithm.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Auxiliary_Functionalities.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auxiliary_Functionalities.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/audio.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/display.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/encryption.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/entities_behaviour.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/files.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/game.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/global_variables.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/graphics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/hud.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/menu_aux.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/useful_functions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auxiliary_modules/user_data_management.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/deprecated/Auxiliary Functionalities.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/deprecated/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/car.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/fireworks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/hud.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/obstacles.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/parts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/road.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/sounds.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity_classes/space_time_entity.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/Cheats/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/Cheats/cheats_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/Gameplay/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/Gameplay/gameplay_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/User/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/User/user_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Management/management_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Missions/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Missions/missions_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Tutorials/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/Tutorials/tutorials_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/GameMenu/game_menu_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/MainMenu/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/MainMenu/main_menu_options.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/password_verification.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/sounds.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/link_functions/start.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/buttons/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/buttons/button.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/buttons/button2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/buttons/name_button.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/basic_input_manager.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/basic_menu.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_add_text.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_choose_account.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_create_modify_account.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_enter_password.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_exit.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_game.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_image_sequence.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_management.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_report_mission_ai.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_report_mission_parts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_start.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_unlock_level.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/menu_winner.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/menus/user_menu.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/sounds.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/menu_classes/user.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/missions/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/missions/sounds.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/missions/typing_missions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tools/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auxiliary_Functionalities.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Encryptor.exe" beforeDir="false" afterPath="$PROJECT_DIR$/Encryptor.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game-Builder.exe" beforeDir="false" afterPath="$PROJECT_DIR$/Game-Builder.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SPECS.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/SPECS.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/general/builder-img.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/general/fire.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/1.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/3.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/management gameplay.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/link_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/link_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menu_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/menu_classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parameters/levels info/1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/parameters/levels info/1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parameters/levels info/2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/parameters/levels info/2.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parameters/prev_men.txt" beforeDir="false" afterPath="$PROJECT_DIR$/parameters/prev_men.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/R.F.J.8/data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/R.F.J.8/data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/RaffaeleFiorillo/data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/RaffaeleFiorillo/data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/RaffaeleFiorillo/next_level.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/RaffaeleFiorillo/next_level.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/Test/data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saves/Test/data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/build.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/build.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts/1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/texts/1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts/2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/texts/2.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts/3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/texts/3.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts/4.txt" beforeDir="false" afterPath="$PROJECT_DIR$/texts/4.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts/6.txt" beforeDir="false" afterPath="$PROJECT_DIR$/texts/6.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts/7.txt" beforeDir="false" afterPath="$PROJECT_DIR$/texts/7.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/texts/8.txt" beforeDir="false" afterPath="$PROJECT_DIR$/texts/8.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/entity_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/deprecated/entity_classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/deprecated/game_classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Dr Digitron/close up.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Dr Digitron/full body.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Space-Time Entity/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Space-Time Entity/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Space-Time Entity/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Space-Time Entity/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Space-Time Entity/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Characters/Space-Time Entity/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/HUD_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/backgrounds/HUD_background_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/backgrounds/HUD_background_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/25.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/26.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/27.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/28.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/29.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/30.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/barr/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/count_down/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/count_down/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/count_down/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/count_down/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/infinite.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/HUD/meter/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Icons/builder-img.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Icons/encryptor.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Icons/fire.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/README.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/Skins/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/Skins/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/car effects/nitro/blue.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/car effects/nitro/red.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/12 - Copy (2).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/cars/display/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/general/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/general/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/general/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/general/Fast and Curious Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/general/encryption-icon-15222-Windows.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/general/encryption-icon-15222.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/1/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/1/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/1/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/10/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/10/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/11/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/11/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/11/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/11/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/11/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/11/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/12/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/12/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/12/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/12/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/12/Future 3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/13/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/13/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/13/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/13/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/2/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/2/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/2/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/2/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/2/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/2/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/3/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/3/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/4/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/4/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/4/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/4/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/4/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/5/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/5/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/5/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/6/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/6/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/7/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/7/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/7/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/8/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/8/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/8/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/8/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/8/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/8/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/8/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/9/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/buttons/9/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/1/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/1/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/1/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/1/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/2/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/2/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/2/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/2/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/3/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/3/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/3/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/3/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/4/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/4/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/4/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/4/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/5/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/5/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/5/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/effects/5/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/exit/delete_account.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/exit/exit_game.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/exit/exit_match.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/exit/exit_menu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/base_info_box.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_game menu/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_game menu/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_game menu/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_game menu/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_game menu/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_game menu/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_main menu/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_main menu/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_main menu/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_account/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_account/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_account/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_account/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_cheats/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_cheats/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_cheats/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_cheats/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_management_gameplay/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_missions menu/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_missions menu/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_missions menu/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_missions menu/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_missions menu/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_missions menu/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_tutorial/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_tutorial/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_tutorial/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_tutorial/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/info_tutorial/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/info/pointer.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/Results_AI.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/Results_Parts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/add text.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/change password.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/choose account- no users.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/choose account.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/create account.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/game menu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/insert_password.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/main menu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/management cheats.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/management.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/management_account.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/management_gameplay.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/missions menu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/sequence.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/tutorial.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/unlock level.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/Main/winner.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/car_window.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/car_window2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/parts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/records.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/User/user_info/level9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/navigation/correct.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/navigation/navigation.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/navigation/navigation2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/navigation/navigation3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/navigation/pointer.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/interfaces/navigation/wrong.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/error9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/succesS2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/success1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/success3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/success4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/success5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/success6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/menu/messages/success7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/1/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/1/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/1/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/1/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/1/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/1/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/1/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/2/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/2/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/2/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/2/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/2/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/2/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/2/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/3/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/3/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/3/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/3/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/3/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/3/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/3/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/obstacles/4/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/parts/part1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/parts/part2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/parts/part3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/parts/part4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/parts/part5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/story/name.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_controls/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_controls/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_controls/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_controls/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_controls/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_controls/name.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_enemies/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_enemies/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_enemies/name.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_level_up/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_level_up/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_level_up/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_level_up/name.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_save/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_save/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/slides/tutorial_save/name.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/texts/cursor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/link_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/deprecated/link_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/deprecated/menu_classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/README.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/11.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/12.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/13.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/levels info/9.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parameters/prev_men.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/R.F.J.8/account_config.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/R.F.J.8/data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/R.F.J.8/next_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/README.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/Raffaele/account_config.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/Raffaele/data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/Raffaele/next_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/RaffaeleFiorillo/account_config.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/RaffaeleFiorillo/data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/RaffaeleFiorillo/next_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/Test/account_config.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/Test/data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/Test/next_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/active_user.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/car_ignition.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/count_down.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/game_over.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/go.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/impact.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/letter_wrong.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/level failed.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/music.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/part_collection.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/space_time_hit.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/game/tic_toc.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/button_activation.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/button_lateral.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/change_menu.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/delete_account.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/enter_password.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/error_message2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/exit.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/ignition.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/level failed.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/level_up.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/new_Mission_Ai.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/success.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/success_message.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/typing.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sounds/menu/volume_change.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/build.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/build.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/encryptor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/encryptor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/genetic_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/deprecated/genetic_algorithm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/5.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/6.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/7.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/8.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/texts/README.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/to do list.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/to do list.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -71,6 +549,9 @@
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="1x6dp2e2uwcH0VNfMAdlZGuwbyd" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -85,23 +566,27 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Dark Knight\Desktop\Projects\Fast_and_Curious\src" />
+      <recent name="C:\Users\Dark Knight\Desktop\Projects\Fast_and_Curious\assets" />
+      <recent name="C:\Users\Dark Knight\Desktop\Projects\Fast_and_Curious\src\deprecated" />
+      <recent name="C:\Users\Dark Knight\Desktop\Projects\Fast_and_Curious\src\link_functions\main_menu" />
+      <recent name="C:\Users\Dark Knight\Desktop\Projects\Fast_and_Curious\src\entity_classes" />
+      <recent name="C:\Users\Dark Knight\Desktop\Projects\Fast_and_Curious\src\menu_classes\menus" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.encryptor">
-    <configuration name="encryptor" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.build">
+    <configuration name="build" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Fast_and_Curious" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\Dark Knight\AppData\Local\Microsoft\WindowsApps\python3.10.exe" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\Dark Knight\Desktop\Projects\Fast_and_Curious\src\encryptor.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/build.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -111,13 +596,13 @@
       <method v="2" />
     </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Genetic_Algorithm" />
+      <module name="Fast_and_Curious" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\Dark Knight\AppData\Local\Microsoft\WindowsApps\python3.10.exe" />
+      <option name="SDK_HOME" value="C:\Program Files\Python39\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -131,12 +616,9 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python.encryptor" />
-      <item itemvalue="Python.main" />
-    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.build" />
         <item itemvalue="Python.main" />
       </list>
     </recent_temporary>

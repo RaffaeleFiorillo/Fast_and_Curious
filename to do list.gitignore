@@ -63,3 +63,5 @@ This table shows stuff to be done in the future (to expand the game or to fix bu
 ------------------------------------------------------------------------------------------------------------------------
  30 |Use CER and WER metrics to determine the typing precision                          | Pendent |      5       |   8 |
 ------------------------------------------------------------------------------------------------------------------------
+ 31 |Make pop-up messages real and interactable instead of simulating windows behaviour | Pendent |      8       |   8 |
+------------------------------------------------------------------------------------------------------------------------

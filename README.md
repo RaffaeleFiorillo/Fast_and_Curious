@@ -1,10 +1,12 @@
 # Fast and Curious
-  A game to learn/improve keyboard typing skills. The main idea is to improve your typing skills and at the same time learn fun facts (some even from your own authory!).
+  A game to learn/improve keyboard typing skills while also learning fun facts and study a specific subject. The player controls a moving car that avoids enemies and obstacles, by typing on the keyboard. The car speed is related to the player's typing speed. The car's ability to avoid obstacles is related to the player's typing precision (*for details about the story and background of the game read the "Story" Section*).
 
 ![sample](https://user-images.githubusercontent.com/75253335/131589894-00e6f646-a507-440b-9e67-b080e4bafc23.png)
 
+## Main Idea Behind the Game:
 
-## How to set up and play the game:
+
+## How to Set Up and Play the Game:
  1st -> Download these files from the repository: 
             
        - Game(.exe); - assets (folder);

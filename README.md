@@ -21,6 +21,7 @@ The game is continuously getting updates to improve it. To get the latest versio
  - 5th -> Enjoy!!!
 
 [Note]: This version could have some unimplemented or uncomplete features and even contain some bugs.
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 

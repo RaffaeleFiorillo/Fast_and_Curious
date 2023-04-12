@@ -14,7 +14,8 @@ The Game is currently at a stable version 2.0. You can find this version of the 
 ### Latest Beta
 The game is continuously getting updates to improve it. To get the latest version of the game follow this steps:
  - 1st -> Download these files from the repository:  
-       - Game(.exe); - assets (folder);
+   - Game(.exe); 
+   - assets (folder);
  - 2nd -> Create a new folder and call it: "Fast and Curious";
  - 3rd -> Put all the downloaded files in the folder ("Fast and Curious");
  - 4th -> Run "Game.exe";
@@ -26,14 +27,13 @@ The game is continuously getting updates to improve it. To get the latest versio
 
 
 ## Screenshots of the game
- ### Login
-    The game allows multiple accounts to be created. You can Login and Logout, allowing multiple people to play, learn and practice
-    without loosing your own progress!
+### Login
+The game allows multiple accounts to be created. You can Login and Logout, allowing multiple people to play, learn and practice without loosing your progress!
     
-   ![Choose account](https://user-images.githubusercontent.com/75253335/130338481-149ac771-5176-4120-8eb8-9ee1b2a3f301.png)
+![Choose account](https://user-images.githubusercontent.com/75253335/130338481-149ac771-5176-4120-8eb8-9ee1b2a3f301.png)
 
 ### Game Menu
-   When you are logged into your account you are presented with multiple possible actions, such as:
+When you are logged into your account you are presented with multiple possible actions, such as:
    - Learn about the game's story;
    - test your skills and level up;
    - practice your typing with endless mode;
@@ -41,32 +41,29 @@ The game is continuously getting updates to improve it. To get the latest versio
    - Manage your account (music and effect volume, change password, add customized texts to practice, ...);
    - Logout
 
-  Your best speed will be recorded in order for you to keep trac of your progress!
+Your best speed will be recorded in order for you to keep trac of your progress!
    
- ![Game Menu](https://user-images.githubusercontent.com/75253335/130338489-28abe657-46d2-4c2e-95b6-a111db421856.png)
+![Game Menu](https://user-images.githubusercontent.com/75253335/130338489-28abe657-46d2-4c2e-95b6-a111db421856.png)
 
 ### Management
-   Makes you able to customize your game experience.
+Makes you able to customize your game experience.
   
-   ![Management](https://user-images.githubusercontent.com/75253335/130338334-3c8079df-af4e-40a6-8168-432fb458ac47.png)
+![Management](https://user-images.githubusercontent.com/75253335/130338334-3c8079df-af4e-40a6-8168-432fb458ac47.png)
 
 ### Add your own practicing texts
-  You are able to insert new texts in the game, so that you can practice with them.
+You are able to insert new texts in the game, so that you can practice with them.
   
-  ![New Text](https://user-images.githubusercontent.com/75253335/130338376-0903996d-c3e0-4be0-b2a3-3455800518b2.png)
+![New Text](https://user-images.githubusercontent.com/75253335/130338376-0903996d-c3e0-4be0-b2a3-3455800518b2.png)
 ---------------------------------------------------------------------------------------------------------------------------------------------------
- 
+
 
 ## Documentation:
 More about the game in this documentation
-  - Portuguese:
-    ->[GDD Fast and Curious.pdf](https://github.com/RaffaeleFiorillo/Fast_and_Curious/files/6441116/GDD.Fast.and.Curious.pdf)
+- Portuguese -> [GDD Fast and Curious.pdf](https://github.com/RaffaeleFiorillo/Fast_and_Curious/files/6441116/GDD.Fast.and.Curious.pdf)
     
- - English:
-    Coming Soon!
+- English -> Coming Soon!
     
- - Italian:
-    Coming Soon!
+- Italian -> Coming Soon!
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -101,12 +98,9 @@ Challanges that make the player win some prizes (could be exclusive car skins, p
 
       
 ## How to support the game:
-  If you find a bug in the game, need assistance or just have some ideas that could make the game better, you are more than welcome to contact me by email: raffadeus8@gmail.com.
-  Make sure that the subject of the email is "Fast and Curious support".
+If you find a bug in the game, need assistance or just have some ideas that could make the game better, you are more than welcome to contact me by email: raffadeus8@gmail.com. Make sure that the subject of the email is "Fast and Curious support".
 
 ### Whays of supporting the game:
-  -> New car skins: 
-        - Must be a png image with a maximum heigth of 54 pixels and length of 90. The background must be transparent;
+- New car skins: Must be a png image with a maximum heigth of 54 pixels and length of 90. The background must be transparent;
         
-  -> New ideas:
-        - Any idea that would make this game better is welcome.
+- New ideas: Any idea that would make this game better is welcome.

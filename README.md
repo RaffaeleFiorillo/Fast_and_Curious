@@ -50,7 +50,7 @@ When you are logged into your account you are presented with multiple possible a
    - Manage your account (music and effect volume, change password, add customized texts to practice, ...);
    - Logout
 
-Your best speed will be recorded in order for you to keep trac of your progress!
+Your best speed will be recorded in order for you to keep track of your progress!
    
 ![Game Menu](https://user-images.githubusercontent.com/75253335/130338489-28abe657-46d2-4c2e-95b6-a111db421856.png)
 

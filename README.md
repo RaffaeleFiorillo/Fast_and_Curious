@@ -73,6 +73,7 @@ More about the game in this documentation
 - English -> Coming Soon!
     
 - Italian -> Coming Soon!
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -103,6 +104,7 @@ The new Missions must be ways to improve typing skills in funny and enjoyable wa
       
 ### Achievements:
 Challanges that make the player win some prizes (could be exclusive car skins, parts,...) when he completes them;
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
       

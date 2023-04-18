@@ -6,13 +6,14 @@
 
 ## Main Idea Behind the Game:
 
-Do you often find yourself wasting time playing games when you should be studying or learning something important? With Fast and Curious, you can do both at the same time! The game allows you to save the information you need to learn, and guides you through improving your typing skills (speed and precision) while having fun.
+Do you often find yourself wasting time playing games when you should be studying or learning something important? With Fast and Curious, you can do both at the same time! The game allows you to save the information you need to learn (see how [here](#add-your-own-practicing-texts)), and guides you through improving your typing skills (speed and precision) while having fun.
 
 Fast and Curious is not your average typing game. It's a unique blend of learning and entertainment, designed to help you improve your typing skills while also learning new things.
 
 Studies have shown that fast and accurate typing can have a significant impact on productivity and efficiency, and with Fast and Curious, you can learn and practice these skills in a fun and engaging way. Whether you're a student trying to memorize important information for an exam, or a professional looking to boost your typing speed at work, Fast and Curious is the perfect tool to help you reach your goals.
 
 With its user-friendly interface and customizable features, Fast and Curious is a game that anyone can enjoy. So why waste your time playing mindless games when you can improve your typing skills and learn something new at the same time? Try Fast and Curious and see how much you can achieve and improve in no time!
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## How to Set Up and Play the Game:

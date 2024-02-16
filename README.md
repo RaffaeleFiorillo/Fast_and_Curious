@@ -70,7 +70,8 @@ You are able to insert new texts in the game, so that you can practice with them
 More about the game in this documentation 
 - Portuguese (outdated) -> [GDD Fast and Curious.pdf](https://github.com/RaffaeleFiorillo/Fast_and_Curious/files/6441116/GDD.Fast.and.Curious.pdf)
     
-- English (outdated) -> [Fast.and.Curious-Typing-Game-ENGLISH.pdf](https://github.com/RaffaeleFiorillo/Fast_and_Curious/files/14304760/Fast.and.Curious-Typing-Game-ENGLISH.pdf)
+- English (outdated) -> [GDD Fast and Curious - English.pdf](https://github.com/RaffaeleFiorillo/Fast_and_Curious/files/14316353/GDD.Fast.and.Curious.-.English.pdf)
+
 
 - Italian -> Coming Soon!
 
